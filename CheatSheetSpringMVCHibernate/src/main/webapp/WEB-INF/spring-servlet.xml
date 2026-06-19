@@ -15,7 +15,7 @@
 
 <mvc:annotation-driven></mvc:annotation-driven>
 
-<context:component-scan base-package="com.hibernate.controller" />
+<context:component-scan base-package="com.hibernate" />
 
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 <property name="prefix" value="/WEB-INF/views/" />
@@ -23,6 +23,7 @@
 </bean>
 <import resource="spring-hibernate.xml"/>
 
-
+<bean id="mvcHandlerMappingIntrospector" 
+      class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
 
 </beans>
