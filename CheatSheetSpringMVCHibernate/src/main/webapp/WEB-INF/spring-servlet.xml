@@ -23,6 +23,7 @@
 </bean>
 <import resource="spring-hibernate.xml"/>
 
-
+<bean id="mvcHandlerMappingIntrospector" 
+      class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
 
 </beans>
