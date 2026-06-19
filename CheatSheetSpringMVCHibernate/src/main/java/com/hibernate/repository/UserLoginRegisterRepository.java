@@ -8,4 +8,5 @@ public interface UserLoginRegisterRepository {
 
 	public void registerUser(UserEntity obj);
 
+	public UserEntity findByEmail(String email);
 }

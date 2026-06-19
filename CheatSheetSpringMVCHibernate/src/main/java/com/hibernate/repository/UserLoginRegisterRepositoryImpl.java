@@ -33,4 +33,12 @@ public class UserLoginRegisterRepositoryImpl implements UserLoginRegisterReposit
 		getSession().save(obj);
 	}
 
+	@Override
+	public UserEntity findByEmail(String	 email) {		
+		return getSession().createQuery("FROM UserEntity WHERE email=:email",UserEntity.class)
+				.setParameter("email", email)
+				.uniqueResultOptional()
+				.orElse(null);
+	}
+
 }
