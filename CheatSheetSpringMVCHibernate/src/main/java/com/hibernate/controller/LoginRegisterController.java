@@ -1,5 +1,6 @@
 package com.hibernate.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,9 +27,18 @@ public class LoginRegisterController {
 	public final PasswordEncoder encoder;
 
 	@GetMapping("/register")
-	public ModelAndView showRegisterForm() {
-		ModelAndView mv = new ModelAndView("register-form", "registerDto", new RegisterDTO());
-		return mv;
+	public ModelAndView showRegisterForm(HttpSession session) {
+		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+
+		if (user == null) {
+			ModelAndView mv = new ModelAndView("register-form", "registerDto", new RegisterDTO());
+			return mv;
+		}
+		if ("ADMIN".equals(user.getRole().name())) {
+			return new ModelAndView("redirect:/admindashboard");
+		}
+
+		return new ModelAndView("redirect:/home");
 	}
 
 	// 2. Handle Form Submission
@@ -65,9 +75,23 @@ public class LoginRegisterController {
 	}
 
 	@GetMapping("/login")
-	public ModelAndView loginForm() {
-		ModelAndView mv = new ModelAndView("login", "loginDto", new LoginDTO());
-		return mv;
+	public ModelAndView loginForm(HttpSession session) {
+
+		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+
+		if (user == null) {
+			ModelAndView mv = new ModelAndView("login", "loginDto", new LoginDTO());
+			return mv;
+		}
+		if ("ADMIN".equals(user.getRole().name())) {
+			return new ModelAndView("redirect:/admindashboard");
+		}
+
+		return new ModelAndView("redirect:/home");
 	}
 
+	@GetMapping("/home")
+	public String home() {
+		return "home";
+	}
 }

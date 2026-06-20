@@ -23,6 +23,7 @@
         <label>Password:</label>
         <form:password path="password" required="required" />
         
+        <input type="checkbox" name="remember-me">Remember me
         <button type="submit">Login</button>
         
     </form:form>
