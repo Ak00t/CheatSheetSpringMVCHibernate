@@ -90,8 +90,4 @@ public class LoginRegisterController {
 		return new ModelAndView("redirect:/home");
 	}
 
-	@GetMapping("/home")
-	public String home() {
-		return "home";
-	}
 }
