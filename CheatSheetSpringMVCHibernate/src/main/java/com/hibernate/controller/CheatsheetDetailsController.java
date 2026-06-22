@@ -26,7 +26,7 @@ public class CheatsheetDetailsController {
         model.addAttribute("cheatsheet", cheatsheet);
         model.addAttribute(
                 "comments",
-                commentService.getRootComments(id));
+                commentService.selectCommentById(id));
         return "cheatsheet-detail"; // WEB-INF/views/cheatsheet-detail.jsp သို့ သွားမည်
     }
 }
