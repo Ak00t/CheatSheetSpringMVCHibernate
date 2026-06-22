@@ -4,8 +4,8 @@
 <c:set var="uri" value="${pageContext.request.requestURI}" />
 
 <div class="sidebar-container">
-    <a href="${pageContext.request.contextPath}/admin/dashboard" 
-       class="sidebar-link ${uri.contains('/admin/dashboard') ? 'active' : ''}">
+    <a href="${pageContext.request.contextPath}/admindashboard" 
+       class="sidebar-link ${uri.contains('admindashboard') ? 'active' : ''}">
         <i class="fa-solid fa-chart-simple"></i> Dashboard
     </a>
     <a href="${pageContext.request.contextPath}/admin/users" 

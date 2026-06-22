@@ -1,14 +1,17 @@
 package com.hibernate.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import com.hibernate.entity.enums.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter
+@ToString
 @Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -128,4 +131,8 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "adminUser")
     private List<AuditLogEntity> auditLogs;
+
+  
+
+	
 }

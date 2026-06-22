@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 public class LoginDTO {
 	@NotBlank
-	public String name;
+	public String email;
 	@NotBlank
 	public String password;
 	public String hashedPassword;

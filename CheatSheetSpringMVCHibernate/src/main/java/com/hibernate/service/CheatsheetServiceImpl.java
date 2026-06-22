@@ -7,7 +7,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hibernate.dto.CheatsheetFormDto;
+import com.hibernate.DTO.CheatsheetFormDto;
 import com.hibernate.entity.CategoryEntity;
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;

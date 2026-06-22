@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.hibernate.dto.CheatsheetFormDto;
+import com.hibernate.DTO.CheatsheetFormDto;
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.entity.enums.UserRole;

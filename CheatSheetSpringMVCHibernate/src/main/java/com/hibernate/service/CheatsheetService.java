@@ -1,7 +1,8 @@
 package com.hibernate.service;
 
 import java.util.List;
-import com.hibernate.dto.CheatsheetFormDto;
+
+import com.hibernate.DTO.CheatsheetFormDto;
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;
 

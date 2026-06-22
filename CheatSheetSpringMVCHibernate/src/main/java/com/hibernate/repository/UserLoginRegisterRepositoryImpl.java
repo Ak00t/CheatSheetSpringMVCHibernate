@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class UserLoginRegisterRepositoryImpl implements UserLoginRegisterRepository {
+public  class UserLoginRegisterRepositoryImpl implements UserLoginRegisterRepository {
 
 	private final SessionFactory sessionFactory;
 
@@ -22,10 +22,12 @@ public class UserLoginRegisterRepositoryImpl implements UserLoginRegisterReposit
 
 	@Override
 	public boolean checkEmail(UserEntity obj) {
-		Long count = getSession().createQuery("SELECT COUNT(u) FROM UserEntity u WHERE email=:email", Long.class)
-				.setParameter("email", obj.getEmail()).uniqueResult();
+	    // Long.class ကို ဖျက်ပြီး manual casting လုပ်လိုက်ပါ
+	    Long count = (Long) getSession().createQuery("SELECT COUNT(u) FROM UserEntity u WHERE email=:email")
+	            .setParameter("email", obj.getEmail())
+	            .uniqueResult();
 
-		return count != null && count > 0;
+	    return count != null && count > 0;
 	}
 
 	@Override
