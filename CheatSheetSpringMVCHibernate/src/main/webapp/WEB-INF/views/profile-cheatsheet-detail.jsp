@@ -64,6 +64,77 @@
         font-weight:500;
     }
 
+
+    /* Fancy owner action buttons */
+    .owner-actions{
+        display:flex;
+        flex-wrap:wrap;
+        gap:14px;
+        align-items:center;
+        margin-top:22px;
+        padding:18px;
+        border:1px solid rgba(181,31,85,.14);
+        border-radius:18px;
+        background:linear-gradient(135deg,#ffffff 0%,#fff5f8 100%);
+        box-shadow:0 10px 26px rgba(181,31,85,.08);
+    }
+
+    .owner-action-link,
+    .owner-action-btn{
+        height:46px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+        padding:0 22px;
+        border-radius:999px;
+        border:none;
+        cursor:pointer;
+        text-decoration:none;
+        font-weight:800;
+        font-size:14px;
+        letter-spacing:.2px;
+        transition:all .18s ease;
+        box-shadow:0 8px 18px rgba(0,0,0,.10);
+    }
+
+    .owner-action-link{
+        color:#fff;
+        background:linear-gradient(135deg,#2563eb,#7c3aed);
+    }
+
+    .owner-action-link:hover{
+        transform:translateY(-2px);
+        box-shadow:0 12px 24px rgba(37,99,235,.28);
+    }
+
+    .owner-delete-form{
+        display:inline;
+        margin:0;
+    }
+
+    .owner-action-btn{
+        color:#fff;
+        background:linear-gradient(135deg,#ef4444,#b91c1c);
+        font-family:inherit;
+    }
+
+    .owner-action-btn:hover{
+        transform:translateY(-2px);
+        box-shadow:0 12px 24px rgba(220,38,38,.28);
+    }
+
+    .owner-action-icon{
+        width:26px;
+        height:26px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:50%;
+        background:rgba(255,255,255,.20);
+        font-size:14px;
+    }
+
     /* cards center ကျအောင် */
     .sections-container{
         display:grid;
@@ -352,6 +423,26 @@
         </h1>
 
         <p class="description">${cheatsheet.description}</p>
+
+        <div class="owner-actions">
+            <a class="owner-action-link"
+               href="${pageContext.request.contextPath}/profile-cheatsheets/edit/${cheatsheet.id}">
+                <span class="owner-action-icon">✏️</span>
+                <span>Edit Cheatsheet</span>
+            </a>
+
+            <form class="owner-delete-form"
+                  action="${pageContext.request.contextPath}/profile-cheatsheets/delete/${cheatsheet.id}"
+                  method="post"
+                  onsubmit="return confirm('ဤ Cheat Sheet အား ဖျက်ရန် သေချာပါသလား?');">
+
+                <button class="owner-action-btn" type="submit">
+                    <span class="owner-action-icon">🗑️</span>
+                    <span>Delete Cheatsheet</span>
+                </button>
+            </form>
+        </div>
+
     </div>
 
     <div class="sections-container">
