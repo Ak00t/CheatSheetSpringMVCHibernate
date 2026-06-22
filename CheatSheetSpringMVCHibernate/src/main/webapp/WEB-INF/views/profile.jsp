@@ -4,20 +4,32 @@
 <body>
     <h2>User Profile</h2>
     
-    <img src="${user.profileImg}" alt="Profile Image" width="150"><br>
-    
-   <form action="${pageContext.request.contextPath}/profile/update" method="POST">
+<form action="${pageContext.request.contextPath}/profile/update" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="id" value="${user.id}">
-    
-    <input type="text" name="profileImg" value="${user.profileImg}">
-    
-    <label>Name:</label>
-    <input type="text" name="name" value="${user.name}"><br>
-    
-    <label>Bio:</label>
-    <textarea name="bio">${user.bio}</textarea><br>
-    
-    <button type="submit">Update Profile</button>
+
+    <div>
+        <label>Current Photo:</label>
+        <img src="${pageContext.request.contextPath}/uploads/${user.profileImg}" 
+             style="width: 150px; height: 150px; border-radius: 50%;" 
+             alt="Profile Photo">
+    </div>
+
+    <div>
+        <label>Change Photo:</label>
+        <input type="file" name="profileImg">
+    </div>
+
+    <div>
+        <label>Name:</label>
+        <input type="text" name="name" value="${user.name}">
+    </div>
+
+    <div>
+        <label>Bio:</label>
+        <textarea name="bio">${user.bio}</textarea>
+    </div>
+
+    <button type="submit">Save Changes</button>
 </form>
 </body>
 </html>
