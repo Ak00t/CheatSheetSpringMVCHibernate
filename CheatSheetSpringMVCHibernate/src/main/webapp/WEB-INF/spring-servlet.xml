@@ -20,13 +20,19 @@
         <property name="prefix" value="/WEB-INF/views/" />
         <property name="suffix" value=".jsp" />
     </bean>
+<!-- slya -->
+<mvc:resources mapping="/uploads/**" location="file:${catalina.home}/webapps/uploads/" />
+
+
+<context:component-scan base-package="com.hibernate" />
 
     <import resource="spring-hibernate.xml"/>
 
-    <bean id="mvcHandlerMappingIntrospector" 
-          class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
-      
-    <bean id="multipartResolver"
-          class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+
+<!-- slya -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+</bean>
+<bean id="mvcHandlerMappingIntrospector" 
+      class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
 
 </beans>

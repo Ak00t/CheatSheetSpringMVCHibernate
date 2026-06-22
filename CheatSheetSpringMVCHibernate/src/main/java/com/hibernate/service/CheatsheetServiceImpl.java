@@ -1,115 +1,142 @@
 package com.hibernate.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-import org.hibernate.SessionFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hibernate.DTO.CheatsheetFormDto;
-import com.hibernate.entity.CategoryEntity;
-import com.hibernate.entity.CheatsheetEntity;
-import com.hibernate.entity.UserEntity;
-import com.hibernate.entity.enums.CheatsheetVisibility;
+import com.hibernate.entity.*;
 import com.hibernate.entity.enums.ContentStatus;
-import com.hibernate.entity.enums.PublishStatus;
-import com.hibernate.repository.CheatsheetRepository;
+import com.hibernate.repository.*;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CheatsheetServiceImpl implements CheatsheetService {
 
     private final CheatsheetRepository cheatsheetRepository;
-    private final SessionFactory sessionFactory;
+    private final CheatsheetTagRepository cheatsheetTagRepository;
+    private final CheatsheetSectionRepository cheatsheetSectionRepository;
+    private final CheatsheetRowRepository cheatsheetRowRepository;
+    private final CheatsheetRowCellRepository cheatsheetRowCellRepository;
+    private final CheatsheetNoteRepository cheatsheetNoteRepository;
+    private final CheatsheetMediaRepository cheatsheetMediaRepository;
+    private final TagRequestRepository tagRequestRepository;
 
     @Override
-    @Transactional
-    public void createNewCheatsheet(CheatsheetFormDto formDto, UserEntity loginUser) {
-        CheatsheetEntity cheatsheet = new CheatsheetEntity();
-        
-        cheatsheet.setTitle(formDto.getTitle());
-        cheatsheet.setDescription(formDto.getDescription());
-        cheatsheet.setThemeColor(formDto.getThemeColor());
-        cheatsheet.setSlug(generateSlug(formDto.getTitle()));
-        cheatsheet.setUser(loginUser); 
-        
-        if (formDto.getCategoryId() != null) {
-            CategoryEntity category = sessionFactory.getCurrentSession()
-                    .get(CategoryEntity.class, formDto.getCategoryId());
-            cheatsheet.setCategory(category);
-        }
-        
-        cheatsheet.setVisibility(CheatsheetVisibility.valueOf(formDto.getVisibility().toUpperCase()));
-        cheatsheet.setPublishStatus(PublishStatus.PUBLISHED);
-        cheatsheet.setStatus(ContentStatus.ACTIVE);
-        
-        cheatsheet.setViewCount(0);
-        cheatsheet.setLikeCount(0);
-        cheatsheet.setBookmarkCount(0);
-        cheatsheet.setCommentCount(0);
-        cheatsheet.setShareCount(0);
-        cheatsheet.setReportCount(0);
-        cheatsheet.setRatingAvg(BigDecimal.ZERO);
-        cheatsheet.setCreatedAt(LocalDateTime.now());
-        cheatsheet.setUpdatedAt(LocalDateTime.now());
-        
-        cheatsheetRepository.save(cheatsheet);
+    public Long saveCheatsheet(CheatsheetEntity cheatsheet) {
+        return cheatsheetRepository.save(cheatsheet);
+    }
+
+  
+    @Override
+    public void saveCheatsheetTag(Long cheatsheetId, Long tagId) {
+        cheatsheetTagRepository.save(cheatsheetId, tagId);
+    }
+    
+
+    @Override
+    public void saveSection(CheatsheetSectionEntity section) {
+        cheatsheetSectionRepository.save(section);
     }
 
     @Override
-    @Transactional
-    public void updateCheatsheetByAdmin(Long id, CheatsheetFormDto formDto, String contentStatus) {
-        CheatsheetEntity existing = cheatsheetRepository.findById(id);
-        if (existing != null) {
-            existing.setTitle(formDto.getTitle());
-            existing.setDescription(formDto.getDescription());
-            existing.setThemeColor(formDto.getThemeColor());
-            existing.setVisibility(CheatsheetVisibility.valueOf(formDto.getVisibility().toUpperCase()));
-            
-            if (contentStatus != null) {
-                existing.setStatus(ContentStatus.valueOf(contentStatus.toUpperCase()));
-            }
-            
-            if (formDto.getCategoryId() != null) {
-                CategoryEntity category = sessionFactory.getCurrentSession()
-                        .get(CategoryEntity.class, formDto.getCategoryId());
-                existing.setCategory(category);
-            }
-            
-            existing.setUpdatedAt(LocalDateTime.now());
-            cheatsheetRepository.update(existing);
-        }
+    public void saveRow(CheatsheetRowEntity row) {
+        cheatsheetRowRepository.save(row);
     }
 
     @Override
-    @Transactional
-    public void deleteCheatsheet(Long id) {
-        CheatsheetEntity cheatsheet = cheatsheetRepository.findById(id);
-        if (cheatsheet != null) {
-            cheatsheetRepository.delete(cheatsheet);
-        }
+    public void saveRowCell(CheatsheetRowCellEntity cell) {
+        cheatsheetRowCellRepository.save(cell);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public CheatsheetEntity getById(Long id) {
+    public void saveNote(CheatsheetNoteEntity note) {
+        cheatsheetNoteRepository.save(note);
+    }
+
+    @Override
+    public void saveMedia(CheatsheetMediaEntity media) {
+        cheatsheetMediaRepository.save(media);
+    }
+
+    @Override
+    public void saveTagRequest(TagRequestEntity request) {
+        tagRequestRepository.save(request);
+    }
+    
+    //child category နှိပ်ရင်ပေါ်လာမယ့် view -- cheatcheatcard list / tag list 
+    
+    @Override
+    public List<CheatsheetEntity> findPublishedCheatsheetsByCategoryId(Long categoryId) {
+        return cheatsheetRepository
+                .findPublishedCheatsheetsByCategoryId(categoryId);
+    }
+    // child tag နှိပ်ရင် ပေါ်လာမယ့် view -- cheatsheetcard list
+
+    @Override
+    public List<CheatsheetEntity> findPublishedCheatsheetsByTagId(Long tagId) {
+        return cheatsheetRepository.findPublishedCheatsheetsByTagId(tagId);
+    }
+    
+    //cheatsheet card နှိပ်လိုက်ရင် ပေါ်လာမယ့် cheatsheet view detail
+ // CheatsheetServiceImpl.java ထဲတွင် တိုးရန်
+    @Override
+    public CheatsheetEntity findDetailsById(Long id) {
+        return cheatsheetRepository.findDetailsById(id);
+    }
+ // profile view မှာ userId အလိုက် cheatsheet list ထုတ်ရန်
+    @Override
+    public List<CheatsheetEntity> findProfileCheatsheetByUserId(Long userId) {
+        return cheatsheetRepository.findProfileCheatsheetByUserId(userId);
+    }
+
+    @Override
+    public CheatsheetEntity findById(Long id) {
         return cheatsheetRepository.findById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<CheatsheetEntity> getAllCheatsheets() {
-        return cheatsheetRepository.findAll();
+    public void updateCheatsheet(CheatsheetEntity cheatsheet) {
+        cheatsheetRepository.update(cheatsheet);
     }
 
-    private String generateSlug(String title) {
-        if (title == null) return "untitled";
-        return title.toLowerCase()
-                    .replaceAll("[^a-z0-9\\s]", "")
-                    .replaceAll("\\s+", "-")
-                    + "-" + (System.currentTimeMillis() % 100000);
+    @Override
+    public void softDeleteCheatsheet(Long id) {
+
+        CheatsheetEntity cheatsheet = cheatsheetRepository.findById(id);
+
+        if (cheatsheet != null) {
+            cheatsheet.setStatus(ContentStatus.DELETED);
+            cheatsheetRepository.update(cheatsheet);
+        }
     }
+    // profile view မှာ userId အလိုက် cheatsheet detail view  ထုတ်ရန်
+    @Override
+    public CheatsheetEntity findProfileDetailById(Long id) {
+        return cheatsheetRepository.findProfileDetailById(id);
+    }
+    
+    
+    // profile edit အတွက် edit view မှာ မူလ old data များ ပြန်ပေါ်ရန် 
+ // 🌟 CheatsheetServiceImpl.java ထဲတွင် ဤမိတ်သတ်အသစ်အား တိုးပေးပါ
+    @Override
+    public CheatsheetEntity findDetailsForEdit(Long id) {
+        // ၁။ Sections, Rows, Cells ပါဝင်ပြီးသား entity အား ဆွဲထုတ်သည်
+        CheatsheetEntity cheatsheet = cheatsheetRepository.findDetailsById(id);
+        
+        if (cheatsheet != null && cheatsheet.getTags() != null) {
+            // ၂။ 🌟 Transaction Session မပိတ်ခင် tags collection အား အတင်း initialize လုပ်ပေးလိုက်ခြင်းဖြင့် JSP တွင် Lazy Error မတက်တော့ပါ။
+            cheatsheet.getTags().size(); 
+        }
+        
+        return cheatsheet;
+    }
+    //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
+ 
+    
+    
+    
 }

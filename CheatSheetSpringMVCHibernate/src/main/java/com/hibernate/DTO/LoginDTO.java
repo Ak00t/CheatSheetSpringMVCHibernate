@@ -12,6 +12,5 @@ public class LoginDTO {
 	public String email;
 	@NotBlank
 	public String password;
-	public String hashedPassword;
 
 }

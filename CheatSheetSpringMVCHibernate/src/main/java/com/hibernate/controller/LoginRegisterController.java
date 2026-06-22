@@ -63,7 +63,7 @@
  */
 package com.hibernate.controller;
 
-import javax.servlet.http.HttpSession; // Session အတွက် လိုအပ်သော import
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -126,5 +126,23 @@ public class LoginRegisterController {
         return new ModelAndView("login", "loginDto", new LoginDTO());
     }
 
-    
-    }
+		return "redirect:/login?success=true";
+	}
+
+	@GetMapping("/login")
+	public ModelAndView loginForm(HttpSession session) {
+
+		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+
+		if (user == null) {
+			ModelAndView mv = new ModelAndView("login", "loginDto", new LoginDTO());
+			return mv;
+		}
+		if ("ADMIN".equals(user.getRole().name())) {
+			return new ModelAndView("redirect:/admindashboard");
+		}
+
+		return new ModelAndView("redirect:/home");
+	}
+
+}

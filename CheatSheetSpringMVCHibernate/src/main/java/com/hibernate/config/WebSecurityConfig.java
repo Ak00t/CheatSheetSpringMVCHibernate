@@ -40,20 +40,46 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/register", "/login", "/resources/**").permitAll()
-						.anyRequest().authenticated())
-				.formLogin().loginPage("/login").loginProcessingUrl("/login").successHandler(customSuccessHandler())
-				.failureUrl("/login?error=true").usernameParameter("email").passwordParameter("password").permitAll()
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout=true").permitAll();
+		http
+				.csrf()
+					.disable()
+					.authorizeHttpRequests(auth -> auth
+							.requestMatchers("/home", "/register", "/login", "/resources/**")
+								.permitAll()
+								.anyRequest()
+								.authenticated())
 
+					.formLogin()
+					.loginPage("/login")
+					.loginProcessingUrl("/login")
+					.successHandler(customSuccessHandler())
+
+					.failureUrl("/login?error=true")
+					.usernameParameter("email")
+					.passwordParameter("password")
+					.permitAll()
+
+					.and()
+					.logout()
+					.logoutUrl("/logout")
+					.logoutSuccessUrl("/login?logout=true")
+					.permitAll()
+					.and()
+					.rememberMe()
+					.key("myToken")
+					.tokenValiditySeconds(86400)
+					.rememberMeParameter("remember-me");
 		return http.build();
 	}
 
 	@Bean
 	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
-				.passwordEncoder(passwordEncoder()).and().build();
+		return http
+				.getSharedObject(AuthenticationManagerBuilder.class)
+					.userDetailsService(userDetailsService)
+					.passwordEncoder(passwordEncoder())
+					.and()
+					.build();
 	}
 
 	@Bean
@@ -68,7 +94,6 @@ public class WebSecurityConfig {
 			if (roles.contains("ROLE_ADMIN")) {
 				response.sendRedirect(request.getContextPath() + "/admindashboard");
 			} else {
-				System.err.println("error" + roles);
 				response.sendRedirect(request.getContextPath() + "/home");
 			}
 		};
