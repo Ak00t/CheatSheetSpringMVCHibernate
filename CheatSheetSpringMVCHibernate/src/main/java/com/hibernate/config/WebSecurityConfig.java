@@ -44,7 +44,7 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/home", "/register", "/login", "/resources/**")
+							.requestMatchers("/", "/register", "/login", "/resources/**")
 								.permitAll()
 								.anyRequest()
 								.authenticated())
@@ -62,7 +62,7 @@ public class WebSecurityConfig {
 					.and()
 					.logout()
 					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login?logout=true")
+					.logoutSuccessUrl("/?logout=true")
 					.permitAll()
 					.and()
 					.rememberMe()
@@ -94,7 +94,7 @@ public class WebSecurityConfig {
 			if (roles.contains("ROLE_ADMIN")) {
 				response.sendRedirect(request.getContextPath() + "/admindashboard");
 			} else {
-				response.sendRedirect(request.getContextPath() + "/home");
+				response.sendRedirect(request.getContextPath() + "/");
 			}
 		};
 	}

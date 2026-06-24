@@ -12,7 +12,7 @@ public interface CommentService {
 
 	public CommentEntity updateComment(CommentEntity obj);
 
-	public CommentEntity DeleteComment(CommentEntity obj);
+	public Integer deleteComment(Long id);
 
 	public CommentEntity selectCommentById(Long id);
 

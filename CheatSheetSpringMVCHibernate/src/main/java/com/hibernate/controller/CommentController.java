@@ -82,6 +82,27 @@ public class CommentController {
 
 	}
 
+	public String deleteComment(@RequestParam("commentId") Long commentId, HttpSession session,
+			RedirectAttributes redirectAttributes) {
+		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+
+		CommentEntity existingComment = commentService.selectCommentById(commentId);
+
+		if (existingComment == null) {
+			redirectAttributes.addFlashAttribute("error", "Comment not found.");
+			return "redirect:/";
+		}
+
+		if (!existingComment.getUser().getId().equals(user.getId())) {
+			redirectAttributes.addFlashAttribute("error", "Unauthorized! You can only delete your own comments.");
+			return "redirect:/";
+		}
+
+		commentService.deleteComment(commentId);
+		redirectAttributes.addFlashAttribute("message", "Comment deleted successfully!");
+		return "redirect:/";
+	}
+
 	@GetMapping(value = "/translate", produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public ResponseEntity<String> translateComment(@RequestParam("commentId") Long commentId,

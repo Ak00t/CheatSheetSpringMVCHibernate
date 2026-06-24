@@ -31,8 +31,11 @@ public class CommentRepositoyImpl implements CommentsRepository {
 		return (CommentEntity) getSession().merge(obj);
 	}
 
-	public CommentEntity DeleteComment(CommentEntity obj) {
-		return (CommentEntity) getSession().merge(obj);
+	public Integer deleteComment(Long id) {
+		return getSession()
+				.createQuery("update CommentEntity c set c.status = 'DELETED' where c.id = :id")
+					.setParameter("id", id)
+					.executeUpdate();
 
 	}
 

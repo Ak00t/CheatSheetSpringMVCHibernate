@@ -27,9 +27,9 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentEntity DeleteComment(CommentEntity obj) {
+	public Integer deleteComment(Long id) {
 
-		return commentRepo.DeleteComment(obj);
+		return commentRepo.deleteComment(id);
 	}
 
 	@Override
