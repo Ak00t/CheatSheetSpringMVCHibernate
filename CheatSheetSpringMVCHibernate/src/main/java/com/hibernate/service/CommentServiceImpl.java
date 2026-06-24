@@ -1,5 +1,7 @@
 package com.hibernate.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.hibernate.entity.CommentEntity;
@@ -34,6 +36,17 @@ public class CommentServiceImpl implements CommentService {
 	public CommentEntity selectCommentById(Long id) {
 
 		return commentRepo.selectCommentById(id);
+	}
+
+	@Override
+	public List<CommentEntity> selectCommentsByCheatsheetId(Long cheatsheetId) {
+		return commentRepo.selectCommentsByCheatsheetId(cheatsheetId);
+	}
+
+	@Override
+	public List<CommentEntity> findReplies(Long parentCommentId) {
+
+		return commentRepo.findReplies(parentCommentId);
 	}
 
 }

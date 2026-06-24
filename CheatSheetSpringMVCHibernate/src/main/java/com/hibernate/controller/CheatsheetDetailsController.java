@@ -14,19 +14,17 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class CheatsheetDetailsController {
-	
-	private final CommentService commentService;
-	 //cheatsheet card နှိပ်လိုက်ရင် ပေါ်လာမယ့် cheatsheet view detail
-    private final CheatsheetService cheatsheetService;
 
-    @RequestMapping("/cheatsheet/{id}")
-    public String viewDetails(@PathVariable Long id, Model model) {
-        
-        CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(id);
-        model.addAttribute("cheatsheet", cheatsheet);
-        model.addAttribute(
-                "comments",
-                commentService.selectCommentById(id));
-        return "cheatsheet-detail"; // WEB-INF/views/cheatsheet-detail.jsp သို့ သွားမည်
-    }
+	private final CommentService commentService;
+	// cheatsheet card နှိပ်လိုက်ရင် ပေါ်လာမယ့် cheatsheet view detail
+	private final CheatsheetService cheatsheetService;
+
+	@RequestMapping("/cheatsheet/{id}")
+	public String viewDetails(@PathVariable Long id, Model model) {
+
+		CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(id);
+		model.addAttribute("cheatsheet", cheatsheet);
+		model.addAttribute("comments", commentService.selectCommentsByCheatsheetId(id));
+		return "cheatsheet-detail"; // WEB-INF/views/cheatsheet-detail.jsp သို့ သွားမည်
+	}
 }
