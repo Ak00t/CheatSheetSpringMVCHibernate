@@ -6,11 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.hibernate.entity.UserEntity;
+import com.hibernate.service.AdminProfileService;
 import com.hibernate.service.DashboardService;
+
 import lombok.RequiredArgsConstructor;
+
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 
 @Controller
 @RequestMapping("/admindashboard") 
@@ -18,10 +23,16 @@ import java.time.LocalDateTime;
 public class AdminDashboardController {
 
     private final DashboardService dashboardService;
+    private final AdminProfileService adminService; 
 
-   
     @GetMapping("") 
-    public String showDashboard(Model model) {
+    public String showDashboard(HttpSession session, Model model) {
+        
+        // Check if the user session exists
+        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
         
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -31,6 +42,10 @@ public class AdminDashboardController {
         if (!isAdmin) {
             return "redirect:/home"; 
         }
+
+        // Refresh user profile metadata from DB on every dashboard load
+        UserEntity freshUserData = adminService.getAdminProfile(currentUser.getId());
+        session.setAttribute("currentUser", freshUserData);
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
 

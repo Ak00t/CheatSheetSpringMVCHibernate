@@ -15,13 +15,14 @@
     <style>
         :root {
             --bg-canvas: #f4fbfc;       
-            --brand-green: #047857;     
-            --brand-light: #d1fae5;     
+            --brand-blue: #2563eb;     
+            --brand-blue-gradient: linear-gradient(135deg, #1e40af, #2563eb);
+            --brand-light: #eff6ff;     
             --text-dark: #1e293b;
             --text-gray: #64748b;
             --border-light: #e2e8f0;
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 10px 20px rgba(4, 120, 87, 0.12);
+            --shadow-hover: 0 10px 20px rgba(37, 99, 235, 0.12);
         }
 
         body {
@@ -33,144 +34,47 @@
             overflow-x: hidden;
         }
 
-        /* --- 1. Top Navbar Styling --- */
-        .top-navbar {
-            background-color: #ffffff;
-            border-bottom: 1px solid var(--border-light);
-            padding: 15px 30px;
+        .page-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .navbar-brand-custom {
-            font-weight: 800;
-            font-size: 22px;
-            color: var(--brand-green);
-            line-height: 1.2;
-            text-decoration: none;
-        }
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .search-input {
-            background-color: #f8fafc;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
-            width: 300px;
-        }
-        .notification-btn {
-            background: #f8fafc;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 10px;
-            position: relative;
-            color: var(--text-gray);
-            cursor: pointer;
-        }
-        .notification-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background-color: #ef4444;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .profile-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            background-color: var(--brand-green);
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* --- 2. Flex Layout Container (Very Important for side-by-side layout) --- */
         .page-wrapper {
             display: flex;
             padding: 24px;
             gap: 24px;
-            align-items: flex-start; /* Keeps sidebar sticky at top */
-            min-height: calc(100vh - 75px);
+            align-items: flex-start;
+            flex: 1;
         }
 
-        /* --- 3. Sidebar CSS (Applies to your included sidebar.jsp) --- */
-        .sidebar-container {
-            width: 250px;
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 20px 16px;
-            box-shadow: var(--shadow-sm);
-            flex-shrink: 0; /* Prevents sidebar from squishing */
-        }
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            color: var(--text-gray);
-            font-weight: 600;
-            font-size: 15px;
-            text-decoration: none;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-        .sidebar-link i {
-            width: 24px;
-            font-size: 16px;
-        }
-        .sidebar-link:hover {
-            background-color: var(--brand-light);
-            color: var(--brand-green);
-            transform: translateX(4px);
-        }
-        .sidebar-link.active {
-            background-color: var(--brand-green);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(4, 120, 87, 0.2);
-        }
-        .sidebar-link.active:hover {
-            color: #ffffff;
-            transform: none;
-        }
-
-        /* --- 4. Main Content CSS --- */
         .main-workspace {
-            flex-grow: 1; /* Takes up remaining space */
+            flex-grow: 1;
             min-width: 0;
         }
 
         .dashboard-banner {
-            background-color: var(--brand-green);
-            border-radius: 20px;
-            padding: 36px 40px;
+            background: var(--brand-blue-gradient);
+            border-radius: 24px;
+            padding: 45px 60px; 
             color: #ffffff;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         }
         .banner-title {
             font-weight: 800;
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 50px; 
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
         }
         .banner-subtitle {
-            font-size: 15px;
-            opacity: 0.9;
+            font-size: 24px; 
+            opacity: 0.95;
             margin: 0;
+            max-width: 800px;
+            line-height: 1.6;
         }
 
-        /* Metric Cards */
         .metric-card {
             background-color: #ffffff;
             border-radius: 20px;
@@ -182,7 +86,7 @@
         .metric-value {
             font-size: 36px;
             font-weight: 800;
-            color: var(--brand-green);
+            color: var(--brand-blue); 
             margin-bottom: 8px;
             line-height: 1;
         }
@@ -192,7 +96,6 @@
             font-weight: 600;
         }
 
-        /* Bottom Info Cards */
         .info-card {
             background-color: #ffffff;
             border-radius: 20px;
@@ -203,7 +106,7 @@
         }
         .info-card-title {
             font-weight: 800;
-            color: var(--brand-green);
+            color: var(--brand-blue); 
             font-size: 20px;
             margin-bottom: 16px;
         }
@@ -233,102 +136,123 @@
         }
         .today-list span {
             font-weight: 700;
-            color: var(--brand-green);
+            color: var(--brand-blue); 
             margin-left: 8px;
+        }
+
+        .site-footer {
+            background: #111827;
+            color: white;
+            margin-top: 60px;
+            padding: 40px 20px;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+        }
+        .footer-container h3 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .footer-container p {
+            color: #d1d5db;
+            margin-bottom: 8px;
+        }
+        .copyright {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #9ca3af;
         }
     </style>
 </head>
 <body>
-<nav class="top-navbar">
-        <a href="${pageContext.request.contextPath}/admindashboard" class="navbar-brand-custom">
-            DEV-NOTE<br>CHEATSHEET
-        </a>
-        
-       <div class="nav-right">
-    <input type="text" class="search-input d-none d-md-block" placeholder="Search users, reports, tags...">
-    
-    <div class="notification-btn">
-        <i class="fa-regular fa-bell"></i>
-        <span class="notification-badge"><c:out value="${not empty pendingReports ? pendingReports : '0'}"/></span>
-    </div>
-    
-<div class="d-flex align-items-center gap-3 ms-2 ps-3 border-start">
-    <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration: none;">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
-             class="profile-avatar" 
-             alt="Profile" 
-             style="width: 40px; height: 40px; cursor: pointer; border: 2px solid #e2e8f0; object-fit: cover; background-color: #ffffff;">
-    </a>
-</div>
-</div>
-    </nav>
 
-    <div class="page-wrapper">
-        
-        <jsp:include page="/WEB-INF/views/sidebar.jsp" />
+    <div class="page-container">
+        <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
+            <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
+            <nav style="display:flex; gap:25px;">
+                <a href="${pageContext.request.contextPath}/" style="text-decoration:none; color:#334155; font-weight: 600;">Home</a>
+                <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" style="text-decoration:none; color:#334155; font-weight: 600;">Create Cheatsheet</a>
+                <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
+            </nav>
+        </header>
 
-        <div class="main-workspace">
+        <div class="page-wrapper">
             
-            <div class="dashboard-banner">
-                <h1 class="banner-title">Admin Dashboard</h1>
-                <p class="banner-subtitle">Monitor users, cheatsheets, reports, warning/ban thresholds, categories, tags and platform analytics.</p>
-            </div>
+            <jsp:include page="/WEB-INF/views/sidebar.jsp" />
 
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-value"><c:out value="${not empty totalUsers ? totalUsers : '1'}"/></div>
-                        <div class="metric-label">Total Users</div>
+            <div class="main-workspace">
+                
+                <div class="dashboard-banner">
+                    <h1 class="banner-title">Admin Dashboard</h1>
+                    <p class="banner-subtitle">Monitor users, cheatsheets, reports, warning/ban thresholds, categories, tags and platform analytics.</p>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value"><c:out value="${not empty totalUsers ? totalUsers : '1'}"/></div>
+                            <div class="metric-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value"><c:out value="${not empty totalCheatsheets ? totalCheatsheets : '0'}"/></div>
+                            <div class="metric-label">Cheatsheets</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value"><c:out value="${not empty pendingReports ? pendingReports : '0'}"/></div>
+                            <div class="metric-label">Pending Reports</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: #dc3545;">
+                                <c:out value="${not empty bannedContents ? bannedContents : '0'}"/>
+                            </div>
+                            <div class="metric-label">Banned Contents</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-value"><c:out value="${not empty totalCheatsheets ? totalCheatsheets : '0'}"/></div>
-                        <div class="metric-label">Cheatsheets</div>
+
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <div class="info-card">
+                            <h3 class="info-card-title">Report Threshold Rule</h3>
+                            <p class="info-card-text">
+                                <c:out value="${not empty warningThreshold ? warningThreshold : '5'}"/> reports = warning notification.<br>
+                                <c:out value="${not empty banThreshold ? banThreshold : '10'}"/> reports = ban notification.<br><br>
+                                Admin can manually ban anytime with reason.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="info-card">
+                            <h3 class="info-card-title">Today</h3>
+                            <ul class="today-list">
+                                <li>New users: <span><c:out value="${not empty newUsersToday ? newUsersToday : '1'}"/></span></li>
+                                <li>New cheatsheets: <span><c:out value="${not empty newCheatsheetsToday ? newCheatsheetsToday : '0'}"/></span></li>
+                                <li>New reports: <span><c:out value="${not empty newReportsToday ? newReportsToday : '0'}"/></span></li>
+                                <li>Warnings sent: <span><c:out value="${not empty warningsSentToday ? warningsSentToday : '0'}"/></span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <div class="metric-value"><c:out value="${not empty pendingReports ? pendingReports : '0'}"/></div>
-                        <div class="metric-label">Pending Reports</div>
-                    </div>
-                </div>
-            <div class="col-md-3">
-    <div class="metric-card">
-        <div class="metric-value" style="color: #dc3545;">
-            <c:out value="${not empty bannedContents ? bannedContents : '0'}"/>
+
+            </div>
         </div>
-        <div class="metric-label">Banned Contents</div>
-    </div>
-</div>
+
+        <footer class="site-footer">
+            <div class="footer-container">
+                <h3>CheatSheet Hub</h3>
+                <p>Learn Faster. Share Knowledge. Build Better.</p>
+                <p class="copyright">© 2026 CheatSheet Hub. All Rights Reserved.</p>
             </div>
-
-            <div class="row g-4">
-                <div class="col-md-7">
-                    <div class="info-card">
-                        <h3 class="info-card-title">Report Threshold Rule</h3>
-                        <p class="info-card-text">
-                            <c:out value="${not empty warningThreshold ? warningThreshold : '5'}"/> reports = warning notification.<br>
-                            <c:out value="${not empty banThreshold ? banThreshold : '10'}"/> reports = ban notification.<br><br>
-                            Admin can manually ban anytime with reason.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-5">
-                    <div class="info-card">
-                        <h3 class="info-card-title">Today</h3>
-                        <ul class="today-list">
-                            <li>New users: <span><c:out value="${not empty newUsersToday ? newUsersToday : '1'}"/></span></li>
-                            <li>New cheatsheets: <span><c:out value="${not empty newCheatsheetsToday ? newCheatsheetsToday : '0'}"/></span></li>
-                            <li>New reports: <span><c:out value="${not empty newReportsToday ? newReportsToday : '0'}"/></span></li>
-                            <li>Warnings sent: <span><c:out value="${not empty warningsSentToday ? warningsSentToday : '0'}"/></span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        </footer>
     </div>
 
 </body>

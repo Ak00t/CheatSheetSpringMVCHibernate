@@ -22,6 +22,8 @@ public interface CategoryService {
 	//next homeview childcategory view by parent Id
 	
 	List<CategoryEntity> findChildrenByParentId(Long parentId);
+
+	boolean existsBySlug(String slug);
 	
 	
 

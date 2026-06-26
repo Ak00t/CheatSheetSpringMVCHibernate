@@ -22,7 +22,7 @@ box-shadow:0 2px 20px rgba(0,0,0,.05);">
             Create Cheatsheet
         </a>
 
-        <a href="#"
+        <a href="${pageContext.request.contextPath}/admin/profile"
            style="text-decoration:none;color:#334155;">
             Profile
         </a>

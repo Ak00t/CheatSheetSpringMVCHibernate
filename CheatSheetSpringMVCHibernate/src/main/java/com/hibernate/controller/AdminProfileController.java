@@ -84,7 +84,7 @@ public class AdminProfileController {
                 
                 file.transferTo(serverFile);
 
-                // FIXED: URL Route ကို /admin/uploads/ စာသားဖြင့် သတ်မှတ်ပေးရပါမည်
+                // FIXED: Set relative URL path using /admin/uploads/ mapping
                 String relativePath = request.getContextPath() + "/admin/uploads/" + fileName;
                 adminService.updateAdminProfileImage(currentUser.getId(), relativePath);
 
@@ -99,7 +99,7 @@ public class AdminProfileController {
         return "redirect:/admin/profile";
     }
 
-    // NEW ENDPOINT: XML တွေ လိုက်ပြင်စရာမလိုဘဲ OS ထဲက ပုံကို Java ကုဒ်ဖြင့် တိုက်ရိုက်ဖတ်ပြီး Browser ထံ ဆွဲပြပေးမည့်စနစ်
+    // NEW ENDPOINT: Directly serves the image from the local storage folder to browser via byte response
     @GetMapping("/uploads/{fileName:.+}")
     @ResponseBody
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
