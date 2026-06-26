@@ -331,7 +331,23 @@
     color:white;
     font-weight:600;
 }
-
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+.star-rating input { display: none; }
+.star-rating label {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5c518;
+}
     
 </style>
 </head>
@@ -406,8 +422,73 @@
     </div>
 
 </div>
+<div class="like-section">
+    <form action="${pageContext.request.contextPath}/cheatsheet/like" method="POST">
+        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+        
+        <button type="submit" class="btn">
+            ${isLiked ? '❤️' : '🤍'} Like
+        </button>
+        <span class="count">${likeCount} Likes</span>
+    </form>
+</div>
 
 
+
+
+	<div class="rating-box">
+    <h3>Rate this Cheatsheet</h3>
+    <form action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST">
+        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+        
+        <div class="star-rating">
+            <input type="radio" id="star5" name="score" value="5" /><label for="star5">★</label>
+            <input type="radio" id="star4" name="score" value="4" /><label for="star4">★</label>
+            <input type="radio" id="star3" name="score" value="3" /><label for="star3">★</label>
+            <input type="radio" id="star2" name="score" value="2" /><label for="star2">★</label>
+            <input type="radio" id="star1" name="score" value="1" /><label for="star1">★</label>
+        </div>
+        
+        <button type="submit" style="margin-top: 10px;">Submit Rating</button>
+    </form>
+    <p>Average Rating: <strong>${cheatsheet.ratingAvg}</strong></p>
+</div>
+		
+		
+		
+		
+		<button type="button" onclick="toggleReportModal()" class="comment-btn" style="background-color: #dc3545;">
+    ⚠️ Report Cheatsheet
+</button>
+
+<div id="reportModal" style="display:none; background:#f9f9f9; padding:20px; border-radius:10px; margin-top:15px;">
+    <h3>Report Content</h3>
+    <form action="${pageContext.request.contextPath}/report/submit" method="POST">
+        <input type="hidden" name="targetId" value="${cheatsheet.id}" />
+        
+        <label>Reason:</label><br>
+        <select name="reason" style="width:100%; padding:8px; margin:5px 0;">
+            <option value="SPAM">Spam</option>
+            <option value="ABUSE">Abuse</option>
+            <option value="COPYRIGHT">Copyright Violation</option>
+            <option value="INAPPROPRIATE">Inappropriate</option>
+        </select>
+        
+        <label>Description:</label>
+        <textarea name="description" style="width:100%; height:60px;"></textarea>
+        
+        <button type="submit" class="comment-btn">Submit Report</button>
+        <button type="button" onclick="toggleReportModal()">Cancel</button>
+    </form>
+</div>
+
+<script>
+function toggleReportModal() {
+    var modal = document.getElementById('reportModal');
+    modal.style.display = (modal.style.display === 'none') ? 'block' : 'none';
+}
+</script>
+		
 <!-- COMMENTS SECTION -->
 
 <div class="comments-section">

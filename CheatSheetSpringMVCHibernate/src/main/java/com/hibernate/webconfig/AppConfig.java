@@ -23,8 +23,14 @@ public class AppConfig {
     public class WebConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/uploads/**")
-                    .addResourceLocations("file:uploads/profiles/");
+            registry.addResourceHandler("/uploads/profiles/**")
+                    .addResourceLocations("file:C:uploads/profiles/");
+            
+            registry.addResourceHandler("/upload/cheatsheets/**")
+            .addResourceLocations("file:C:/upload/cheatsheets/");
         }
+        
+        
     }
+    
 }

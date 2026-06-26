@@ -13,7 +13,8 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     
     @Autowired
     private SessionFactory sessionFactory;
-
+    @Autowired
+    private UserProfileRepository userRepository;
     @Override
     public UserEntity findById(Long id) {
         return sessionFactory.getCurrentSession().get(UserEntity.class, id);

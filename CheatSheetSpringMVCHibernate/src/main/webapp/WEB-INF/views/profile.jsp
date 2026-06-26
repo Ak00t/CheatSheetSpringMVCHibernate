@@ -9,7 +9,7 @@
 
     <div>
         <label>Current Photo:</label>
-        <img src="${pageContext.request.contextPath}/uploads/${user.profileImg}" 
+        <img src="${pageContext.request.contextPath}/uploads/profiles/${user.profileImg}" 
              style="width: 150px; height: 150px; border-radius: 50%;" 
              alt="Profile Photo">
     </div>

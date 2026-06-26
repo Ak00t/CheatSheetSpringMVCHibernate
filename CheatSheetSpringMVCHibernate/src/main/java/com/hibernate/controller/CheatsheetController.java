@@ -176,11 +176,11 @@ public class CheatsheetController {
             }
         }
 
+     // CheatsheetController.java ၏ saveCheatsheet method
         if (coverPhoto != null && !coverPhoto.isEmpty()) {
-
-            // 🌟 [ဗဟိုချက်လမ်းကြောင်းစနစ်] Tomcat home folder ထဲက webapps/uploads ထဲကို တိုက်ရိုက်သိမ်းခိုင်းခြင်း 🌟
-            String rootPath = System.getProperty("catalina.home");
-            String uploadDir = rootPath + File.separator + "webapps" + File.separator + "uploads" + File.separator + "cheatsheets" + File.separator;
+            
+            // Cheatsheet အတွက် သီးသန့် Folder Path
+            String uploadDir = "C:/upload/cheatsheets/"; 
             File dir = new File(uploadDir);
 
             if (!dir.exists()) {
@@ -189,19 +189,18 @@ public class CheatsheetController {
 
             String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename();
             File file = new File(dir, fileName);
-            coverPhoto.transferTo(file);
+            coverPhoto.transferTo(file); 
 
             CheatsheetMediaEntity media = new CheatsheetMediaEntity();
             media.setCheatsheet(cheatsheet);
             media.setMediaType(MediaType.IMAGE);
-            media.setMediaUrl("/uploads/cheatsheets/" + fileName);
+            media.setMediaUrl(fileName); // ဖိုင်နာမည်အမှန်ကို သိမ်းပါ
             media.setCaption(title);
             media.setSortOrder(0);
             media.setCreatedAt(LocalDateTime.now());
 
             cheatsheetService.saveMedia(media);
         }
-
         return "redirect:/admin/cheatsheet/create";
     }
 

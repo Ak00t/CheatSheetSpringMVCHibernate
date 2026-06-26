@@ -128,4 +128,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "adminUser")
     private List<AuditLogEntity> auditLogs;
+    
 }
