@@ -32,26 +32,21 @@
         </a>
 
         <c:choose>
-            <c:when test="${not empty sessionScope.currentUser}">
-                <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
-                    Create Cheatsheet
-                </a>
-                <a href="#" class="text-decoration-none text-secondary fw-semibold">
-                    Profile
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
-                    Logout
-                </a>
-            </c:when>
-            <c:otherwise>
-                <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    Login
-                </button>
-                <button type="button" class="btn btn-primary btn-sm fw-bold px-3 rounded-2" data-bs-toggle="modal" data-bs-target="#registerModal">
-                    Register
-                </button>
-            </c:otherwise>
-        </c:choose>
+    <c:when test="${not empty sessionScope.currentUser}">
+        <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
+            Create Cheatsheet
+        </a>
+        
+        <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}" 
+           class="text-decoration-none text-secondary fw-semibold">
+            Profile
+        </a>
+        
+        <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
+            Logout
+        </a>
+    </c:when>
+    </c:choose>
     </nav>
 </header>
 

@@ -25,29 +25,35 @@ public class RatingServiceImpl implements RatingService {
     public void addRating(Long userId, Long cheatsheetId, Integer score) {
         Session session = sessionFactory.getCurrentSession();
         
-        // ၁။ အရင်ဆုံး ဒီ User က ဒီ Cheatsheet ကို Rating ပေးထားပြီးသားလား စစ်မယ်
+        // ၁။ Rating ရှိပြီးသားလား စစ်ဆေးခြင်း
         String hql = "FROM RatingEntity r WHERE r.user.id = :userId AND r.cheatsheet.id = :cheatsheetId";
-        RatingEntity existingRating = (RatingEntity) session.createQuery(hql)
+        RatingEntity rating = (RatingEntity) session.createQuery(hql)
                 .setParameter("userId", userId)
                 .setParameter("cheatsheetId", cheatsheetId)
                 .uniqueResult();
 
-        if (existingRating != null) {
-            // Rating ရှိပြီးသားဆိုရင် Update လုပ်မယ်
-            existingRating.setRating(score);
-            session.update(existingRating);
+        if (rating != null) {
+            rating.setRating(score);
+            session.update(rating);
         } else {
-            // မရှိသေးရင် အသစ်ဆောက်မယ်
             RatingEntity newRating = new RatingEntity();
             newRating.setRating(score);
-            newRating.setCheatsheet((CheatsheetEntity) session.get(CheatsheetEntity.class, cheatsheetId));
-            newRating.setUser((UserEntity) session.get(UserEntity.class, userId));
+            newRating.setCheatsheet(session.get(CheatsheetEntity.class, cheatsheetId));
+            newRating.setUser(session.get(UserEntity.class, userId));
             session.save(newRating);
         }
+        
+        // အရေးကြီး: Database ကို တန်းပြီး commit/flush လုပ်မှ Average အမှန်ရမှာပါ
+        session.flush(); 
 
-        // ၂။ Average ပြန်တွက်ပြီး update လုပ်ပေးခြင်း (အပေါ်က logic အတိုင်း)
+        // ၂။ Average ပြန်တွက်ခြင်း
         BigDecimal newAvg = ratingRepository.getAverageRating(cheatsheetId);
-        CheatsheetEntity sheet = (CheatsheetEntity) session.get(CheatsheetEntity.class, cheatsheetId);
-        sheet.setRatingAvg(newAvg);
+        
+        // ၃။ Cheatsheet ထဲသို့ Update လုပ်ခြင်း
+        CheatsheetEntity sheet = session.get(CheatsheetEntity.class, cheatsheetId);
+        if (sheet != null) {
+            sheet.setRatingAvg(newAvg);
+            session.update(sheet); // explicitly update
+        }
     }
 }

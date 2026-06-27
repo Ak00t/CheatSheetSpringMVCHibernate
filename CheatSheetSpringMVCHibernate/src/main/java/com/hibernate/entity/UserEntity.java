@@ -138,8 +138,6 @@ public class UserEntity {
 	@OneToMany(mappedBy = "createdBy")
 	private List<AnnouncementEntity> announcements;
 
-    @OneToMany(mappedBy = "createdBy")
-    private List<AnnouncementEntity> announcements;
 
     @OneToMany(mappedBy = "adminUser")
     private List<AuditLogEntity> auditLogs;

@@ -66,4 +66,6 @@ public class UserProfileController {
         model.addAttribute("profileUser", userService.getUserProfile(id));
         return "profile-detail"; // profile detail ကို ပြမယ့် jsp နာမည်
     }
+    
+    
 }

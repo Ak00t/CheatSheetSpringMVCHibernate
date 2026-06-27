@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;
+import com.hibernate.service.BookmarkService;
 import com.hibernate.service.CheatsheetService;
 import com.hibernate.service.CommentService;
 import com.hibernate.service.LikeService;
@@ -31,14 +32,16 @@ public class CheatsheetDetailsController {
     private final LikeService likeService;
     private final RatingService ratingService;
     private final ReportService reportService;
+    	private final BookmarkService bookmarkService;
     @RequestMapping("/cheatsheet/{id}")
     public String viewDetails(@PathVariable Long id, Model model,HttpSession session) {
         UserEntity user=(UserEntity) session.getAttribute("currentUser");
         Long userId = (user != null) ? user.getId() : null;
         
         CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(id);
-        model.addAttribute("comments", commentService.selectCommentById(id));
-        
+        model.addAttribute("comments", commentService.selectCommentsByCheatsheetId(id));
+        model.addAttribute("isBookmarked", userId != null && bookmarkService.isBookmarked(userId, id));
+
         
         model.addAttribute("cheatsheet", cheatsheet);
         model.addAttribute(
@@ -86,5 +89,16 @@ public class CheatsheetDetailsController {
         // Report တင်ပြီးရင် Cheatsheet page ကို ပြန်သွားမယ်
         return "redirect:/cheatsheet/" + targetId;
     }
+ // Controller ထဲတွင် ထည့်ရန်
+    @PostMapping("/cheatsheet/bookmark")
+    public String toggleBookmark(@RequestParam Long cheatsheetId, HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("currentUser");
+        if (user != null) {
+            bookmarkService.toggleBookmark(user.getId(), cheatsheetId);
+        }
+        return "redirect:/cheatsheet/" + cheatsheetId;
+    }
+
+    
 
 }
