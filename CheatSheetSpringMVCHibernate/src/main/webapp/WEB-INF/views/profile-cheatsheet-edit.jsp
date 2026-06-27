@@ -473,16 +473,17 @@ input[type="color"]{
             <div>
                 <div class="preview-card" id="previewCard" style="background: ${not empty cheatsheet.themeColor ? cheatsheet.themeColor : '#0ea5e9'};">
                   
-                    <div class="cover-preview" id="coverPreview">
-                        <c:choose>
-                            <c:when test="${not empty cheatsheet.mediaList}">
-                             <img src="${pageContext.request.contextPath}${cheatsheet.mediaList[0].mediaUrl}" alt="Cover">
-                            </c:when>
-                            <c:otherwise>Cover preview</c:otherwise>
-                        </c:choose>
-                    </div>
-                    
-                    
+<div class="cover-preview" id="coverPreview">
+    <c:choose>
+        <c:when test="${not empty cheatsheet.mediaList and not empty cheatsheet.mediaList[0].mediaUrl}">
+            <%-- ပုံနာမည်အနောက်မှာ တန်ဖိုးတစ်ခုခု ထပ်ထည့်လိုက်ပါ (Cache ကြေအောင်) --%>
+            <img src="${pageContext.request.contextPath}/upload/cheatsheets/${cheatsheet.mediaList[0].mediaUrl}?t=<%=System.currentTimeMillis()%>" alt="Cover">
+        </c:when>
+        <c:otherwise>
+            <span style="color:white; font-size:14px; opacity:0.7;">Cover preview</span>
+        </c:otherwise>
+    </c:choose>
+</div>                    
                     <div class="preview-title" id="previewTitle">${cheatsheet.title}</div>
                     <div class="preview-small" id="previewCategory">Category: ${cheatsheet.category.name}</div>
                     <div class="preview-small">Interactive Builder Mode active. All layers syncing properly.</div>

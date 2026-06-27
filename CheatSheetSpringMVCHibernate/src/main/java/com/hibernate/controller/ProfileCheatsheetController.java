@@ -3,7 +3,7 @@ package com.hibernate.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.PersistenceContext;
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,6 +68,44 @@ public class ProfileCheatsheetController {
                          @RequestParam(value = "tagIds", required = false) List<Long> tagIds,
                          javax.servlet.http.HttpServletRequest request) {
 
+    	
+    	
+    	CheatsheetEntity cheatsheet1 = cheatsheetService.findDetailsById(id);
+    	
+    	// ၄။ Image ပုံသိမ်းဆည်းခြင်း (Controller အတွင်းပိုင်း)
+    	if (coverPhoto != null && !coverPhoto.isEmpty()) {
+    		
+    		if (cheatsheet1.getMediaList() == null) {
+	            cheatsheet1.setMediaList(new java.util.ArrayList<>());
+	        } else {
+	            cheatsheet1.getMediaList().clear(); // ဒီ clear() အလုပ်လုပ်ဖို့ လိုပါတယ်
+	        }
+	        if (cheatsheet1.getMediaList() == null) cheatsheet1.setMediaList(new java.util.ArrayList<>());
+	        else cheatsheet1.getMediaList().clear();
+	        
+    	    try {
+    	        // C Drive အောက်က folder အတိုင်း အတိအကျသတ်မှတ်ပါ
+    	        String uploadDir = "C:/upload/cheatsheets/";
+    	        java.io.File dir = new java.io.File(uploadDir);
+    	        if (!dir.exists()) dir.mkdirs();
+
+    	        String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename().replaceAll("\\s+", "");
+    	        coverPhoto.transferTo(new java.io.File(uploadDir + fileName));
+
+    	        // Browser ကနေ ခေါ်နိုင်ဖို့အတွက် Mapping ကို /uploads/cheatsheets/ လို့ ပြောင်းပါ
+    	        String dbMediaUrl = "/upload/cheatsheets/" + fileName;
+    	        
+    	        com.hibernate.entity.CheatsheetMediaEntity media = new com.hibernate.entity.CheatsheetMediaEntity();
+    	        media.setMediaUrl(dbMediaUrl);
+    	        media.setMediaType(com.hibernate.entity.enums.MediaType.IMAGE);
+    	        media.setCheatsheet(cheatsheet1);
+    	        cheatsheet1.getMediaList().add(media);
+    	    } catch (Exception e) { e.printStackTrace(); }
+    	}
+    	
+    	
+    	
+    	
         // ၁။ DB မှ Data ဆွဲထုတ်ခြင်း
         CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(id);
         String existingSlug = cheatsheet.getSlug(); 
@@ -103,29 +141,7 @@ public class ProfileCheatsheetController {
         category.setId(categoryId);
         cheatsheet.setCategory(category);
 
-        // ၄။ Image ပုံသိမ်းဆည်းခြင်း
-        if (coverPhoto != null && !coverPhoto.isEmpty()) {
-            try {
-                String uploadDir = System.getProperty("catalina.home") + java.io.File.separator + "webapps" + java.io.File.separator + "uploads" + java.io.File.separator;
-                java.io.File dir = new java.io.File(uploadDir);
-                if (!dir.exists()) dir.mkdirs();
-
-                String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename().replaceAll("\\s+", "");
-                coverPhoto.transferTo(new java.io.File(uploadDir + fileName));
-
-                String dbMediaUrl = "/uploads/" + fileName;
-
-                if (cheatsheet.getMediaList() == null) cheatsheet.setMediaList(new java.util.ArrayList<>());
-                else cheatsheet.getMediaList().clear();
-                
-                com.hibernate.entity.CheatsheetMediaEntity media = new com.hibernate.entity.CheatsheetMediaEntity();
-                media.setMediaUrl(dbMediaUrl);
-                media.setMediaType(com.hibernate.entity.enums.MediaType.IMAGE);
-                media.setCheatsheet(cheatsheet);
-                cheatsheet.getMediaList().add(media);
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-
+        
         // ၅။ Tree Layout (Row & Note) ပြန်လည်တည်ဆောက်ခြင်း
         if (sectionIndexes != null) {
             for (int i = 0; i < sectionIndexes.size(); i++) {

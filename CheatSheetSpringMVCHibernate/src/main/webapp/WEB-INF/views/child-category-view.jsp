@@ -288,18 +288,18 @@ body{
                         <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
                            class="sheet-card"
                            style="background-color: ${sheet.themeColor};">
-
-                            <div class="sheet-cover">
-                                <c:choose>
-                                    <c:when test="${not empty sheet.mediaList}">
-                                        <img src="${pageContext.request.contextPath}${sheet.mediaList[0].mediaUrl}"
-                                             alt="${sheet.title}">
-                                    </c:when>
-                                    <c:otherwise>
-                                        No Cover
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
+<div class="sheet-cover">
+    <c:choose>
+        <c:when test="${not empty sheet.mediaList and not empty sheet.mediaList[0].mediaUrl}">
+            <img src="${pageContext.request.contextPath}/upload/cheatsheets/${sheet.mediaList[0].mediaUrl}" 
+                 alt="${sheet.title}"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:white; font-size:12px;\'>No Image</span>';">
+        </c:when>
+        <c:otherwise>
+            <span style="color:white; font-size:12px;">No Image</span>
+        </c:otherwise>
+    </c:choose>
+</div>
 
                             <div class="sheet-body">
 
@@ -327,11 +327,19 @@ body{
                                     Created At: ${sheet.createdAt}
                                 </div> --%>
                                 
-                                <div class="sheet-footer">
+                               <div class="sheet-footer">
+                               
+                               
+                               
+                               
+                               
 
     Created By:
+    
     <span class="creator-link">
         ${sheet.user.name}
+        
+        
     </span>
 
     <br>
@@ -345,6 +353,8 @@ body{
     <fmt:formatDate
             value="${createdDate}"
             pattern="dd MMM yyyy"/>
+            
+            
 
 </div>
                                 
@@ -364,6 +374,10 @@ body{
             </c:otherwise>
         </c:choose>
     </section>
+    
+    
+    
+    
 
 </div>
 
@@ -389,6 +403,20 @@ document.querySelectorAll(".see-btn").forEach(function(btn){
     });
 
 });
+.sheet-cover {
+    width: 100%;
+    height: 180px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-bottom: 10px; /* အောက်က စာသားနဲ့ ကပ်မနေအောင် */
+}
+
+
 </script>
 
 </body>

@@ -184,7 +184,7 @@ body{
 
     .placeholder-grid{
         grid-template-columns:1fr;
-    }
+    }F
 
 }
 

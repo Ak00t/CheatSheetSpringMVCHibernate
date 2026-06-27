@@ -29,9 +29,7 @@
     <import resource="spring-hibernate.xml"/>
 
 
-<!-- slya -->
-<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
-</bean>
+
 <bean id="mvcHandlerMappingIntrospector" 
       class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
 

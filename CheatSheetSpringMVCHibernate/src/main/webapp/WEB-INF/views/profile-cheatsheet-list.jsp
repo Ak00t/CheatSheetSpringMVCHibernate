@@ -206,16 +206,17 @@ h1 {
                         <a href="${pageContext.request.contextPath}/profile-cheatsheets/detail/${sheet.id}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                             
                             <div class="sheet-cover">
-                                <c:choose>
-                                    <c:when test="${not empty sheet.mediaList}">
-                                        <img src="${pageContext.request.contextPath}${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                    </c:when>
-                                    <c:otherwise>
-                                        No Cover
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-
+    <c:choose>
+        <c:when test="${not empty sheet.mediaList and not empty sheet.mediaList[0].mediaUrl}">
+<img src="${pageContext.request.contextPath}/upload/cheatsheets/${cheatsheet.mediaList[0].mediaUrl}?t=<%=System.currentTimeMillis()%>" 
+     alt="Cover" 
+     onerror="this.src='path/to/default-image.png';">
+        </c:when>
+        <c:otherwise>
+            <span style="color:white; font-size:12px;">No Image</span>
+        </c:otherwise>
+    </c:choose>
+</div>
                             <div class="sheet-body">
                                 <div class="category-badge">${sheet.category.name}</div>
 

@@ -4,23 +4,24 @@ package com.hibernate.repository;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.UserEntity;
 @Repository
-public class UserProfileRepositoryImpl implements UserProfileRepository{
-	@Autowired
+@Transactional
+public class UserProfileRepositoryImpl implements UserProfileRepository {
+    
+    @Autowired
     private SessionFactory sessionFactory;
-	@Override
-	public UserEntity findById(Long id) {
-		
-		return sessionFactory.getCurrentSession().get(UserEntity.class, id);
-	}
+    @Autowired
+    private UserProfileRepository userRepository;
+    @Override
+    public UserEntity findById(Long id) {
+        return sessionFactory.getCurrentSession().get(UserEntity.class, id);
+    }
 
-	@Override
-	public void update(UserEntity user) {
-		sessionFactory.getCurrentSession().update(user);
-		
-	}
-
-
+    @Override
+    public void updateProfile(UserEntity user) {
+        sessionFactory.getCurrentSession().update(user);
+    }
 }
