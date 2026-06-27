@@ -44,7 +44,7 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/", "/register", "/login", "/resources/**")
+							.requestMatchers("/", "/register", "/login", "/search/**", "/resources/**")
 								.permitAll()
 								.anyRequest()
 								.authenticated())
@@ -54,7 +54,7 @@ public class WebSecurityConfig {
 					.loginProcessingUrl("/login")
 					.successHandler(customSuccessHandler())
 
-					.failureUrl("/login?error=true")
+					.failureUrl("/?error=true")
 					.usernameParameter("email")
 					.passwordParameter("password")
 					.permitAll()
