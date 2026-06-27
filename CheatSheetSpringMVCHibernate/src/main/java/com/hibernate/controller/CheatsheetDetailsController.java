@@ -46,7 +46,7 @@ public class CheatsheetDetailsController {
         model.addAttribute("cheatsheet", cheatsheet);
         model.addAttribute(
                 "comments",
-                commentService.selectCommentById(id));
+                commentService.selectCommentsByCheatsheetId(id));
         
 
         
