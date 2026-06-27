@@ -36,9 +36,13 @@
                 <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
                     Create Cheatsheet
                 </a>
-                <a href="#" class="text-decoration-none text-secondary fw-semibold">
+
+
+                <!-- <a href="#" class="text-decoration-none text-secondary fw-semibold">
                     Profile
-                </a>
+                </a> -->
+
+
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
                     Logout
                 </a>
@@ -52,6 +56,16 @@
                 </button>
             </c:otherwise>
         </c:choose>
+        <a href="${pageContext.request.contextPath}/admin/cheatsheet/create"
+           style="text-decoration:none;color:#334155;">
+            Create Cheatsheet
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/profile"
+           style="text-decoration:none;color:#334155;">
+            Profile
+        </a>
+
     </nav>
 </header>
 

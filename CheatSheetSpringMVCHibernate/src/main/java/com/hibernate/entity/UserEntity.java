@@ -1,6 +1,7 @@
 package com.hibernate.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,9 +22,11 @@ import com.hibernate.entity.enums.UserStatus;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter
+@ToString
 @Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class UserEntity {

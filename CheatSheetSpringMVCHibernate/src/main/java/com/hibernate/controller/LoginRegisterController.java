@@ -1,3 +1,4 @@
+
 package com.hibernate.controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.service.UserLoginRegisterService;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Controller
 @RequiredArgsConstructor
 public class LoginRegisterController {
 
-	public final UserLoginRegisterService userService;
-	public final PasswordEncoder encoder;
+    public final UserLoginRegisterService userService;
+    public final PasswordEncoder encoder;
 
 	/*
 	 * @GetMapping("/register") public ModelAndView showRegisterForm(HttpSession
@@ -112,3 +116,6 @@ public class LoginRegisterController {
 	 */
 
 }
+	
+
+	
