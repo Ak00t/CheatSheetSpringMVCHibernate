@@ -19,14 +19,20 @@ public class SearchServiceImpl implements SearchService {
 	private final SearchRepository searchRepo;
 
 	@Override
-	public SearchResultDTO searchAll(String keyword, Long currentUserId) {
-		return searchRepo.searchAll(keyword, currentUserId);
+	public SearchResultDTO searchAll(String keyword) {
+		return searchRepo.searchAll(keyword);
 	}
 
 	@Override
 	public List<SearchLogEntity> getSearchLogByUserId(Long userId) {
 
 		return searchRepo.getSearchLogByUserId(userId);
+	}
+
+	@Override
+	public void saveSearchLog(String keyword, int resultCount, Long userId) {
+		searchRepo.saveSearchLog(keyword, resultCount, userId);
+
 	}
 
 }

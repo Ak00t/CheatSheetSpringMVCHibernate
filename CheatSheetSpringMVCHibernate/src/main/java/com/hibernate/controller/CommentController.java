@@ -15,42 +15,75 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.CommentEntity;
 import com.hibernate.entity.UserEntity;
-import com.hibernate.service.CommentService; // Replace with your actual package path
+import com.hibernate.entity.enums.ReferenceType;
+import com.hibernate.service.CheatsheetService;
+import com.hibernate.service.CommentService;
 import com.hibernate.service.CommentTranslationService;
+import com.hibernate.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/comment")
-@RequiredArgsConstructor // Automatically wires your CommentService bean via constructor injection
+@RequiredArgsConstructor
 public class CommentController {
 
 	private final CommentService commentService;
 	private final CommentTranslationService commentTranslationService;
+	private final NotificationService notiService;
+	private final CheatsheetService cheatsheetService;
 
 	@PostMapping("/post")
 	public String postComment(@RequestParam("cheatsheetId") Long cheatsheetId, @RequestParam("content") String content,
 			@RequestParam(value = "parentCommentId", required = false) Long parentId, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 
-		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+
+		// 1. Fetch the real, fully-populated Cheatsheet
+		CheatsheetEntity cheatsheet = cheatsheetService.findById(cheatsheetId);
+		if (cheatsheet == null) {
+			redirectAttributes.addFlashAttribute("error", "Cheatsheet not found!");
+			return "redirect:/";
+		}
 
 		CommentEntity newComment = new CommentEntity();
-
 		newComment.setContent(content.trim());
-		newComment.setUser(user);
-
-		CheatsheetEntity cheatsheet = new CheatsheetEntity();
-		cheatsheet.setId(cheatsheetId);
+		newComment.setUser(currentUser);
 		newComment.setCheatsheet(cheatsheet);
 
+		// Variables to track who needs to be notified
+		UserEntity targetUserToNotify = null;
+		String notificationMessage = "";
+
+		// 2. Determine if this is a Reply or a Root Comment
 		if (parentId != null) {
-			CommentEntity parentComment = new CommentEntity();
-			parentComment.setId(parentId);
-			newComment.setParentComment(parentComment);
+			// Fetch the full parent comment from your database
+			CommentEntity parentComment = commentService.selectCommentById(parentId);
+
+			if (parentComment != null) {
+				newComment.setParentComment(parentComment);
+
+				// Target receiver becomes the author of the parent comment
+				targetUserToNotify = parentComment.getUser();
+				notificationMessage = currentUser.getName() + " replied to your comment on \"" + cheatsheet.getTitle()
+						+ "\".";
+			}
+		} else {
+			targetUserToNotify = cheatsheet.getUser();
+			notificationMessage = currentUser.getName() + " commented on your cheatsheet: \"" + cheatsheet.getTitle()
+					+ "\".";
 		}
 
 		commentService.insertComment(newComment);
+
+		if (targetUserToNotify != null && !currentUser.getId().equals(targetUserToNotify.getId())) {
+
+			notiService
+					.createAndSendNotification(parentId != null ? "New Reply" : "New Comment", notificationMessage,
+							"COMMENT", ReferenceType.CHEATSHEET, cheatsheetId, targetUserToNotify.getId(),
+							currentUser.getId());
+		}
 
 		redirectAttributes.addFlashAttribute("message", "Posted successfully!");
 		return "redirect:/cheatsheet/" + cheatsheetId;
@@ -73,15 +106,17 @@ public class CommentController {
 			redirectAttributes.addFlashAttribute("error", "Unauthorized! You can only edit your own comments.");
 			return "redirect:/";
 		}
+		Long cheatsheetId = existingComment.getCheatsheet().getId();
 
-		existingComment.setContent(newContent);
+		existingComment.setContent(newContent.trim());
 		commentService.updateComment(existingComment);
 
 		redirectAttributes.addFlashAttribute("message", "Comment updated successfully!");
-		return "redirect:/";
+		return "redirect:/cheatsheet/" + cheatsheetId;
 
 	}
 
+	@PostMapping("/delete")
 	public String deleteComment(@RequestParam("commentId") Long commentId, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 		UserEntity user = (UserEntity) session.getAttribute("currentUser");
@@ -97,10 +132,11 @@ public class CommentController {
 			redirectAttributes.addFlashAttribute("error", "Unauthorized! You can only delete your own comments.");
 			return "redirect:/";
 		}
+		Long cheatsheetId = existingComment.getCheatsheet().getId();
 
 		commentService.deleteComment(commentId);
 		redirectAttributes.addFlashAttribute("message", "Comment deleted successfully!");
-		return "redirect:/";
+		return "redirect:/cheatsheet/" + cheatsheetId;
 	}
 
 	@GetMapping(value = "/translate", produces = "text/plain;charset=UTF-8")

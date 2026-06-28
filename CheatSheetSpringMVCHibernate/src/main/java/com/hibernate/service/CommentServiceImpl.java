@@ -49,4 +49,10 @@ public class CommentServiceImpl implements CommentService {
 		return commentRepo.findReplies(parentCommentId);
 	}
 
+	@Override
+	public CommentEntity findByParentId(Long id) {
+
+		return commentRepo.findByParentId(id);
+	}
+
 }

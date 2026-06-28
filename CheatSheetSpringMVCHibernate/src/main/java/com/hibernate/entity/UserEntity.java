@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.hibernate.entity.enums.ProfileVisibility;
 import com.hibernate.entity.enums.ThemeMode;
 import com.hibernate.entity.enums.UserRole;
@@ -72,6 +74,7 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<CheatsheetEntity> cheatsheets;
 
+	@CreationTimestamp
 	@OneToMany(mappedBy = "createdBy")
 	private List<TagEntity> createdTags;
 

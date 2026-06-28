@@ -117,11 +117,11 @@
             <div class="d-flex align-items-center gap-4">
                 <div class="text-secondary d-flex align-items-center gap-2">
                     <i class="bi bi-eye-fill fs-5 text-muted"></i>
-                    <span class="fw-medium">${not empty cheatsheet.viewCount ? cheatsheet.viewCount : 124} Views</span>
+                    <span class="fw-medium">${not empty cheatsheet.viewCount ? cheatsheet.viewCount : 0} Views</span>
                 </div>
                 <button class="action-icon-btn d-flex align-items-center gap-2" onclick="toggleLike(${cheatsheet.id})">
                     <i class="bi bi-heart fs-5 text-danger" id="likeBtnIcon"></i>
-                    <span class="fw-medium text-dark" id="likeCounterText">32 Likes</span>
+                    <span class="fw-medium text-dark" id="likeCounterText">${not empty cheatsheet.likeCount ? cheatsheet.likeCount : 0}</span>
                 </button>
                 <button class="action-icon-btn d-flex align-items-center gap-2" onclick="toggleBookmark(${cheatsheet.id})">
                     <i class="bi bi-bookmark fs-5 text-warning" id="bookmarkBtnIcon"></i>

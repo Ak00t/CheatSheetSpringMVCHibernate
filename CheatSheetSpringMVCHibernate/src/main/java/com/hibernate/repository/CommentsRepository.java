@@ -18,4 +18,6 @@ public interface CommentsRepository {
 
 	public List<CommentEntity> findReplies(Long parentCommentId);
 
+	public CommentEntity findByParentId(Long id);
+
 }
