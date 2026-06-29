@@ -41,7 +41,7 @@ public class ProfileCheatsheetController {
         
         model.addAttribute(
                 "comments",
-                commentService.selectCommentById(id));
+                commentService.selectCommentsByCheatsheetId(id));
         return "profile-cheatsheet-detail";
     }
 
