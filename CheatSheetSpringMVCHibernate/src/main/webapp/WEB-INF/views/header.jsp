@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
 
@@ -26,28 +28,77 @@
             <div id="suggestContent" class="p-2"></div>
         </div>
     </form>
+    
     <nav class="d-flex align-items-center gap-4">
         <a href="${pageContext.request.contextPath}/" class="text-decoration-none text-secondary fw-semibold">
             Home
         </a>
 
         <c:choose>
-    <c:when test="${not empty sessionScope.currentUser}">
-        <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
-            Create Cheatsheet
-        </a>
-        
-        <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}" 
-           class="text-decoration-none text-secondary fw-semibold">
-            Profile
-        </a>
-        
-        <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
-            Logout
-        </a>
-    </c:when>
-    
-    <c:otherwise>
+            <c:when test="${not empty sessionScope.currentUser}">
+                <div class="dropdown" id="notificationDropdownArea">
+                    <button class="btn btn-link text-dark p-1 position-relative border-0 shadow-none dropdown-toggle text-decoration-none no-caret" 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <i class="bi bi-bell fs-5"></i>
+                        <c:if test="${not empty unreadNotifications && fn:length(unreadNotifications) > 0}">
+                            <span id="notiBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 0.35em 0.5em;">
+                                ${fn:length(unreadNotifications)}
+                            </span>
+                        </c:if>
+                    </button>
+                    
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2" 
+                        style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
+                        
+                        <li class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
+                            <span>Notifications</span>
+                            <c:if test="${not empty unreadNotifications}">
+                                <button onclick="markAllAsRead()" class="btn btn-link p-0 text-decoration-none text-primary fw-semibold" style="font-size: 11px;">Mark all read</button>
+                            </c:if>
+                        </li>
+                        
+                        <div id="notiList">
+                            <c:choose>
+                                <c:when test="${empty unreadNotifications}">
+                                    <li class="text-center py-4 text-muted small list-unstyled">
+                                        <i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>
+                                        No new notifications
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="noti" items="${unreadNotifications}">
+                                        <li class="border-bottom list-unstyled">
+                                            <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1" 
+                                               href="javascript:void(0);" 
+                                               onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
+                                                <div class="fw-bold text-dark small d-flex align-items-center gap-1">
+                                                    <i class="bi bi-chat-left-text-fill text-primary small"></i> ${noti.title}
+                                                </div>
+                                                <div class="text-secondary tracking-normal line-clamp-2" style="font-size: 12px; line-height:1.4;">
+                                                    ${noti.message}
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </ul>
+                </div>
+
+                <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
+                    Create Cheatsheet
+                </a>
+                <a href="#" class="text-decoration-none text-secondary fw-semibold">
+                    Profile
+                </a>
+                <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
+                    Logout
+                </a>
+            </c:when>
+            <c:otherwise>
                 <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2" data-bs-toggle="modal" data-bs-target="#loginModal">
                     Login
                 </button>
@@ -55,11 +106,15 @@
                     Register
                 </button>
             </c:otherwise>
-    
-    
-    </c:choose>
+        </c:choose>
     </nav>
 </header>
+
+<style>
+.dropdown-toggle.no-caret::after {
+    display: none !important;
+}
+</style>
 
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -70,8 +125,9 @@
             </div>
             <div class="modal-body p-4">
                 <c:if test="${param.error == 'true'}">
-                    <div class="alert alert-danger py-2 small" role="alert">
-                        Invalid email or password. Please try again.
+                    <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Invalid email or password. Please try again.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>
                     </div>
                 </c:if>
 
@@ -106,20 +162,21 @@
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                <c:if test="${not empty param.regError}">
-                    <div class="alert alert-danger py-2 small" role="alert">
+                <c:if test="${param.regError == 'true'}">
+                    <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
                         ⚠️ <c:out value="${sessionScope.regErrorMessage}" />
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>
                     </div>
                 </c:if>
 
                 <form action="${pageContext.request.contextPath}/register" method="POST">
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Full Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="John Doe" required="required" value="${param.prevName}" />
+                        <input type="text" name="name" class="form-control" placeholder="John Doe" required="required" value="<c:out value='${param.name}' />" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Email Address</label>
-                        <input type="email" name="email" class="form-control" placeholder="john@example.com" required="required" value="${param.prevEmail}" />
+                        <input type="email" name="email" class="form-control" placeholder="john@example.com" required="required" value="<c:out value='${param.email}' />" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Password</label>
@@ -142,17 +199,53 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // --- STABLE MODAL ROUTING MECHANICS ---
     if (urlParams.get('error') === 'true') {
-        var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-        loginModal.show();
+        const loginEl = document.getElementById('loginModal');
+        if (loginEl) {
+            bootstrap.Modal.getOrCreateInstance(loginEl).show();
+        }
     }
 
+    if (urlParams.get('regError') === 'true') {
+        const regEl = document.getElementById('registerModal');
+        if (regEl) {
+            bootstrap.Modal.getOrCreateInstance(regEl).show();
+        }
+    }
+
+    if (urlParams.get('regSuccess') === 'true') {
+        const loginEl = document.getElementById('loginModal');
+        if (loginEl) {
+            bootstrap.Modal.getOrCreateInstance(loginEl).show();
+            const modalBody = loginEl.querySelector('.modal-body');
+            if (modalBody && !document.getElementById('regSuccessAlert')) {
+                const alertDiv = document.createElement('div');
+                alertDiv.id = 'regSuccessAlert';
+                alertDiv.className = 'alert alert-success alert-dismissible fade show py-2 small';
+                alertDiv.innerHTML = '🎉 Account created successfully! Please sign in below.' +
+                                      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
+                modalBody.insertBefore(alertDiv, modalBody.firstChild);
+            }
+        }
+    }
+
+    // --- AUTOMATIC ALERTS TIMEOUT FADE ---
+    setTimeout(function() {
+        const activeAlerts = document.querySelectorAll('.alert-dismissible');
+        activeAlerts.forEach(function(alert) {
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+        });
+    }, 4000);
+
+    // --- SEARCH INFRASTRUCTURE ---
     const searchInput = document.getElementById("headerSearchInput");
     const suggestBox = document.getElementById("searchSuggestBox");
     const suggestContent = document.getElementById("suggestContent");
     const ctx = "${pageContext.request.contextPath}";
 
-    // Event 1: Focus to display history
     searchInput.addEventListener("focus", function() {
         if (searchInput.value.trim() === "") {
             fetch(ctx + '/search/history')
@@ -175,7 +268,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
- // Event 2: Type to query data live
     searchInput.addEventListener("input", function() {
         const query = searchInput.value.trim();
         if (query === "") {
@@ -191,7 +283,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 let hasCategories = false;
                 let hasUsers=false;
 
-                // Separate them by type for beautiful section formatting
                 let cheatsheetHtml = `<div class="p-2 small fw-bold text-primary"><i class="bi bi-file-earmark-text me-1"></i> Cheatsheets</div>`;
                 let categoryHtml = `<div class="p-2 small fw-bold text-success mt-2"><i class="bi bi-folder me-1"></i> Categories</div>`;
                 let userHtml = `<div class="p-2 small fw-bold text-warning mt-2"><i class="bi bi-person me-1"></i> Users</div>`;
@@ -203,9 +294,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     } else if (item.type === 'category') {
                         hasCategories = true;
                         categoryHtml += `<a href="` + ctx + `/category/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
-                    }
-                    else if(item.type === 'user') {
-                    	hasUsers = true;
+                    } else if(item.type === 'user') {
+                        hasUsers = true;
                         userHtml += `<a href="` + ctx + `/user/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
                     }
                 });
@@ -226,11 +316,31 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     });
 
-    // Event 3: Hide suggested content window when clicking outside
     document.addEventListener("click", function(e) {
         if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) {
             suggestBox.classList.add("d-none");
         }
     });
 });
+
+function readNotification(notificationId, redirectUrl) {
+    fetch('${pageContext.request.contextPath}/notification/read?id=' + notificationId, {
+        method: 'POST'
+    }).then(response => {
+        if (response.ok) {
+            window.location.href = redirectUrl;
+        }
+    }).catch(err => console.error("Notification clearance failed:", err));
+}
+
+function markAllAsRead() {
+    fetch('${pageContext.request.contextPath}/notification/read-all', { method: 'POST' })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById('notiBadge')?.remove();
+            document.getElementById('notiList').innerHTML = 
+                `<li class="text-center py-4 text-muted small list-unstyled"><i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>No new notifications</li>`;
+        }
+    });
+}
 </script>
