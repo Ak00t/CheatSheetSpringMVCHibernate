@@ -117,19 +117,20 @@ public class CheatsheetController {
 	        }
 	    }
 
-	    // 3. Handle File Upload (Single block)
 	    if (coverPhoto != null && !coverPhoto.isEmpty()) {
-	        String uploadDir = "C:/upload/cheatsheets/";
-	        File dir = new File(uploadDir);
+	        // Dynamic Path တည်ဆောက်ခြင်း
+	        String baseDir = System.getProperty("user.home") + File.separator + "app_uploads" + File.separator + "cheatsheets" + File.separator;
+	        File dir = new File(baseDir);
 	        if (!dir.exists()) dir.mkdirs();
 
-	        String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename();
+	        String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename().replaceAll("\\s+", "");
 	        File file = new File(dir, fileName);
 	        coverPhoto.transferTo(file);
 
 	        CheatsheetMediaEntity media = new CheatsheetMediaEntity();
 	        media.setCheatsheet(cheatsheet);
 	        media.setMediaType(MediaType.IMAGE);
+	        // URL ကို သိမ်းဆည်းသည့်အခါ filename သက်သက်သာ သိမ်းပါ
 	        media.setMediaUrl(fileName);
 	        media.setCaption(title);
 	        media.setSortOrder(0);

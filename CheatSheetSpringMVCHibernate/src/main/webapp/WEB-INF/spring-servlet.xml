@@ -15,7 +15,8 @@
 
 <mvc:annotation-driven></mvc:annotation-driven>
 
-
+<mvc:resources mapping="/uploads/profiles/**" location="file:${user.home}/app_uploads/profiles/" />
+<mvc:resources mapping="/uploads/cheatsheets/**" location="file:${user.home}/app_uploads/cheatsheets/" />
 <context:component-scan base-package="com.hibernate" />
 
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

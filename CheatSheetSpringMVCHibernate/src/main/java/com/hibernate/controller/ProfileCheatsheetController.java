@@ -74,26 +74,25 @@ public class ProfileCheatsheetController {
     	
     	// ၄။ Image ပုံသိမ်းဆည်းခြင်း (Controller အတွင်းပိုင်း)
     	if (coverPhoto != null && !coverPhoto.isEmpty()) {
-    		
-    		if (cheatsheet1.getMediaList() == null) {
-	            cheatsheet1.setMediaList(new java.util.ArrayList<>());
-	        } else {
-	            cheatsheet1.getMediaList().clear(); // ဒီ clear() အလုပ်လုပ်ဖို့ လိုပါတယ်
-	        }
-	        if (cheatsheet1.getMediaList() == null) cheatsheet1.setMediaList(new java.util.ArrayList<>());
-	        else cheatsheet1.getMediaList().clear();
-	        
+    	    
+    	    if (cheatsheet1.getMediaList() == null) {
+    	        cheatsheet1.setMediaList(new java.util.ArrayList<>());
+    	    } else {
+    	        cheatsheet1.getMediaList().clear();
+    	    }
+    	    
     	    try {
-    	        // C Drive အောက်က folder အတိုင်း အတိအကျသတ်မှတ်ပါ
-    	        String uploadDir = "C:/upload/cheatsheets/";
+    	        // mvc:resources မှာ သတ်မှတ်ထားတဲ့အတိုင်း Path ကို ပြောင်းပေးပါ
+    	        String userHome = System.getProperty("user.home");
+    	        String uploadDir = userHome + "/app_uploads/cheatsheets/";
     	        java.io.File dir = new java.io.File(uploadDir);
     	        if (!dir.exists()) dir.mkdirs();
 
     	        String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename().replaceAll("\\s+", "");
     	        coverPhoto.transferTo(new java.io.File(uploadDir + fileName));
 
-    	        // Browser ကနေ ခေါ်နိုင်ဖို့အတွက် Mapping ကို /uploads/cheatsheets/ လို့ ပြောင်းပါ
-    	        String dbMediaUrl = "/upload/cheatsheets/" + fileName;
+    	        // Browser က ခေါ်တဲ့ Mapping နှင့် ကိုက်ညီအောင် /uploads/cheatsheets/ နဲ့ စပါ
+    	        String dbMediaUrl = "/uploads/cheatsheets/" + fileName;
     	        
     	        com.hibernate.entity.CheatsheetMediaEntity media = new com.hibernate.entity.CheatsheetMediaEntity();
     	        media.setMediaUrl(dbMediaUrl);
@@ -102,7 +101,6 @@ public class ProfileCheatsheetController {
     	        cheatsheet1.getMediaList().add(media);
     	    } catch (Exception e) { e.printStackTrace(); }
     	}
-    	
     	
     	
     	

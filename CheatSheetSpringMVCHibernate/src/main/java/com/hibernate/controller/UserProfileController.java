@@ -35,31 +35,36 @@ public class UserProfileController {
                                 @RequestParam("profileImg") MultipartFile profileImg) {
     	UserEntity user = userRepository.findById(id);
         
-        if (!profileImg.isEmpty()) {
-            try {
-                // ဖိုင်သိမ်းမည့် လမ်းကြောင်း
-                String uploadDir = "C:/uploads/profiles/";
-                String fileName = profileImg.getOriginalFilename();
-                File dest = new File(uploadDir + fileName);
-                
-                // ဖိုင်တွဲမရှိရင် အလိုလိုဖန်တီးပေးခြင်း
-                if (!dest.getParentFile().exists()) {
-                    dest.getParentFile().mkdirs();
-                }
-                
-                profileImg.transferTo(dest); // ဤနေရာတွင် ဖိုင်ကို စက်ထဲသို့ သိမ်းပေးပါသည်
-                user.setProfileImg(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    	
         
-        user.setName(name);
-        user.setBio(bio);
-        userRepository.updateProfile(user);
-        userService.updateProfile(id, name, bio, profileImg);
-        return "redirect:/profile/" + id;
-    }
+        if (!profileImg.isEmpty()) {
+              try {
+                  // Dynamic Path: user.home/app_uploads/profiles/
+                  String userHome = System.getProperty("user.home");
+                  String uploadDir = userHome + File.separator + "app_uploads" + File.separator + "profiles" + File.separator;
+                  
+                  File dir = new File(uploadDir);
+                  if (!dir.exists()) {
+                      dir.mkdirs(); // ဖိုင်တွဲမရှိရင် အလိုလိုဖန်တီးပေးခြင်း
+                  }
+                  
+                  // File နာမည်ကို Unique ဖြစ်အောင် Timestamp ထည့်ခြင်း (အကြံပြုချက်)
+                  String fileName = System.currentTimeMillis() + "_" + profileImg.getOriginalFilename();
+                  File dest = new File(uploadDir + fileName);
+                  
+                  profileImg.transferTo(dest);
+                  user.setProfileImg(fileName);
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+          
+          user.setName(name);
+          user.setBio(bio);
+          userRepository.updateProfile(user);
+          // userService.updateProfile(id, name, bio, profileImg); // ဒီ code ထပ်နေတယ်ဆိုရင် ပြန်စစ်ပါ
+          return "redirect:/profile/" + id;
+      }
  // UserProfileController.java
     @GetMapping("/view/{id}")
     public String viewProfileDetail(@PathVariable Long id, Model model) {

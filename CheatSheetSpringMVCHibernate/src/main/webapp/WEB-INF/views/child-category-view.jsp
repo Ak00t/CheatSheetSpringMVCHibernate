@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -291,9 +291,8 @@ body{
 <div class="sheet-cover">
     <c:choose>
         <c:when test="${not empty sheet.mediaList and not empty sheet.mediaList[0].mediaUrl}">
-            <img src="${pageContext.request.contextPath}/upload/cheatsheets/${sheet.mediaList[0].mediaUrl}" 
-                 alt="${sheet.title}"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:white; font-size:12px;\'>No Image</span>';">
+            <img src="${pageContext.request.contextPath}/uploads/cheatsheets/${sheet.mediaList[0].mediaUrl}" 
+                 alt="${sheet.title}" />
         </c:when>
         <c:otherwise>
             <span style="color:white; font-size:12px;">No Image</span>
@@ -345,14 +344,11 @@ body{
     <br>
 
     🗓
-    <fmt:parseDate
-            value="${sheet.createdAt}"
-            pattern="yyyy-MM-dd'T'HH:mm:ss"
-            var="createdDate"/>
+    <%-- အရင်ရှိနေတဲ့ fmt:parseDate ကို ဖျက်ပြီး ဒါနဲ့ အစားထိုးပါ --%>
+<c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+<c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
 
-    <fmt:formatDate
-            value="${createdDate}"
-            pattern="dd MMM yyyy"/>
+🗓 ${datePart} ${timePart}
             
             
 

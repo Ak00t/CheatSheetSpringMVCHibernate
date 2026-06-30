@@ -28,6 +28,19 @@
             transition: 0.3s; width: 100%; 
         }
         .btn-save:hover { background-color: #357abd; color: white; }
+        
+        
+        .profile-img { 
+    width: 150px !important;    /* အကျယ် 150px */
+    height: 150px !important;   /* အမြင့် 150px */
+    object-fit: cover;          /* ပုံကို အချိုးအစားမပျက်အောင်ဖြတ်ညှပ်ပေးမယ် */
+    border-radius: 50%;         /* ပုံကို အဝိုင်းဖြစ်စေမယ် */
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: block;             /* ပုံကို center ကျအောင်လုပ်ပေးမယ် */
+    margin: 0 auto;             /* ပုံကို အလယ်တည့်တည့်ရောက်အောင်လုပ်ပေးမယ် */
+}
+        
     </style>
 </head>
 <body>
@@ -42,9 +55,10 @@
 
                 <div class="text-center mb-4">
                     <label class="d-block mb-3">Current Photo:</label>
-                    <img src="${pageContext.request.contextPath}/uploads/profiles/${user.profileImg}" 
-                         class="rounded-circle profile-img" alt="Profile Photo">
-                </div>
+<img src="${pageContext.request.contextPath}/uploads/profiles/${user.profileImg}" 
+     class="profile-img" alt="Profile Photo">            
+     
+         </div>
 
                 <div class="mb-3">
                     <label>Change Photo:</label>

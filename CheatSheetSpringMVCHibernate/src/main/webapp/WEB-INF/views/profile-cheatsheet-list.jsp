@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -204,13 +205,13 @@ h1 {
                     <div class="sheet-card" style="background-color: ${sheet.themeColor};">
                         
                         <a href="${pageContext.request.contextPath}/profile-cheatsheets/detail/${sheet.id}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-                            
-                            <div class="sheet-cover">
+                       <div class="sheet-cover">
     <c:choose>
         <c:when test="${not empty sheet.mediaList and not empty sheet.mediaList[0].mediaUrl}">
-<img src="${pageContext.request.contextPath}/upload/cheatsheets/${cheatsheet.mediaList[0].mediaUrl}?t=<%=System.currentTimeMillis()%>" 
-     alt="Cover" 
-     onerror="this.src='path/to/default-image.png';">
+            <%-- mediaUrl က /uploads/cheatsheets/ နဲ့ စတဲ့အတွက် contextPath နောက်မှာ တန်းထည့်ပါ --%>
+            <img src="${pageContext.request.contextPath}/uploads/cheatsheets/${sheet.mediaList[0].mediaUrl}?t=<%=System.currentTimeMillis()%>" 
+                 alt="Cover" 
+                 onerror="this.src='${pageContext.request.contextPath}/path/to/default-image.png';">
         </c:when>
         <c:otherwise>
             <span style="color:white; font-size:12px;">No Image</span>
@@ -247,14 +248,11 @@ h1 {
     <br>
 
     🗓
-    <fmt:parseDate
-            value="${sheet.createdAt}"
-            pattern="yyyy-MM-dd'T'HH:mm:ss"
-            var="createdDate"/>
+    <%-- အရင်ရှိတဲ့ fmt:parseDate ကို ဖျက်ပြီး ဒါနဲ့ အစားထိုးလိုက်ပါ --%>
+<c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+<c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
 
-    <fmt:formatDate
-            value="${createdDate}"
-            pattern="dd MMM yyyy"/>
+🗓 ${datePart} ${timePart}
 
 </div>
                         
