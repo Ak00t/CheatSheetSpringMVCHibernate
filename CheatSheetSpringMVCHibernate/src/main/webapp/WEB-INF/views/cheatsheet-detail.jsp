@@ -61,6 +61,20 @@
 
 <div class="container py-4">
 
+<c:if test="${not empty message}">
+        <div class="alert alert-success alert-dismissible fade show mb-3 shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger alert-dismissible fade show mb-3 shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
+
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>

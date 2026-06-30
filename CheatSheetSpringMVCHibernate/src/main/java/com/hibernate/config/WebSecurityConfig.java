@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 								.authenticated())
 
 					.formLogin()
-					.loginPage("/login")
+					.loginPage("/")
 					.loginProcessingUrl("/login")
 					.successHandler(customSuccessHandler())
 

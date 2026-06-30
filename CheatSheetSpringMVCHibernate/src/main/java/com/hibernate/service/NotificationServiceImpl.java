@@ -1,6 +1,7 @@
 package com.hibernate.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,23 @@ public class NotificationServiceImpl implements NotificationService {
 		// 4. Map to clean DTO payload and dispatch over WebSockets
 		NotificationDTO payload = new NotificationDTO(notification);
 		messagingTemplate.convertAndSend("/queue/notifications-" + targetUserId, payload);
+	}
+
+	@Override
+	public List<NotificationEntity> findUnreadByUserId(Long userId) {
+
+		return notificationRepository.findUnreadByUserId(userId);
+	}
+
+	@Override
+	public void markAsRead(Long notificationId) {
+		notificationRepository.markAsRead(notificationId);
+
+	}
+
+	@Override
+	public void markAllAsReadByUserId(Long userId) {
+		notificationRepository.markAllAsReadByUserId(userId);
 	}
 
 }

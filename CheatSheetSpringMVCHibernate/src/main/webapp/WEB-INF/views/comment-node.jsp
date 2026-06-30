@@ -81,7 +81,7 @@
     <div id="reply-form-${node.id}" class="mt-2 p-2 bg-light rounded border" style="display:none;">
         <form method="post" action="${pageContext.request.contextPath}/comment/post">
             <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-            <input type="hidden" name="parentId" value="${node.id}" />
+            <input type="hidden" name="parentCommentId" value="${node.id}" />
             <div class="mb-2">
                 <textarea class="form-control form-control-sm" placeholder="Write a reply..." name="content" required></textarea>
             </div>
