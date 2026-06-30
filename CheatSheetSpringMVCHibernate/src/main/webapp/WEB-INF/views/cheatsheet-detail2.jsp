@@ -53,27 +53,6 @@
             transform: scale(1.08);
         }
         .dropdown-toggle::after { display: none !important; }
-        
-        .bookmark-container {
-    display: inline-block;
-    transition: transform 0.2s ease;
-}
-
-.icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.text-wrapper {
-    font-size: 0.9rem;
-}
-
-/* Hover effect အပိုထည့်ချင်ရင် */
-.bookmark-container:hover {
-    transform: scale(1.05);
-}
-        
     </style>
 </head>
 <body>
@@ -81,6 +60,20 @@
 <jsp:include page="header.jsp"/>
 
 <div class="container py-4">
+
+<c:if test="${not empty message}">
+        <div class="alert alert-success alert-dismissible fade show mb-3 shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger alert-dismissible fade show mb-3 shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
 
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
@@ -133,63 +126,22 @@
         </c:forEach>
     </div>
 
-<div class="card shadow-sm border-0 rounded-3 p-3 mb-5 bg-white">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-        
-        <div class="d-flex align-items-center gap-4">
-            <form action="${pageContext.request.contextPath}/cheatsheet/like" method="POST" style="display:inline;">
-                <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-                <button type="submit" class="action-icon-btn d-flex align-items-center gap-2">
-                    <i class="bi ${isLiked ? 'bi-heart-fill text-danger' : 'bi-heart'} fs-5"></i>
-                    <span class="fw-medium">${likeCount}</span>
-                </button>
-            </form>
-
-            <div class="dropdown">
-                <button class="action-icon-btn d-flex align-items-center gap-2" data-bs-toggle="dropdown">
-                    <i class="bi bi-star-fill text-warning fs-5"></i>
-                    <span class="fw-medium">${cheatsheet.ratingAvg}</span>
-                </button>
-                <div class="dropdown-menu p-3 shadow border-0" style="width: 200px;">
-                    <form action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST">
-                        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-                        <label class="small fw-bold mb-2">Rate this sheet:</label>
-                        <select name="score" class="form-select form-select-sm mb-2">
-                            <option value="5">5 - Excellent</option>
-                            <option value="4">4 - Very Good</option>
-                            <option value="3">3 - Average</option>
-                            <option value="2">2 - Poor</option>
-                            <option value="1">1 - Terrible</option>
-                        </select>
-                        <button type="submit" class="btn btn-dark btn-sm w-100">Submit Rating</button>
-                    </form>
+    <div class="card shadow-sm border-0 rounded-3 p-3 mb-5 bg-white">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-4">
+                <div class="text-secondary d-flex align-items-center gap-2">
+                    <i class="bi bi-eye-fill fs-5 text-muted"></i>
+                    <span class="fw-medium">${not empty cheatsheet.viewCount ? cheatsheet.viewCount : 0} Views</span>
                 </div>
+                <button class="action-icon-btn d-flex align-items-center gap-2" onclick="toggleLike(${cheatsheet.id})">
+                    <i class="bi bi-heart fs-5 text-danger" id="likeBtnIcon"></i>
+                    <span class="fw-medium text-dark" id="likeCounterText">${not empty cheatsheet.likeCount ? cheatsheet.likeCount : 0}</span>
+                </button>
+                <button class="action-icon-btn d-flex align-items-center gap-2" onclick="toggleBookmark(${cheatsheet.id})">
+                    <i class="bi bi-bookmark fs-5 text-warning" id="bookmarkBtnIcon"></i>
+                    <span class="fw-medium text-dark">Bookmark</span>
+                </button>
             </div>
-        </div>
-
-
-		<div class="bookmark-container">
-    <form action="${pageContext.request.contextPath}/cheatsheet/bookmark" method="POST" style="display:inline;">
-        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-        
-        <button type="submit" class="action-icon-btn d-flex align-items-center gap-2">
-            <div class="icon-wrapper">
-                <i class="bi ${isBookmarked ? 'bi-bookmark-fill text-warning' : 'bi-bookmark'} fs-5"></i>
-            </div>
-            <div class="text-wrapper">
-                <span class="fw-medium">Bookmark</span>
-            </div>
-        </button>
-    </form>
-</div>
-
-
-
-        <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#reportModal">
-            <i class="bi bi-flag-fill"></i> Report
-        </button>
-    </div>
-</div>
             <div>
                 <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 rounded-2 px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#shareLinkModal">
                     <i class="bi bi-share-fill"></i> Share Sheet
@@ -338,30 +290,6 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="modal fade" id="reportModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form action="${pageContext.request.contextPath}/report/submit" method="POST" class="modal-content">
-            <input type="hidden" name="targetId" value="${cheatsheet.id}" />
-            <div class="modal-header">
-                <h5 class="modal-title">Report Content</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <select name="reason" class="form-select mb-3" required>
-                    <option value="SPAM">Spam</option>
-                    <option value="ABUSE">Abuse</option>
-                    <option value="COPYRIGHT">Copyright Violation</option>
-                    <option value="INAPPROPRIATE">Inappropriate Content</option>
-                </select>
-                <textarea name="description" class="form-control" placeholder="Optional details..."></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-danger">Submit Report</button>
-            </div>
-        </form>
-    </div>
 </div>
 <jsp:include page="footer.jsp"/>
 
