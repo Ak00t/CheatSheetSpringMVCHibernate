@@ -1,5 +1,6 @@
 package com.hibernate.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -79,4 +81,46 @@ public class CommentEntity {
 
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CommentTranslationEntity> translations;
+
+	@Transient
+	public String getRelativeTime() {
+		if (this.createdAt == null) {
+			return "";
+		}
+
+		LocalDateTime now = LocalDateTime.now();
+		Duration duration = Duration.between(this.createdAt, now);
+
+		long seconds = duration.getSeconds();
+		if (seconds < 60) {
+			return seconds <= 0 ? "1s ago" : seconds + "s ago";
+		}
+
+		long minutes = duration.toMinutes();
+		if (minutes < 60) {
+			return minutes + "m ago";
+		}
+
+		long hours = duration.toHours();
+		if (hours < 24) {
+			return hours + "h ago";
+		}
+
+		long days = duration.toDays();
+		if (days < 7) {
+			return days + "d ago";
+		}
+
+		long weeks = days / 7;
+		if (weeks < 4) {
+			return weeks + "w ago";
+		}
+
+		long months = days / 30;
+		if (months < 12) {
+			return months + "mo ago";
+		}
+
+		return (months / 12) + "y ago";
+	}
 }

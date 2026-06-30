@@ -9,7 +9,7 @@
             </div>
             <div>
                 <span class="fw-bold text-dark small">${node.user.name}</span>
-                <span class="text-muted ms-2" style="font-size:10px;"><i class="bi bi-clock me-1"></i>${node.createdAt}</span>
+                <span class="text-muted ms-2" style="font-size:10px;"><i class="bi bi-clock me-1"></i>${node.relativeTime}</span>
             </div>
         </div>
 

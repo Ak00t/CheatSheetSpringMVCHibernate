@@ -178,7 +178,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark small">${comment.user.name}</div>
-                                        <div class="text-muted" style="font-size:11px;">${comment.createdAt}</div>
+                                        <div class="text-muted" style="font-size:11px;">${comment.relativeTime}</div>
                                     </div>
                                 </div>
 
