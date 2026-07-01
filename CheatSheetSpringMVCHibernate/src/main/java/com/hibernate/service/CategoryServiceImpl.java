@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.CategoryEntity;
+import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.TagEntity;
 import com.hibernate.entity.enums.CategoryStatus;
 import com.hibernate.entity.enums.TagStatus;
 import com.hibernate.repository.CategoryRepository;
+import com.hibernate.repository.CheatsheetRepository;
 import com.hibernate.repository.TagRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final TagRepository tagRepository;
+	private final CheatsheetRepository cheatsheetRepository;
 
 	@Override
 	@Transactional
@@ -92,6 +95,45 @@ public class CategoryServiceImpl implements CategoryService {
 	@Transactional
 	public boolean existsBySlug(String slug) {
 		return categoryRepository.existsBySlug(slug);
+	}
+	
+	//final
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	@Override
+	@Transactional
+	public long countActiveCategories() {
+	    return categoryRepository.countActiveCategories();
+	}
+
+	@Override
+	@Transactional
+	public long countChildrenByParentId(Long parentId) {
+	    return categoryRepository.countChildrenByParentId(parentId);
+	}
+	
+	// =========================
+	// Child Category View
+	// =========================
+
+	@Override
+	public List<CheatsheetEntity> findPopularByCategoryId(
+	        Long categoryId) {
+
+	    return cheatsheetRepository
+	            .findPopularByCategoryId(
+	                    categoryId);
+	}
+
+	@Override
+	public List<CheatsheetEntity> findRecentByCategoryId(
+	        Long categoryId) {
+
+	    return cheatsheetRepository
+	            .findRecentByCategoryId(
+	                    categoryId);
 	}
 
 }

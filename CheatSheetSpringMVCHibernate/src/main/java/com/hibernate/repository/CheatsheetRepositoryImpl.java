@@ -217,4 +217,173 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
 
         return null;
     }
+    
+    
+    
+    //fianl
+ // =========================
+ // Home Page Statistics
+ // =========================
+
+ @Override
+ public long countPublicCheatsheets() {
+     return sessionFactory
+             .getCurrentSession()
+             .createQuery(
+                     "select count(c.id) from CheatsheetEntity c " +
+                     "where c.publishStatus = :publishStatus " +
+                     "and c.visibility = :visibility " +
+                     "and c.status = :status",
+                     Long.class)
+             .setParameter("publishStatus", PublishStatus.PUBLISHED)
+             .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+             .setParameter("status", ContentStatus.ACTIVE)
+             .getSingleResult();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularCheatsheets(int limit) {
+     return sessionFactory
+             .getCurrentSession()
+             .createQuery(
+                     "select distinct c from CheatsheetEntity c " +
+                     "left join fetch c.user " +
+                     "left join fetch c.category " +
+                     "left join fetch c.mediaList " +
+                     "where c.publishStatus = :publishStatus " +
+                     "and c.visibility = :visibility " +
+                     "and c.status = :status " +
+                     "order by c.viewCount desc, c.likeCount desc, c.bookmarkCount desc",
+                     CheatsheetEntity.class)
+             .setParameter("publishStatus", PublishStatus.PUBLISHED)
+             .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+             .setParameter("status", ContentStatus.ACTIVE)
+             .setMaxResults(limit)
+             .getResultList();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentCheatsheets(int limit) {
+     return sessionFactory
+             .getCurrentSession()
+             .createQuery(
+                     "select distinct c from CheatsheetEntity c " +
+                     "left join fetch c.user " +
+                     "left join fetch c.category " +
+                     "left join fetch c.mediaList " +
+                     "where c.publishStatus = :publishStatus " +
+                     "and c.visibility = :visibility " +
+                     "and c.status = :status " +
+                     "order by c.createdAt desc",
+                     CheatsheetEntity.class)
+             .setParameter("publishStatus", PublishStatus.PUBLISHED)
+             .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+             .setParameter("status", ContentStatus.ACTIVE)
+             .setMaxResults(limit)
+             .getResultList();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularByParentCategoryId(Long parentId) {
+     return sessionFactory
+             .getCurrentSession()
+             .createQuery(
+                     "select distinct c from CheatsheetEntity c " +
+                     "left join fetch c.user " +
+                     "left join fetch c.category cat " +
+                     "left join fetch c.mediaList " +
+                     "where cat.parent.id = :parentId " +
+                     "and c.publishStatus = :publishStatus " +
+                     "and c.visibility = :visibility " +
+                     "and c.status = :status " +
+                     "order by c.viewCount desc, c.likeCount desc, c.bookmarkCount desc",
+                     CheatsheetEntity.class)
+             .setParameter("parentId", parentId)
+             .setParameter("publishStatus", PublishStatus.PUBLISHED)
+             .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+             .setParameter("status", ContentStatus.ACTIVE)
+             .setMaxResults(5)
+             .getResultList();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentByParentCategoryId(Long parentId) {
+     return sessionFactory
+             .getCurrentSession()
+             .createQuery(
+                     "select distinct c from CheatsheetEntity c " +
+                     "left join fetch c.user " +
+                     "left join fetch c.category cat " +
+                     "left join fetch c.mediaList " +
+                     "where cat.parent.id = :parentId " +
+                     "and c.publishStatus = :publishStatus " +
+                     "and c.visibility = :visibility " +
+                     "and c.status = :status " +
+                     "order by c.createdAt desc",
+                     CheatsheetEntity.class)
+             .setParameter("parentId", parentId)
+             .setParameter("publishStatus", PublishStatus.PUBLISHED)
+             .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+             .setParameter("status", ContentStatus.ACTIVE)
+             .setMaxResults(5)
+             .getResultList();
+ }
+ 
+ 
+ 
+//=========================
+//Child Category View
+//=========================
+
+@Override
+public List<CheatsheetEntity> findPopularByCategoryId(
+      Long categoryId) {
+
+  return sessionFactory
+          .getCurrentSession()
+          .createQuery(
+                  "select distinct c from CheatsheetEntity c " +
+                  "left join fetch c.user " +
+                  "left join fetch c.category " +
+                  "left join fetch c.mediaList " +
+                  "where c.category.id = :categoryId " +
+                  "and c.publishStatus = :publishStatus " +
+                  "and c.visibility = :visibility " +
+                  "and c.status = :status " +
+                  "order by c.viewCount desc, c.likeCount desc, c.bookmarkCount desc",
+                  CheatsheetEntity.class)
+          .setParameter("categoryId", categoryId)
+          .setParameter("publishStatus", PublishStatus.PUBLISHED)
+          .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+          .setParameter("status", ContentStatus.ACTIVE)
+          .setMaxResults(5)
+          .getResultList();
+}
+
+@Override
+public List<CheatsheetEntity> findRecentByCategoryId(
+      Long categoryId) {
+
+  return sessionFactory
+          .getCurrentSession()
+          .createQuery(
+                  "select distinct c from CheatsheetEntity c " +
+                  "left join fetch c.user " +
+                  "left join fetch c.category " +
+                  "left join fetch c.mediaList " +
+                  "where c.category.id = :categoryId " +
+                  "and c.publishStatus = :publishStatus " +
+                  "and c.visibility = :visibility " +
+                  "and c.status = :status " +
+                  "order by c.createdAt desc",
+                  CheatsheetEntity.class)
+          .setParameter("categoryId", categoryId)
+          .setParameter("publishStatus", PublishStatus.PUBLISHED)
+          .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+          .setParameter("status", ContentStatus.ACTIVE)
+          .setMaxResults(5)
+          .getResultList();
+}
+    
+    
 }

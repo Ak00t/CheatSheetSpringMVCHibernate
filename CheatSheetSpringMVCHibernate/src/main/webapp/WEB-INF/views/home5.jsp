@@ -88,94 +88,50 @@ body{
     margin-bottom:25px;
 }
 
-/* Explore Categories UI only */
 .category-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:32px;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:24px;
 }
 
 .category-card{
-    position:relative;
-    min-height:250px;
-    padding:36px;
-    border-radius:32px;
-    background:#fff;
-    border:1px solid #edf2f7;
+    min-height:220px;
+    border-radius:28px;
+    padding:30px;
     text-decoration:none;
-    color:#1e293b;
-    overflow:hidden;
-    box-shadow:0 10px 35px rgba(15,23,42,.06);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 15px 35px rgba(0,0,0,.14);
     transition:.3s;
 }
 
 .category-card:hover{
     transform:translateY(-8px);
-    box-shadow:0 20px 50px rgba(15,23,42,.10);
 }
 
-.category-card::before{
-    content:'';
-    position:absolute;
-    width:230px;
-    height:230px;
-    right:-90px;
-    bottom:-90px;
-    border-radius:50%;
-    opacity:.75;
+.gradient-0{background:linear-gradient(135deg,#2563eb,#06b6d4);}
+.gradient-1{background:linear-gradient(135deg,#9333ea,#ec4899);}
+.gradient-2{background:linear-gradient(135deg,#f97316,#ef4444);}
+.gradient-3{background:linear-gradient(135deg,#10b981,#22c55e);}
+.gradient-4{background:linear-gradient(135deg,#4f46e5,#8b5cf6);}
+.gradient-5{background:linear-gradient(135deg,#0f172a,#475569);}
+
+.category-card h3{
+    font-size:34px;
+    margin-bottom:14px;
 }
 
-.gradient-0::before{background:radial-gradient(circle,#dbeafe,#ffffff);}
-.gradient-1::before{background:radial-gradient(circle,#ede9fe,#ffffff);}
-.gradient-2::before{background:radial-gradient(circle,#fee2e2,#ffffff);}
-.gradient-3::before{background:radial-gradient(circle,#dcfce7,#ffffff);}
-.gradient-4::before{background:radial-gradient(circle,#fef3c7,#ffffff);}
-.gradient-5::before{background:radial-gradient(circle,#e0e7ff,#ffffff);}
-
-.category-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    position:relative;
-    z-index:2;
-}
-
-.category-name{
-    color:#2563eb;
-    font-size:28px;
-    font-weight:800;
-}
-
-.category-arrow{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    background:#fff;
-    border:1px solid #eef2f7;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:28px;
-    color:#0f172a;
-    box-shadow:0 4px 16px rgba(0,0,0,.08);
-}
-
-.category-desc{
-    margin-top:28px;
-    color:#64748b;
-    line-height:1.8;
-    font-size:16px;
-    position:relative;
-    z-index:2;
+.category-card p{
+    line-height:1.7;
+    opacity:.95;
 }
 
 .category-count{
-    margin-top:40px;
-    color:#475569;
-    font-size:18px;
-    font-weight:700;
-    position:relative;
-    z-index:2;
+    margin-top:25px;
+    font-weight:900;
+    opacity:.95;
 }
 
 .sheet-grid{
@@ -381,12 +337,6 @@ body{
     border-radius:20px;
 }
 
-@media(max-width:1200px){
-    .category-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
 @media(max-width:950px){
     .page-layout{
         grid-template-columns:1fr;
@@ -400,10 +350,6 @@ body{
 
     .hero h1{
         font-size:38px;
-    }
-
-    .category-grid{
-        grid-template-columns:1fr;
     }
 }
 </style>
@@ -459,25 +405,19 @@ body{
                                 <a href="${pageContext.request.contextPath}/category/${cat.id}"
                                    class="category-card gradient-${st.index % 6}">
 
-                                    <div class="category-top">
-                                        <div class="category-name">
-                                            ${cat.name}
-                                        </div>
+                                    <div>
+                                        <h3>${cat.name}</h3>
 
-                                        <div class="category-arrow">
-                                            →
-                                        </div>
-                                    </div>
-
-                                    <div class="category-desc">
-                                        <c:choose>
-                                            <c:when test="${not empty cat.description}">
-                                                ${cat.description}
-                                            </c:when>
-                                            <c:otherwise>
-                                                Explore related topics and public cheatsheets.
-                                            </c:otherwise>
-                                        </c:choose>
+                                        <p>
+                                            <c:choose>
+                                                <c:when test="${not empty cat.description}">
+                                                    ${cat.description}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Explore related topics and public cheatsheets.
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
 
                                     <div class="category-count">

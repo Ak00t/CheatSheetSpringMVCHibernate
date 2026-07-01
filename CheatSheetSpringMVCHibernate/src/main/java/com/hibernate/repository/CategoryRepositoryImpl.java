@@ -109,4 +109,39 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		return count > 0;
 	}
 	
+	
+	//final
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	@Override
+	public long countActiveCategories() {
+
+	    return getSession()
+	            .createQuery(
+	                    "select count(c.id) " +
+	                    "from CategoryEntity c " +
+	                    "where c.status = :status",
+	                    Long.class)
+	            .setParameter("status", CategoryStatus.ACTIVE)
+	            .getSingleResult();
+	}
+
+	@Override
+	public long countChildrenByParentId(Long parentId) {
+
+	    return getSession()
+	            .createQuery(
+	                    "select count(c.id) " +
+	                    "from CategoryEntity c " +
+	                    "where c.parent.id = :parentId " +
+	                    "and c.status = :status",
+	                    Long.class)
+	            .setParameter("parentId", parentId)
+	            .setParameter("status", CategoryStatus.ACTIVE)
+	            .getSingleResult();
+	}
+	
+	
 }

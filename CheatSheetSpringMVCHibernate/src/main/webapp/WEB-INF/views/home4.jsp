@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -88,94 +89,48 @@ body{
     margin-bottom:25px;
 }
 
-/* Explore Categories UI only */
-.category-grid{
+.grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:32px;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
 }
 
 .category-card{
-    position:relative;
-    min-height:250px;
-    padding:36px;
-    border-radius:32px;
-    background:#fff;
-    border:1px solid #edf2f7;
+    background:white;
+    border-radius:24px;
+    padding:28px;
     text-decoration:none;
     color:#1e293b;
-    overflow:hidden;
-    box-shadow:0 10px 35px rgba(15,23,42,.06);
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+    border:1px solid #e2e8f0;
     transition:.3s;
 }
 
 .category-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 20px 50px rgba(15,23,42,.10);
+    transform:translateY(-7px);
 }
 
-.category-card::before{
-    content:'';
-    position:absolute;
-    width:230px;
-    height:230px;
-    right:-90px;
-    bottom:-90px;
-    border-radius:50%;
-    opacity:.75;
-}
-
-.gradient-0::before{background:radial-gradient(circle,#dbeafe,#ffffff);}
-.gradient-1::before{background:radial-gradient(circle,#ede9fe,#ffffff);}
-.gradient-2::before{background:radial-gradient(circle,#fee2e2,#ffffff);}
-.gradient-3::before{background:radial-gradient(circle,#dcfce7,#ffffff);}
-.gradient-4::before{background:radial-gradient(circle,#fef3c7,#ffffff);}
-.gradient-5::before{background:radial-gradient(circle,#e0e7ff,#ffffff);}
-
-.category-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    position:relative;
-    z-index:2;
-}
-
-.category-name{
-    color:#2563eb;
-    font-size:28px;
-    font-weight:800;
-}
-
-.category-arrow{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    background:#fff;
-    border:1px solid #eef2f7;
+.category-icon{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#2563eb,#10b981);
+    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:28px;
-    color:#0f172a;
-    box-shadow:0 4px 16px rgba(0,0,0,.08);
+    margin-bottom:18px;
 }
 
-.category-desc{
-    margin-top:28px;
+.category-card h3{
+    font-size:23px;
+    margin-bottom:10px;
+}
+
+.category-card p{
     color:#64748b;
-    line-height:1.8;
-    font-size:16px;
-    position:relative;
-    z-index:2;
-}
-
-.category-count{
-    margin-top:40px;
-    color:#475569;
-    font-size:18px;
-    font-weight:700;
-    position:relative;
-    z-index:2;
+    line-height:1.6;
 }
 
 .sheet-grid{
@@ -265,52 +220,21 @@ body{
     margin-bottom:20px;
 }
 
-.sidebar-scroll-box{
-    max-height:330px;
-    overflow-y:auto;
-    scroll-behavior:smooth;
-    padding-right:6px;
-}
-
-.sidebar-scroll-box::-webkit-scrollbar{
-    width:6px;
-}
-
-.sidebar-scroll-box::-webkit-scrollbar-thumb{
-    background:#cbd5e1;
-    border-radius:999px;
-}
-
-.scroll-controls{
-    display:flex;
-    gap:10px;
-    margin-top:14px;
-}
-
-.scroll-btn{
-    flex:1;
-    border:none;
-    padding:10px;
-    border-radius:12px;
-    background:#eff6ff;
-    color:#2563eb;
-    font-weight:900;
-    cursor:pointer;
-}
-
 .author-item{
     display:flex;
     gap:14px;
     align-items:center;
     padding:14px 0;
     border-bottom:1px solid #e2e8f0;
-    text-decoration:none;
-    color:#1e293b;
+}
+
+.author-item:last-child{
+    border-bottom:none;
 }
 
 .avatar{
-    width:48px;
-    height:48px;
+    width:46px;
+    height:46px;
     border-radius:50%;
     background:linear-gradient(135deg,#2563eb,#10b981);
     color:white;
@@ -318,13 +242,6 @@ body{
     justify-content:center;
     align-items:center;
     font-weight:900;
-    overflow:hidden;
-}
-
-.avatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
 }
 
 .author-name{
@@ -381,12 +298,6 @@ body{
     border-radius:20px;
 }
 
-@media(max-width:1200px){
-    .category-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
 @media(max-width:950px){
     .page-layout{
         grid-template-columns:1fr;
@@ -400,10 +311,6 @@ body{
 
     .hero h1{
         font-size:38px;
-    }
-
-    .category-grid{
-        grid-template-columns:1fr;
     }
 }
 </style>
@@ -437,7 +344,7 @@ body{
 
             <div class="stat-card">
                 <h2>${totalUsers}</h2>
-                <span>Community Members</span>
+                <span>Active Users</span>
             </div>
         </div>
     </section>
@@ -454,35 +361,25 @@ body{
 
                 <c:choose>
                     <c:when test="${not empty parentCategories}">
-                        <div class="category-grid">
-                            <c:forEach items="${parentCategories}" var="cat" varStatus="st">
+                        <div class="grid">
+                            <c:forEach items="${parentCategories}" var="cat">
                                 <a href="${pageContext.request.contextPath}/category/${cat.id}"
-                                   class="category-card gradient-${st.index % 6}">
+                                   class="category-card">
 
-                                    <div class="category-top">
-                                        <div class="category-name">
-                                            ${cat.name}
-                                        </div>
+                                    <div class="category-icon">📚</div>
 
-                                        <div class="category-arrow">
-                                            →
-                                        </div>
-                                    </div>
+                                    <h3>${cat.name}</h3>
 
-                                    <div class="category-desc">
+                                    <p>
                                         <c:choose>
                                             <c:when test="${not empty cat.description}">
                                                 ${cat.description}
                                             </c:when>
                                             <c:otherwise>
-                                                Explore related topics and public cheatsheets.
+                                                Explore child categories and cheatsheets.
                                             </c:otherwise>
                                         </c:choose>
-                                    </div>
-
-                                    <div class="category-count">
-                                        Explore →
-                                    </div>
+                                    </p>
 
                                 </a>
                             </c:forEach>
@@ -514,7 +411,8 @@ body{
                                     <div class="sheet-cover">
                                         <c:choose>
                                             <c:when test="${not empty sheet.mediaList}">
-                                                <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                                <img src="${sheet.mediaList[0].mediaUrl}"
+                                                     alt="${sheet.title}">
                                             </c:when>
                                             <c:otherwise>
                                                 No Cover
@@ -562,46 +460,22 @@ body{
 
                 <c:choose>
                     <c:when test="${not empty topContributors}">
-                        <div id="authorSidebar" class="sidebar-scroll-box">
-                            <c:forEach items="${topContributors}" var="row">
-                                <a href="${pageContext.request.contextPath}/profile/${row[0].id}"
-                                   class="author-item">
+                        <c:forEach items="${topContributors}" var="row" varStatus="st">
+                            <div class="author-item">
+                                <div class="avatar">
+                                    #${st.index + 1}
+                                </div>
 
-                                    <div class="avatar">
-                                        <c:choose>
-                                            <c:when test="${not empty row[0].profileImg}">
-                                                <img src="${row[0].profileImg}" alt="${row[0].name}">
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${row[0].name.substring(0,1)}
-                                            </c:otherwise>
-                                        </c:choose>
+                                <div>
+                                    <div class="author-name">
+                                        ${row[0].name}
                                     </div>
-
-                                    <div>
-                                        <div class="author-name">
-                                            ${row[0].name}
-                                        </div>
-                                        <div class="author-count">
-                                            ${row[1]} public cheatsheets
-                                        </div>
+                                    <div class="author-count">
+                                        ${row[1]} public cheatsheets
                                     </div>
-
-                                </a>
-                            </c:forEach>
-                        </div>
-
-                        <div class="scroll-controls">
-                            <button type="button" class="scroll-btn"
-                                    onclick="scrollBox('authorSidebar', -160)">
-                                ▲
-                            </button>
-
-                            <button type="button" class="scroll-btn"
-                                    onclick="scrollBox('authorSidebar', 160)">
-                                ▼
-                            </button>
-                        </div>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </c:when>
 
                     <c:otherwise>
@@ -617,47 +491,34 @@ body{
 
                 <c:choose>
                     <c:when test="${not empty recentCheatsheets}">
-                        <div id="recentSidebar" class="sidebar-scroll-box">
-                            <c:forEach items="${recentCheatsheets}" var="sheet">
-                                <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                                   class="mini-card">
+                        <c:forEach items="${recentCheatsheets}" var="sheet">
+                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                               class="mini-card">
 
-                                    <div class="mini-img">
-                                        <c:choose>
-                                            <c:when test="${not empty sheet.mediaList}">
-                                                <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div></div>
-                                            </c:otherwise>
-                                        </c:choose>
+                                <div class="mini-img">
+                                    <c:choose>
+                                        <c:when test="${not empty sheet.mediaList}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}"
+                                                 alt="${sheet.title}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div></div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+
+                                <div>
+                                    <div class="mini-title">
+                                        ${sheet.title}
                                     </div>
 
-                                    <div>
-                                        <div class="mini-title">
-                                            ${sheet.title}
-                                        </div>
-
-                                        <div class="mini-meta">
-                                            👤 ${sheet.user.name}
-                                        </div>
+                                    <div class="mini-meta">
+                                        👤 ${sheet.user.name}
                                     </div>
+                                </div>
 
-                                </a>
-                            </c:forEach>
-                        </div>
-
-                        <div class="scroll-controls">
-                            <button type="button" class="scroll-btn"
-                                    onclick="scrollBox('recentSidebar', -160)">
-                                ▲
-                            </button>
-
-                            <button type="button" class="scroll-btn"
-                                    onclick="scrollBox('recentSidebar', 160)">
-                                ▼
-                            </button>
-                        </div>
+                            </a>
+                        </c:forEach>
                     </c:when>
 
                     <c:otherwise>
@@ -675,19 +536,6 @@ body{
 </div>
 
 <jsp:include page="footer.jsp"/>
-
-<script>
-function scrollBox(id, amount){
-    const box = document.getElementById(id);
-
-    if(box){
-        box.scrollBy({
-            top:amount,
-            behavior:"smooth"
-        });
-    }
-}
-</script>
 
 </body>
 </html>

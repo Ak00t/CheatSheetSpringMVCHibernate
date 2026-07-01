@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${parentCategory.name}</title>
+<title>CheatSheet Hub</title>
 
 <style>
 *{
@@ -30,9 +30,10 @@ body{
 .hero{
     margin:30px 0;
     padding:55px;
-    border-radius:30px;
+    border-radius:32px;
     background:linear-gradient(135deg,#2563eb,#10b981);
     color:white;
+    box-shadow:0 20px 45px rgba(37,99,235,.25);
 }
 
 .hero h1{
@@ -41,128 +42,121 @@ body{
 }
 
 .hero p{
-    font-size:19px;
+    font-size:18px;
     line-height:1.8;
-    max-width:750px;
+    max-width:780px;
 }
 
-.stats-row{
-    display:flex;
+.hero-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
     gap:20px;
-    margin:25px 0 55px;
+    margin-top:35px;
 }
 
 .stat-card{
-    flex:1;
-    background:white;
-    border-radius:22px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.25);
     padding:24px;
-    box-shadow:0 10px 28px rgba(15,23,42,.08);
-    border:1px solid #e2e8f0;
+    border-radius:22px;
+    backdrop-filter:blur(10px);
 }
 
 .stat-card h2{
-    font-size:34px;
-    color:#2563eb;
+    font-size:38px;
+    margin-bottom:6px;
 }
 
-.stat-card p{
-    color:#64748b;
+.stat-card span{
     font-weight:700;
+    opacity:.95;
 }
 
 .section{
-    margin-top:65px;
+    margin-top:60px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    gap:20px;
+    margin-bottom:25px;
 }
 
 .section-title{
-    font-size:42px;
-    font-weight:800;
-    margin-bottom:10px;
+    font-size:34px;
+    font-weight:900;
 }
 
 .section-subtitle{
     color:#64748b;
-    font-size:18px;
-    margin-bottom:30px;
+    margin-top:8px;
 }
 
-.child-grid{
-    display:flex;
-    gap:25px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding-bottom:15px;
-    scroll-behavior:smooth;
-}
-
-.child-grid::-webkit-scrollbar,
-.sheet-scroll::-webkit-scrollbar{
-    height:10px;
-}
-
-.child-grid::-webkit-scrollbar-track,
-.sheet-scroll::-webkit-scrollbar-track{
-    background:#dbeafe;
-    border-radius:999px;
-}
-
-.child-grid::-webkit-scrollbar-thumb,
-.sheet-scroll::-webkit-scrollbar-thumb{
-    background:linear-gradient(90deg,#2563eb,#10b981);
-    border-radius:999px;
-}
-
-.child-card{
-    min-width:280px;
-    height:220px;
-    flex-shrink:0;
-    background:white;
-    border-radius:30px;
-    padding:30px;
-    text-decoration:none;
-    border:1px solid #dbeafe;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.3s;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-}
-
-.child-card:hover{
-    transform:translateY(-8px);
-}
-
-.child-card h3{
-    color:#2563eb;
-    font-size:32px;
-    margin-bottom:15px;
-}
-
-.child-card p{
-    color:#475569;
-    line-height:1.7;
-}
-
-.sheet-scroll{
-    display:flex;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:24px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding-bottom:18px;
-    scroll-behavior:smooth;
+}
+
+.category-card,
+.user-card{
+    background:white;
+    border-radius:24px;
+    padding:28px;
+    text-decoration:none;
+    color:#1e293b;
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+    border:1px solid #e2e8f0;
+    transition:.3s;
+}
+
+.category-card:hover,
+.user-card:hover{
+    transform:translateY(-7px);
+    box-shadow:0 20px 45px rgba(15,23,42,.14);
+}
+
+.category-icon{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#2563eb,#10b981);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    margin-bottom:18px;
+}
+
+.category-card h3,
+.user-card h3{
+    font-size:23px;
+    margin-bottom:10px;
+}
+
+.category-card p,
+.user-card p{
+    color:#64748b;
+    line-height:1.6;
+}
+
+.sheet-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:24px;
 }
 
 .sheet-card{
-    flex:0 0 360px;
-    min-height:470px;
-    border-radius:28px;
-    overflow:hidden;
+    min-height:460px;
+    border-radius:26px;
+    padding:22px;
     text-decoration:none;
     color:white !important;
     box-shadow:0 14px 35px rgba(0,0,0,.14);
     transition:.3s;
-    padding:22px;
     display:flex;
     flex-direction:column;
 }
@@ -173,20 +167,16 @@ body{
 }
 
 .sheet-cover{
-    width:100%;
-    height:180px;
-    border:2px dashed rgba(255,255,255,.45);
+    height:170px;
     border-radius:18px;
+    overflow:hidden;
+    background:rgba(0,0,0,.08);
+    border:2px dashed rgba(255,255,255,.4);
     display:flex;
     justify-content:center;
     align-items:center;
-    color:white;
-    font-size:18px;
     font-weight:800;
-    overflow:hidden;
-    background:rgba(0,0,0,.06);
-    flex-shrink:0;
-    margin-bottom:14px;
+    margin-bottom:15px;
 }
 
 .sheet-cover img{
@@ -195,49 +185,57 @@ body{
     object-fit:cover;
 }
 
-.category-badge{
+.badge{
     display:inline-block;
     padding:6px 14px;
     border-radius:999px;
-    background:rgba(255,255,255,.25);
-    color:white;
+    background:rgba(255,255,255,.24);
     font-size:12px;
     font-weight:900;
     margin-bottom:12px;
-    align-self:flex-start;
 }
 
-.sheet-title{
+.sheet-card h3{
     font-size:22px;
-    color:white;
-    margin-bottom:8px;
-    font-weight:900;
     line-height:1.35;
+    margin-bottom:10px;
 }
 
-.sheet-description{
-    color:rgba(255,255,255,.92);
-    line-height:1.55;
-    max-height:95px;
+.sheet-desc{
+    color:rgba(255,255,255,.9);
+    line-height:1.6;
+    max-height:82px;
     overflow:hidden;
-    font-size:15px;
 }
 
 .sheet-footer{
     margin-top:auto;
-    padding-top:12px;
+    padding-top:13px;
     border-top:1px solid rgba(255,255,255,.25);
-    color:rgba(255,255,255,.9);
     font-size:13px;
     line-height:1.7;
+    color:rgba(255,255,255,.9);
 }
 
 .empty-box{
     background:white;
     border:2px dashed #cbd5e1;
-    border-radius:26px;
-    padding:30px;
     color:#64748b;
+    padding:28px;
+    border-radius:22px;
+}
+
+.rank{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:#eff6ff;
+    color:#2563eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:900;
+    margin-bottom:15px;
 }
 
 @media(max-width:768px){
@@ -249,12 +247,8 @@ body{
         font-size:38px;
     }
 
-    .stats-row{
-        flex-direction:column;
-    }
-
-    .sheet-card{
-        flex-basis:310px;
+    .section-head{
+        display:block;
     }
 }
 </style>
@@ -267,101 +261,89 @@ body{
 <div class="container">
 
     <section class="hero">
-        <h1>${parentCategory.name}</h1>
+        <h1>Explore Public Cheatsheets</h1>
 
         <p>
-            <c:choose>
-                <c:when test="${not empty parentCategory.description}">
-                    ${parentCategory.description}
-                </c:when>
-                <c:otherwise>
-                    Browse child categories and discover related cheatsheets.
-                </c:otherwise>
-            </c:choose>
+            Discover useful cheatsheets shared by the community.
+            Browse categories, learn faster, and find quick references
+            for your study and development work.
         </p>
+
+        <div class="hero-stats">
+            <div class="stat-card">
+                <h2>${totalCheatsheets}</h2>
+                <span>Public Cheatsheets</span>
+            </div>
+
+            <div class="stat-card">
+                <h2>${totalCategories}</h2>
+                <span>Categories</span>
+            </div>
+
+            <div class="stat-card">
+                <h2>${totalUsers}</h2>
+                <span>Active Users</span>
+            </div>
+        </div>
     </section>
 
-    <div class="stats-row">
-        <div class="stat-card">
-            <h2>${childCount}</h2>
-            <p>Child Categories</p>
-        </div>
-
-        <div class="stat-card">
-            <h2>${popularCheatsheets.size()}</h2>
-            <p>Popular Cheatsheets</p>
-        </div>
-
-        <div class="stat-card">
-            <h2>${recentCheatsheets.size()}</h2>
-            <p>Recent Cheatsheets</p>
-        </div>
-    </div>
-
     <section class="section">
-
-        <h2 class="section-title">
-            Child Categories
-        </h2>
-
-        <p class="section-subtitle">
-            Choose a child category to view tags and cheatsheets.
-        </p>
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Explore Categories</h2>
+                <p class="section-subtitle">
+                    Choose a main category and browse related topics.
+                </p>
+            </div>
+        </div>
 
         <c:choose>
-            <c:when test="${not empty childCategories}">
-                <div class="child-grid">
+            <c:when test="${not empty parentCategories}">
+                <div class="grid">
+                    <c:forEach items="${parentCategories}" var="cat">
+                        <a href="${pageContext.request.contextPath}/category/${cat.id}"
+                           class="category-card">
+                            <div class="category-icon">📚</div>
 
-                    <c:forEach items="${childCategories}" var="child">
-
-                        <a href="${pageContext.request.contextPath}/child-category/${child.id}"
-                           class="child-card">
-
-                            <h3>${child.name}</h3>
+                            <h3>${cat.name}</h3>
 
                             <p>
                                 <c:choose>
-                                    <c:when test="${not empty child.description}">
-                                        ${child.description}
+                                    <c:when test="${not empty cat.description}">
+                                        ${cat.description}
                                     </c:when>
                                     <c:otherwise>
-                                        View tags and cheatsheets under this category.
+                                        Explore child categories and cheatsheets.
                                     </c:otherwise>
                                 </c:choose>
                             </p>
-
                         </a>
-
                     </c:forEach>
-
                 </div>
             </c:when>
 
             <c:otherwise>
                 <div class="empty-box">
-                    No child categories found.
+                    No parent categories found.
                 </div>
             </c:otherwise>
         </c:choose>
-
     </section>
 
     <section class="section">
-
-        <h2 class="section-title">
-            🔥 Popular in ${parentCategory.name}
-        </h2>
-
-        <p class="section-subtitle">
-            Popular cheatsheets from child categories under ${parentCategory.name}.
-        </p>
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">🔥 Popular Cheatsheets</h2>
+                <p class="section-subtitle">
+                    Most viewed and liked public cheatsheets.
+                </p>
+            </div>
+        </div>
 
         <c:choose>
             <c:when test="${not empty popularCheatsheets}">
-                <div class="sheet-scroll">
-
+                <div class="sheet-grid">
                     <c:forEach items="${popularCheatsheets}" var="sheet">
-
                         <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
                            class="sheet-card"
                            style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
@@ -378,15 +360,13 @@ body{
                                 </c:choose>
                             </div>
 
-                            <div class="category-badge">
+                            <span class="badge">
                                 ${sheet.category.name}
-                            </div>
+                            </span>
 
-                            <h3 class="sheet-title">
-                                ${sheet.title}
-                            </h3>
+                            <h3>${sheet.title}</h3>
 
-                            <p class="sheet-description">
+                            <p class="sheet-desc">
                                 ${sheet.description}
                             </p>
 
@@ -397,39 +377,33 @@ body{
                                 &nbsp; ❤ ${sheet.likeCount}
                                 &nbsp; 🔖 ${sheet.bookmarkCount}
                             </div>
-
                         </a>
-
                     </c:forEach>
-
                 </div>
             </c:when>
 
             <c:otherwise>
                 <div class="empty-box">
-                    No popular cheatsheets found.
+                    No popular cheatsheets yet.
                 </div>
             </c:otherwise>
         </c:choose>
-
     </section>
 
     <section class="section">
-
-        <h2 class="section-title">
-            🆕 Recent in ${parentCategory.name}
-        </h2>
-
-        <p class="section-subtitle">
-            Recently published cheatsheets from this parent category.
-        </p>
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">🆕 Recent Cheatsheets</h2>
+                <p class="section-subtitle">
+                    Newly published cheatsheets from the community.
+                </p>
+            </div>
+        </div>
 
         <c:choose>
             <c:when test="${not empty recentCheatsheets}">
-                <div class="sheet-scroll">
-
+                <div class="sheet-grid">
                     <c:forEach items="${recentCheatsheets}" var="sheet">
-
                         <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
                            class="sheet-card"
                            style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#10b981'};">
@@ -446,15 +420,13 @@ body{
                                 </c:choose>
                             </div>
 
-                            <div class="category-badge">
+                            <span class="badge">
                                 ${sheet.category.name}
-                            </div>
+                            </span>
 
-                            <h3 class="sheet-title">
-                                ${sheet.title}
-                            </h3>
+                            <h3>${sheet.title}</h3>
 
-                            <p class="sheet-description">
+                            <p class="sheet-desc">
                                 ${sheet.description}
                             </p>
 
@@ -471,21 +443,56 @@ body{
                                         value="${createdDate}"
                                         pattern="dd MMM yyyy"/>
                             </div>
-
                         </a>
-
                     </c:forEach>
-
                 </div>
             </c:when>
 
             <c:otherwise>
                 <div class="empty-box">
-                    No recent cheatsheets found.
+                    No recent cheatsheets yet.
                 </div>
             </c:otherwise>
         </c:choose>
+    </section>
 
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">🏆 Top Contributors</h2>
+                <p class="section-subtitle">
+                    Users with the most public cheatsheets.
+                </p>
+            </div>
+        </div>
+
+        <c:choose>
+            <c:when test="${not empty topContributors}">
+                <div class="grid">
+                    <c:forEach items="${topContributors}" var="row" varStatus="st">
+                        <div class="user-card">
+                            <div class="rank">
+                                #${st.index + 1}
+                            </div>
+
+                            <h3>
+                                ${row[0].name}
+                            </h3>
+
+                            <p>
+                                ${row[1]} public cheatsheets
+                            </p>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:when>
+
+            <c:otherwise>
+                <div class="empty-box">
+                    No contributors found yet.
+                </div>
+            </c:otherwise>
+        </c:choose>
     </section>
 
 </div>

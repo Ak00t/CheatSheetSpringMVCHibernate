@@ -28,4 +28,20 @@ public interface CategoryRepository {
 
 	boolean existsBySlug(String slug);
 	
+	
+	
+	//final
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	// Home total active categories
+	long countActiveCategories();
+
+	// Parent category card child count
+	long countChildrenByParentId(Long parentId);
+	
+	
+	
+	
 }

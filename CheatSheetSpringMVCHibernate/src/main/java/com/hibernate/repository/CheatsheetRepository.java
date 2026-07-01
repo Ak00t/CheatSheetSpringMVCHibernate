@@ -30,4 +30,36 @@ public interface CheatsheetRepository {
     CheatsheetEntity findProfileDetailById(Long id);
  // Profile / Public detail permission စစ်ပြီး ပြရန်
     CheatsheetEntity findVisibleCheatsheet(Long cheatsheetId, Long loginUserId);
-}
+
+      //final
+    // =========================
+    // Home Page Statistics
+    // =========================
+
+    long countPublicCheatsheets();
+
+    List<CheatsheetEntity> findPopularCheatsheets(int limit);
+
+    List<CheatsheetEntity> findRecentCheatsheets(int limit);
+
+    List<CheatsheetEntity> findPopularByParentCategoryId(Long parentId);
+
+    List<CheatsheetEntity> findRecentByParentCategoryId(Long parentId);
+    
+ // =========================
+ // Child Category View
+ // =========================
+
+ // Popular Cheatsheets by Child Category
+ List<CheatsheetEntity> findPopularByCategoryId(
+         Long categoryId);
+
+ // Recent Cheatsheets by Child Category
+ List<CheatsheetEntity> findRecentByCategoryId(
+         Long categoryId);
+    
+    
+
+    }
+    
+    

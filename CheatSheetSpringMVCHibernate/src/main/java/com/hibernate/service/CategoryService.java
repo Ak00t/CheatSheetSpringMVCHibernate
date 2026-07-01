@@ -2,6 +2,7 @@ package com.hibernate.service;
 
 import java.util.List;
 import com.hibernate.entity.CategoryEntity;
+import com.hibernate.entity.CheatsheetEntity;
 
 public interface CategoryService {
 
@@ -24,6 +25,28 @@ public interface CategoryService {
 	List<CategoryEntity> findChildrenByParentId(Long parentId);
 
 	boolean existsBySlug(String slug);
+	
+	
+	//fianl
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	long countActiveCategories();
+
+	long countChildrenByParentId(Long parentId);
+	
+	
+	
+	// =========================
+	// Child Category View
+	// =========================
+
+	List<CheatsheetEntity> findPopularByCategoryId(
+	        Long categoryId);
+
+	List<CheatsheetEntity> findRecentByCategoryId(
+	        Long categoryId);
 	
 	
 

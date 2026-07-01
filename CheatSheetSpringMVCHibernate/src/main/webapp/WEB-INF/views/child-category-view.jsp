@@ -28,112 +28,220 @@ body{
 }
 
 .hero{
-    margin:30px 0;
-    padding:55px;
-    border-radius:30px;
+    margin:30px 0 25px;
+    border-radius:28px;
+    overflow:hidden;
+    background:white;
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+}
+
+.hero-top{
+    padding:50px;
     background:linear-gradient(135deg,#2563eb,#10b981);
     color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
 }
 
 .hero h1{
-    font-size:54px;
-    margin-bottom:15px;
-}
-
-.hero p{
-    font-size:18px;
-    line-height:1.8;
-    max-width:750px;
-}
-
-.section{
-    margin-top:55px;
-}
-
-.section-title{
-    font-size:38px;
-    font-weight:800;
+    font-size:48px;
     margin-bottom:12px;
 }
 
-.section-subtitle{
-    color:#64748b;
-    margin-bottom:25px;
+.hero p{
     font-size:17px;
+    line-height:1.7;
 }
 
-.tag-scroll,
-.sheet-scroll{
+.hero-stats{
     display:flex;
-    gap:18px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding-bottom:18px;
-    scroll-behavior:smooth;
+    gap:45px;
+    text-align:center;
 }
 
-.tag-scroll::-webkit-scrollbar,
-.sheet-scroll::-webkit-scrollbar{
-    height:10px;
+.hero-stats h2{
+    font-size:34px;
 }
 
-.tag-scroll::-webkit-scrollbar-track,
-.sheet-scroll::-webkit-scrollbar-track{
-    background:#dbeafe;
-    border-radius:999px;
+.hero-stats span{
+    font-size:15px;
 }
 
-.tag-scroll::-webkit-scrollbar-thumb,
-.sheet-scroll::-webkit-scrollbar-thumb{
-    background:linear-gradient(90deg,#2563eb,#10b981);
-    border-radius:999px;
+.follow-bar{
+    padding:22px 35px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.follow-info small{
+    color:#64748b;
+    font-weight:700;
+}
+
+.follow-info h3{
+    margin-top:6px;
+    font-size:20px;
+}
+
+.follow-btn,
+.following-btn{
+    border:none;
+    padding:13px 28px;
+    border-radius:14px;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.follow-btn{
+    background:#2563eb;
+}
+
+.following-btn{
+    background:#ef4444;
+}
+
+.page-layout{
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:25px;
+    align-items:start;
+}
+
+.sidebar-card,
+.main-card{
+    background:white;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(15,23,42,.07);
+    border:1px solid #e2e8f0;
+}
+
+.sidebar-card{
+    padding:22px;
+    margin-bottom:22px;
+}
+
+.sidebar-card h3{
+    font-size:20px;
+    margin-bottom:18px;
+}
+
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
 }
 
 .tag-card{
-    flex:0 0 auto;
-    padding:14px 24px;
+    padding:10px 16px;
     border-radius:999px;
     background:white;
     color:#2563eb;
     text-decoration:none;
-    font-weight:700;
+    font-weight:800;
     border:1px solid #bfdbfe;
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    box-shadow:0 6px 16px rgba(37,99,235,.08);
+    font-size:14px;
+}
+
+.mini-card{
+    display:flex;
+    gap:12px;
+    text-decoration:none;
+    color:#1e293b;
+    margin-bottom:16px;
+    align-items:center;
+}
+
+.mini-img{
+    width:70px;
+    height:55px;
+    border-radius:10px;
+    overflow:hidden;
+    background:#e2e8f0;
+    flex-shrink:0;
+}
+
+.mini-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.mini-title{
+    font-size:14px;
+    font-weight:800;
+    line-height:1.4;
+}
+
+.mini-meta{
+    margin-top:4px;
+    font-size:12px;
+    color:#64748b;
+}
+
+.main-card{
+    padding:25px;
+}
+
+.main-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.main-title{
+    font-size:30px;
+    font-weight:900;
+}
+
+.main-subtitle{
+    color:#64748b;
+    margin-top:6px;
+}
+
+.sheet-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:24px;
 }
 
 .sheet-card{
-    flex:0 0 380px;
-    border-radius:28px;
+    border-radius:22px;
     overflow:hidden;
     text-decoration:none;
     color:white !important;
-    border:1px solid rgba(255,255,255,0.2);
-    box-shadow:0 14px 35px rgba(0,0,0,.12);
+    box-shadow:0 12px 30px rgba(0,0,0,.13);
     transition:.3s;
-    padding:24px;
+    padding:20px;
     display:flex;
     flex-direction:column;
-    height:500px;
+    min-height:470px;
 }
 
 .sheet-card:hover{
     transform:translateY(-6px);
-    box-shadow:0 20px 40px rgba(0,0,0,.2);
+    box-shadow:0 20px 40px rgba(0,0,0,.22);
 }
 
 .sheet-cover{
     width:100%;
-    height:180px;
-    border:2px dashed rgba(255,255,255,0.4);
+    height:170px;
+    border:2px dashed rgba(255,255,255,0.45);
     border-radius:18px;
     display:flex;
     justify-content:center;
     align-items:center;
     color:white;
-    font-size:22px;
+    font-size:18px;
     font-weight:800;
     overflow:hidden;
-    background:rgba(0,0,0,0.05);
+    background:rgba(0,0,0,0.06);
     flex-shrink:0;
 }
 
@@ -144,7 +252,7 @@ body{
 }
 
 .sheet-body{
-    padding:12px 0 0 0;
+    padding-top:12px;
     display:flex;
     flex-direction:column;
     flex-grow:1;
@@ -153,33 +261,35 @@ body{
 
 .category-badge{
     display:inline-block;
-    padding:5px 15px;
+    padding:6px 14px;
     border-radius:999px;
-    background:rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.25);
     color:white;
-    font-size:13px;
+    font-size:12px;
     font-weight:800;
     margin-bottom:12px;
     align-self:flex-start;
 }
 
 .sheet-title{
-    font-size:24px;
+    font-size:21px;
     color:white;
     margin-bottom:8px;
-    font-weight:800;
+    font-weight:900;
+    line-height:1.35;
 }
 
 .sheet-description{
-    color:rgba(255,255,255,0.9);
-    line-height:1.6;
-    max-height:100px;
+    color:rgba(255,255,255,0.92);
+    line-height:1.55;
+    max-height:95px;
     overflow:hidden;
+    font-size:15px;
 }
 
 .see-btn{
     display:inline-block;
-    margin-top:5px;
+    margin-top:6px;
     color:white;
     text-decoration:underline;
     font-weight:800;
@@ -189,28 +299,44 @@ body{
 .sheet-footer{
     margin-top:auto;
     padding-top:12px;
-    border-top:1px solid rgba(255,255,255,0.2);
-    color:rgba(255,255,255,0.8);
+    border-top:1px solid rgba(255,255,255,0.25);
+    color:rgba(255,255,255,0.9);
     font-size:13px;
-    line-height:1.6;
+    line-height:1.7;
 }
 
 .creator-link{
     color:white;
     text-decoration:none;
-    font-weight:800;
+    font-weight:900;
 }
 
 .empty-box{
     background:white;
     border:2px dashed #cbd5e1;
-    border-radius:26px;
-    padding:30px;
+    border-radius:20px;
+    padding:25px;
     color:#64748b;
 }
 
+@media(max-width:900px){
+    .page-layout{
+        grid-template-columns:1fr;
+    }
+
+    .hero-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .hero-stats{
+        width:100%;
+        justify-content:space-between;
+    }
+}
+
 @media(max-width:768px){
-    .hero{
+    .hero-top{
         padding:30px;
     }
 
@@ -218,8 +344,8 @@ body{
         font-size:36px;
     }
 
-    .sheet-card{
-        flex-basis:320px;
+    .sheet-grid{
+        grid-template-columns:1fr;
     }
 }
 </style>
@@ -232,125 +358,271 @@ body{
 <div class="container">
 
     <section class="hero">
-        <h1>${childCategory.name}</h1>
 
-        <p>
+        <div class="hero-top">
+
+            <div>
+                <h1>${childCategory.name}</h1>
+
+                <p>
+                    <c:choose>
+                        <c:when test="${not empty childCategory.description}">
+                            ${childCategory.description}
+                        </c:when>
+
+                        <c:otherwise>
+                            Browse cheatsheets, tags and resources related to ${childCategory.name}.
+                        </c:otherwise>
+                    </c:choose>
+                </p>
+            </div>
+
+            <div class="hero-stats">
+                <div>
+                    <h2>${followersCount}</h2>
+                    <span>Followers</span>
+                </div>
+
+                <div>
+                    <h2>${cheatsheets.size()}</h2>
+                    <span>Cheatsheets</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="follow-bar">
+
+            <div class="follow-info">
+                <small>Category</small>
+                <h3>${childCategory.name}</h3>
+            </div>
+
             <c:choose>
-                <c:when test="${not empty childCategory.description}">
-                    ${childCategory.description}
+                <c:when test="${isFollowing}">
+                    <form method="post"
+                          action="${pageContext.request.contextPath}/category/unfollow/${childCategory.id}">
+                        <button type="submit" class="following-btn">
+                            ✓ Following
+                        </button>
+                    </form>
                 </c:when>
 
                 <c:otherwise>
-                    Browse tags and cheatsheets under this category.
+                    <form method="post"
+                          action="${pageContext.request.contextPath}/category/follow/${childCategory.id}">
+                        <button type="submit" class="follow-btn">
+                            + Follow
+                        </button>
+                    </form>
                 </c:otherwise>
             </c:choose>
-        </p>
+
+        </div>
+
     </section>
 
-    <section class="section">
-        <h2 class="section-title">Tags</h2>
-        <p class="section-subtitle">Explore tags under ${childCategory.name}.</p>
+    <div class="page-layout">
 
-        <c:choose>
-            <c:when test="${not empty tags}">
-                <div class="tag-scroll">
+        <aside>
 
-                    <c:forEach items="${tags}" var="tag">
-                        <a href="${pageContext.request.contextPath}/tag/${tag.id}" class="tag-card">
-                            #${tag.name}
-                        </a>
-                    </c:forEach>
+            <div class="sidebar-card">
+                <h3>🏷 Tags</h3>
 
-                </div>
-            </c:when>
+                <c:choose>
+                    <c:when test="${not empty tags}">
+                        <div class="tags">
+                            <c:forEach items="${tags}" var="tag">
+                                <a href="${pageContext.request.contextPath}/tag/${tag.id}" class="tag-card">
+                                    #${tag.name}
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </c:when>
 
-            <c:otherwise>
-                <div class="empty-box">
-                    No tags found for this category.
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </section>
+                    <c:otherwise>
+                        <div class="empty-box">
+                            No tags found.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
-    <section class="section">
-        <h2 class="section-title">Cheatsheets</h2>
-        <p class="section-subtitle">Public cheatsheets from ${childCategory.name}.</p>
+            <div class="sidebar-card">
+                <h3>🔥 Popular Cheatsheets</h3>
 
-        <c:choose>
-            <c:when test="${not empty cheatsheets}">
-                <div class="sheet-scroll">
+                <c:choose>
+                    <c:when test="${not empty popularCheatsheets}">
+                        <c:forEach items="${popularCheatsheets}" var="sheet">
+                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}" class="mini-card">
 
-                    <c:forEach items="${cheatsheets}" var="sheet">
-
-                        <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                           class="sheet-card"
-                           style="background-color:${sheet.themeColor};">
-
-                            <div class="sheet-cover">
-                                <c:choose>
-                                    <c:when test="${not empty sheet.mediaList}">
-                                        <img src="${sheet.mediaList[0].mediaUrl}"
-                                             alt="${sheet.title}">
-                                    </c:when>
-
-                                    <c:otherwise>
-                                        No Cover
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-
-                            <div class="sheet-body">
-
-                                <div class="category-badge">
-                                    ${sheet.category.name}
+                                <div class="mini-img">
+                                    <c:choose>
+                                        <c:when test="${not empty sheet.mediaList}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div></div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
 
-                                <h3 class="sheet-title">
-                                    ${sheet.title}
-                                </h3>
+                                <div>
+                                    <div class="mini-title">${sheet.title}</div>
+                                    <div class="mini-meta">👁 ${sheet.viewCount} views</div>
+                                </div>
 
-                                <p class="sheet-description">
-                                    ${sheet.description}
-                                </p>
+                            </a>
+                        </c:forEach>
+                    </c:when>
 
-                                <span class="see-btn">
-                                    See More
-                                </span>
+                    <c:otherwise>
+                        <div class="empty-box">
+                            No popular cheatsheets.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
-                                <div class="sheet-footer">
-                                    Created By:
-                                    <span class="creator-link">
-                                        ${sheet.user.name}
+            <div class="sidebar-card">
+                <h3>🆕 Recent Cheatsheets</h3>
+
+                <c:choose>
+                    <c:when test="${not empty recentCheatsheets}">
+                        <c:forEach items="${recentCheatsheets}" var="sheet">
+                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}" class="mini-card">
+
+                                <div class="mini-img">
+                                    <c:choose>
+                                        <c:when test="${not empty sheet.mediaList}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div></div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+
+                                <div>
+                                    <div class="mini-title">${sheet.title}</div>
+                                    <div class="mini-meta">
+                                        🗓
+                                        <fmt:parseDate
+                                                value="${sheet.createdAt}"
+                                                pattern="yyyy-MM-dd'T'HH:mm:ss"
+                                                var="recentDate"/>
+
+                                        <fmt:formatDate
+                                                value="${recentDate}"
+                                                pattern="dd MMM yyyy"/>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </c:forEach>
+                    </c:when>
+
+                    <c:otherwise>
+                        <div class="empty-box">
+                            No recent cheatsheets.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+        </aside>
+
+        <main class="main-card">
+
+            <div class="main-head">
+                <div>
+                    <div class="main-title">
+                        📚 All Cheatsheets
+                    </div>
+                    <p class="main-subtitle">
+                        Browse all public cheatsheets under ${childCategory.name}.
+                    </p>
+                </div>
+            </div>
+
+            <c:choose>
+                <c:when test="${not empty cheatsheets}">
+                    <div class="sheet-grid">
+
+                        <c:forEach items="${cheatsheets}" var="sheet">
+
+                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                               class="sheet-card"
+                               style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
+
+                                <div class="sheet-cover">
+                                    <c:choose>
+                                        <c:when test="${not empty sheet.mediaList}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}"
+                                                 alt="${sheet.title}">
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            No Cover
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+
+                                <div class="sheet-body">
+
+                                    <div class="category-badge">
+                                        ${sheet.category.name}
+                                    </div>
+
+                                    <h3 class="sheet-title">
+                                        ${sheet.title}
+                                    </h3>
+
+                                    <p class="sheet-description">
+                                        ${sheet.description}
+                                    </p>
+
+                                    <span class="see-btn">
+                                        See More
                                     </span>
 
-                                    <br>
+                                    <div class="sheet-footer">
+                                        Created By:
+                                        <span class="creator-link">
+                                            ${sheet.user.name}
+                                        </span>
 
-                                    🗓
-                                    <fmt:parseDate
-                                            value="${sheet.createdAt}"
-                                            pattern="yyyy-MM-dd'T'HH:mm:ss"
-                                            var="createdDate"/>
+                                        <br>
 
-                                    <fmt:formatDate
-                                            value="${createdDate}"
-                                            pattern="dd MMM yyyy"/>
+                                        🗓
+                                        <fmt:parseDate
+                                                value="${sheet.createdAt}"
+                                                pattern="yyyy-MM-dd'T'HH:mm:ss"
+                                                var="createdDate"/>
+
+                                        <fmt:formatDate
+                                                value="${createdDate}"
+                                                pattern="dd MMM yyyy"/>
+                                    </div>
+
                                 </div>
+                            </a>
 
-                            </div>
-                        </a>
+                        </c:forEach>
 
-                    </c:forEach>
+                    </div>
+                </c:when>
 
-                </div>
-            </c:when>
+                <c:otherwise>
+                    <div class="empty-box">
+                        No published cheatsheets found for this category.
+                    </div>
+                </c:otherwise>
+            </c:choose>
 
-            <c:otherwise>
-                <div class="empty-box">
-                    No published cheatsheets found for this category.
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </section>
+        </main>
+
+    </div>
 
 </div>
 
@@ -366,7 +638,7 @@ document.querySelectorAll(".see-btn").forEach(function(btn){
         const desc = this.previousElementSibling;
 
         if(desc.style.maxHeight === "none"){
-            desc.style.maxHeight = "100px";
+            desc.style.maxHeight = "95px";
             this.innerText = "See More";
         }else{
             desc.style.maxHeight = "none";
