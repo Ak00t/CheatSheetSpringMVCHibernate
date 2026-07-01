@@ -44,10 +44,19 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/", "/register", "/login", "/search/**", "/resources/**")
+							.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
+									"reset-password", "/resources/**")
 								.permitAll()
 								.anyRequest()
 								.authenticated())
+
+					// 3. UNAUTHENTICATED REDIRECT HANDLER
+					.exceptionHandling(
+							exception -> exception.authenticationEntryPoint((request, response, authException) -> {
+								// Automatically routes unauthenticated users home and tells your JS to pop open
+								// the modal with an error
+								response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
+							}))
 
 					.formLogin()
 					.loginPage("/")

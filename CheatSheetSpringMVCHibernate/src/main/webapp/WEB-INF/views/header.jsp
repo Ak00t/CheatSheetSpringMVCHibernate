@@ -131,28 +131,35 @@
                     </div>
                 </c:if>
 
-                <form action="${pageContext.request.contextPath}/login" method="POST">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Email Address</label>
-                        <input type="email" name="email" class="form-control" required="required" placeholder="name@example.com" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Password</label>
-                        <input type="password" name="password" class="form-control" required="required" placeholder="••••••••" />
-                    </div>
-                    <div class="mb-4 form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember-me">
-                        <label class="form-check-label small text-muted" for="rememberMeCheck">Remember me on this machine</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
-                </form>
-            </div>
-            <div class="modal-footer bg-light justify-content-center border-0 py-3">
-                <span class="small text-muted">New here? <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#registerModal" class="fw-bold text-decoration-none">Create an account</a></span>
-            </div>
-        </div>
-    </div>
-</div>
+						<form action="${pageContext.request.contextPath}/login" method="POST">
+						                    <div class="mb-3">
+						                        <label class="form-label small fw-bold text-secondary">Email Address</label>
+						                        <input type="email" name="email" class="form-control" required="required" placeholder="name@example.com" />
+						                    </div>
+						                    <div class="mb-3">
+						                        <label class="form-label small fw-bold text-secondary">Password</label>
+						                        <input type="password" name="password" class="form-control" required="required" placeholder="••••••••" />
+						                    </div>
+						                    
+						                    <div class="mb-4 d-flex justify-content-between align-items-center">
+						                        <div class="form-check m-0">
+						                            <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember-me">
+						                            <label class="form-check-label small text-muted" for="rememberMeCheck">Remember me</label>
+						                        </div>
+						                        <div>
+						                            <a href="${pageContext.request.contextPath}/forgot-password" class="small text-decoration-none fw-semibold">Forgot Password?</a>
+						                        </div>
+						                    </div>
+						                    
+						                    <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
+						                </form>
+						            </div>
+						            <div class="modal-footer bg-light justify-content-center border-0 py-3">
+						                <span class="small text-muted">New here? <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#registerModal" class="fw-bold text-decoration-none">Create an account</a></span>
+						            </div>
+						        </div>
+						    </div>
+						</div>
 
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -200,11 +207,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     
+    function clearUrlParams() {
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+    }
+    
     // --- STABLE MODAL ROUTING MECHANICS ---
     if (urlParams.get('error') === 'true') {
         const loginEl = document.getElementById('loginModal');
         if (loginEl) {
             bootstrap.Modal.getOrCreateInstance(loginEl).show();
+            clearUrlParams();
         }
     }
 
@@ -212,6 +225,33 @@ document.addEventListener("DOMContentLoaded", function() {
         const regEl = document.getElementById('registerModal');
         if (regEl) {
             bootstrap.Modal.getOrCreateInstance(regEl).show();
+            clearUrlParams();
+        }
+    }
+    if (urlParams.get('login')==='true') {
+		const loginEl = document.getElementById('loginModal');
+		if (loginEl) {
+			bootstrap.Modal.getOrCreateInstance(loginEl).show();
+			clearUrlParams();
+		}
+	}
+ // Add this inside your existing document.addEventListener("DOMContentLoaded", function() { ... }) block
+
+    if (urlParams.get('unauthorized') === 'true') {
+        const loginEl = document.getElementById('loginModal');
+        if (loginEl) {
+            bootstrap.Modal.getOrCreateInstance(loginEl).show();
+            const modalBody = loginEl.querySelector('.modal-body');
+            
+            if (modalBody && !document.getElementById('authErrorAlert')) {
+                const alertDiv = document.createElement('div');
+                alertDiv.id = 'authErrorAlert';
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show py-2 small';
+                alertDiv.innerHTML = '🔒 Please sign in first to access that area.' +
+                                      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
+                modalBody.insertBefore(alertDiv, modalBody.firstChild);
+            }
+            clearUrlParams();
         }
     }
 
@@ -228,6 +268,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                       '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
                 modalBody.insertBefore(alertDiv, modalBody.firstChild);
             }
+            clearUrlParams();
         }
     }
 
@@ -321,6 +362,7 @@ document.addEventListener("DOMContentLoaded", function() {
             suggestBox.classList.add("d-none");
         }
     });
+    
 });
 
 function readNotification(notificationId, redirectUrl) {

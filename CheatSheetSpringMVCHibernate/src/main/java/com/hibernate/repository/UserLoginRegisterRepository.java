@@ -9,4 +9,9 @@ public interface UserLoginRegisterRepository {
 	public void registerUser(UserEntity obj);
 
 	public UserEntity findByEmail(String email);
+
+	public void updateUser(UserEntity obj);
+
+	public UserEntity findByResetPasswordToken(String token);
+
 }

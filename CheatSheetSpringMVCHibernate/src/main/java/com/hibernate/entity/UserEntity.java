@@ -146,4 +146,10 @@ public class UserEntity {
 
 	@OneToMany(mappedBy = "adminUser")
 	private List<AuditLogEntity> auditLogs;
+
+	@Column(name = "reset_password_token", length = 45)
+	private String resetPasswordToken;
+
+	@Column(name = "reset_password_expires_at")
+	private LocalDateTime resetPasswordExpiresAt;
 }

@@ -22,8 +22,10 @@ public class UserLoginRegisterRepositoryImpl implements UserLoginRegisterReposit
 
 	@Override
 	public boolean checkEmail(UserEntity obj) {
-		Long count = getSession().createQuery("SELECT COUNT(u) FROM UserEntity u WHERE email=:email", Long.class)
-				.setParameter("email", obj.getEmail()).uniqueResult();
+		Long count = getSession()
+				.createQuery("SELECT COUNT(u) FROM UserEntity u WHERE email=:email", Long.class)
+					.setParameter("email", obj.getEmail())
+					.uniqueResult();
 
 		return count != null && count > 0;
 	}
@@ -34,11 +36,28 @@ public class UserLoginRegisterRepositoryImpl implements UserLoginRegisterReposit
 	}
 
 	@Override
-	public UserEntity findByEmail(String	 email) {		
-		return getSession().createQuery("FROM UserEntity WHERE email=:email",UserEntity.class)
-				.setParameter("email", email)
-				.uniqueResultOptional()
-				.orElse(null);
+	public UserEntity findByEmail(String email) {
+		return getSession()
+				.createQuery("FROM UserEntity WHERE email=:email", UserEntity.class)
+					.setParameter("email", email)
+					.uniqueResultOptional()
+					.orElse(null);
+	}
+
+	@Override
+	public void updateUser(UserEntity obj) {
+		getSession().merge(obj);
+
+	}
+
+	@Override
+	public UserEntity findByResetPasswordToken(String token) {
+
+		return getSession()
+				.createQuery("FROM UserEntity WHERE resetPasswordToken=:token", UserEntity.class)
+					.setParameter("token", token)
+					.uniqueResultOptional()
+					.orElse(null);
 	}
 
 }

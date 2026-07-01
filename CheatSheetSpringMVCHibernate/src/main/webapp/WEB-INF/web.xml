@@ -14,10 +14,7 @@
             </multipart-config>
               
       </servlet>
-      
-      
-     
-            
+                
 
       <servlet-mapping>
             <servlet-name>spring</servlet-name>
@@ -32,7 +29,8 @@
       
       <context-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring-hibernate.xml</param-value>
+            <param-value>/WEB-INF/spring-hibernate.xml
+            </param-value>
       </context-param>
       
       
