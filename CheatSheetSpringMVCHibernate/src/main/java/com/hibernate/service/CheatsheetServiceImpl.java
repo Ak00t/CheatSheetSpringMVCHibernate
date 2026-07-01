@@ -135,8 +135,19 @@ public class CheatsheetServiceImpl implements CheatsheetService {
         return cheatsheet;
     }
     //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
- 
+ // profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
+
+    @Override
+    public CheatsheetEntity findVisibleCheatsheet(
+            Long cheatsheetId,
+            Long loginUserId) {
+
+        return cheatsheetRepository.findVisibleCheatsheet(
+                cheatsheetId,
+                loginUserId);
+    }
+
+    }
     
     
     
-}

@@ -48,7 +48,10 @@ public interface CheatsheetService {
     // profile edit အတွက် edit view မှာ မူလ old data များ ပြန်ပေါ်ရန်
 	CheatsheetEntity findDetailsForEdit(Long id);
 	 //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
-	
+	// Owner / Public permission စစ်ပြီး detail ပြရန်
+	CheatsheetEntity findVisibleCheatsheet(
+	        Long cheatsheetId,
+	        Long loginUserId);
 	
 
 }
