@@ -6,4 +6,5 @@ import com.hibernate.entity.UserEntity;
 public interface UserProfileRepository {
     UserEntity findById(Long id);
     void updateProfile(UserEntity user);
+	UserEntity findByUsername(String currentUsername);
 }

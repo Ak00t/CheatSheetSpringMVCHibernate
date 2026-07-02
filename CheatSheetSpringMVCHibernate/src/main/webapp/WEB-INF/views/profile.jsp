@@ -45,6 +45,17 @@
 .btn-outline-danger { border-radius: 20px; transition: 0.3s; }
 .btn-primary { border-radius: 20px; transition: 0.3s; }
         
+        
+        
+        
+        .btn-outline-secondary {
+        border: 1px solid #ced4da;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 10px;
+        text-align: center;
+        display: block;
+    }
     </style>
 </head>
 <body>
@@ -54,23 +65,28 @@
         <div class="col-md-6 profile-card">
             <h2 class="text-center mb-4 fw-bold" style="color: #2d3748;">Edit Profile</h2>
             
-            <form action="${pageContext.request.contextPath}/profile/update" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id" value="${user.id}">
+            <%-- Login ဝင်ထားတဲ့သူရဲ့ ID နဲ့ Profile ပိုင်ရှင် ID ကို နှိုင်းယှဉ်ပြီး variable တစ်ခု သတ်မှတ်ပါ --%>
+<c:set var="isOwner" value="${currentUser.id == user.id}" />
 
-                <div class="text-center mb-4">
-                    <label class="d-block mb-3">Current Photo:</label>
-<img src="${pageContext.request.contextPath}/uploads/profiles/${user.profileImg}" 
-     class="profile-img" alt="Profile Photo">            
-     
-         </div>
-         
-        
-         
+<form action="${pageContext.request.contextPath}/profile/update" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="${user.id}">
 
-                <div class="mb-3">
-                    <label>Change Photo:</label>
-                    <input type="file" name="profileImg" class="form-control">
-                </div>
+    <div class="text-center mb-4">
+        <label class="d-block mb-3">Current Photo:</label>
+        <img src="${pageContext.request.contextPath}/uploads/profiles/${user.profileImg}" class="profile-img" alt="Profile Photo">            
+    </div>
+
+    <%-- ဤနေရာတွင် c:if ကိုသုံးပြီး ပိုင်ရှင်မှသာ "Choose File" အပိုင်းကို မြင်ရအောင်လုပ်ပါ --%>
+    <c:if test="${isOwner}">
+        <div class="mb-3">
+            <label>Change Photo:</label>
+            <input type="file" name="profileImg" class="form-control">
+        </div>
+    </c:if>
+    
+    <%-- ကျန်တဲ့ Name, Bio နဲ့ Save button တွေကိုလည်း အပေါ်ကအတိုင်း လိုအပ်သလို c:if ခံပေးနိုင်ပါတယ် --%>
+    ...
+
 
                 <div class="mb-3">
                     <label>Name:</label>
@@ -87,18 +103,25 @@
                 </div>
                 
              <div class="text-center mt-3">
-    <%-- 'isFollowing' တန်ဖိုးအပေါ်မူတည်၍ class နှင့် စာသားကို ပြောင်းလဲပေးခြင်း --%>
+    <c:if test="${currentUser.id != user.id}">
     <button type="button" 
             onclick="toggleFollow(${user.id})" 
             class="btn ${isFollowing ? 'btn-outline-danger' : 'btn-primary'} w-100">
         ${isFollowing ? 'Unfollow' : 'Follow'}
     </button>
+</c:if>
 </div>
+<%-- ပြင်ဆင်ချက် --%>
+<%-- ပြင်ဆင်ချက် --%>
 <div class="d-flex gap-3 mt-4">
-                    <a href="javascript:history.back()" class="btn btn-back flex-grow-1 text-center">Back</a>
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-save">Save Changes</button>
-                </div>
+    <a href="${pageContext.request.contextPath}" class="btn btn-secondary flex-grow-1 text-center">Back</a>
+    
+    <c:if test="${currentUser.id == user.id}">
+        <div class="mt-4">
+            <button type="submit" class="btn btn-save">Save Changes</button>
+        </div>
+    </c:if>
+</div>
             </form>
         </div>
     </div>
@@ -130,6 +153,13 @@ function toggleFollow(followingId) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+
+document.getElementById('file-upload').addEventListener('change', function() {
+    var fileName = this.files[0].name;
+    // label စာသားကို ဖိုင်နာမည်နဲ့ အစားထိုးမယ်
+    this.previousElementSibling.textContent = fileName;
+});
 </script>
 </body>
 </html>

@@ -39,11 +39,19 @@ public class UserProfileController {
     public String updateProfile(@RequestParam("id") Long id,
                                 @RequestParam("name") String name,
                                 @RequestParam("bio") String bio,
-                                @RequestParam("profileImg") MultipartFile profileImg) {
+                                @RequestParam("profileImg") MultipartFile profileImg,Principal principal) {
     	UserEntity user = userRepository.findById(id);
         
-    	
-        
+    	String currentUsername = principal.getName();
+        UserEntity currentUser = userRepository.findByUsername(currentUsername);
+
+        // 2. Security Validation: Login ဝင်ထားတဲ့သူရဲ့ ID နဲ့ Update လုပ်မယ့် ID တူမှသာ လုပ်ဆောင်ပါ
+        if (!currentUser.getId().equals(id)) {
+            return "redirect:/error/403"; // တူညီမှုမရှိရင် Access Denied စာမျက်နှာသို့ ပို့ပါ
+        }
+
+        // တူညီတယ်ဆိုရင် အောက်ပါ Update လုပ်ငန်းစဉ်များကို ဆက်လုပ်ပါ
+                
         if (!profileImg.isEmpty()) {
               try {
                   // Dynamic Path: user.home/app_uploads/profiles/
