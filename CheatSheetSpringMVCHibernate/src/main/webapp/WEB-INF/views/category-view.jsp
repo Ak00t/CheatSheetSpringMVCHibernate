@@ -284,7 +284,7 @@ body{
     <div class="stats-row">
         <div class="stat-card">
             <h2>${childCount}</h2>
-            <p>Child Categories</p>
+            <p>Categories</p>
         </div>
 
         <div class="stat-card">
