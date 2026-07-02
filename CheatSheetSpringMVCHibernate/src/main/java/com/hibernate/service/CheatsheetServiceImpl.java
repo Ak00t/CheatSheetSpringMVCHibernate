@@ -200,6 +200,48 @@ public List<CheatsheetEntity> findRecentByCategoryId(
                   categoryId);
 }
     
+//pagination
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
+        Long categoryId,
+        int page,
+        int size) {
+
+    return cheatsheetRepository
+            .findPublishedCheatsheetsByCategoryIdWithPagination(
+                    categoryId,
+                    page,
+                    size);
+}
+
+@Override
+public long countPublishedCheatsheetsByCategoryId(Long categoryId) {
+
+    return cheatsheetRepository
+            .countPublishedCheatsheetsByCategoryId(categoryId);
+}
+
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByTagIdWithPagination(
+        Long tagId,
+        int page,
+        int size) {
+
+    return cheatsheetRepository
+            .findPublishedCheatsheetsByTagIdWithPagination(
+                    tagId,
+                    page,
+                    size);
+}
+
+@Override
+public long countPublishedCheatsheetsByTagId(Long tagId) {
+
+    return cheatsheetRepository
+            .countPublishedCheatsheetsByTagId(tagId);
+}
+
+
     
     }
     

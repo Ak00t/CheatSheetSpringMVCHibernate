@@ -81,5 +81,20 @@ public interface CheatsheetService {
 	List<CheatsheetEntity> findPopularByCategoryId(Long categoryId);
 
 	List<CheatsheetEntity> findRecentByCategoryId(Long categoryId);
+	//pagination
+	List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
+	        Long categoryId,
+	        int page,
+	        int size);
+
+	long countPublishedCheatsheetsByCategoryId(Long categoryId);
+
+	List<CheatsheetEntity> findPublishedCheatsheetsByTagIdWithPagination(
+	        Long tagId,
+	        int page,
+	        int size);
+
+	long countPublishedCheatsheetsByTagId(Long tagId);
+	
 
 }

@@ -384,6 +384,103 @@ public List<CheatsheetEntity> findRecentByCategoryId(
           .setMaxResults(5)
           .getResultList();
 }
+
+//pagination
     
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
+        Long categoryId,
+        int page,
+        int size) {
+
+    return sessionFactory.getCurrentSession()
+            .createQuery(
+                    "select distinct c from CheatsheetEntity c " +
+                    "left join fetch c.mediaList " +
+                    "left join fetch c.user " +
+                    "left join fetch c.category " +
+                    "where c.category.id = :categoryId " +
+                    "and c.publishStatus = :publishStatus " +
+                    "and c.visibility = :visibility " +
+                    "and c.status = :status " +
+                    "order by c.createdAt desc",
+                    CheatsheetEntity.class)
+            .setParameter("categoryId", categoryId)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+            .setParameter("status", ContentStatus.ACTIVE)
+            .setFirstResult(page * size)
+            .setMaxResults(size)
+            .getResultList();
+}
+
+@Override
+public long countPublishedCheatsheetsByCategoryId(Long categoryId) {
+
+    return sessionFactory.getCurrentSession()
+            .createQuery(
+                    "select count(c.id) from CheatsheetEntity c " +
+                    "where c.category.id = :categoryId " +
+                    "and c.publishStatus = :publishStatus " +
+                    "and c.visibility = :visibility " +
+                    "and c.status = :status",
+                    Long.class)
+            .setParameter("categoryId", categoryId)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+            .setParameter("status", ContentStatus.ACTIVE)
+            .getSingleResult();
+}
+
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByTagIdWithPagination(
+        Long tagId,
+        int page,
+        int size) {
+
+    return sessionFactory.getCurrentSession()
+            .createQuery(
+                    "select distinct c from CheatsheetEntity c " +
+                    "inner join c.tags t " +
+                    "left join fetch c.mediaList " +
+                    "left join fetch c.user " +
+                    "left join fetch c.category " +
+                    "where t.id = :tagId " +
+                    "and c.publishStatus = :publishStatus " +
+                    "and c.visibility = :visibility " +
+                    "and c.status = :status " +
+                    "order by c.createdAt desc",
+                    CheatsheetEntity.class)
+            .setParameter("tagId", tagId)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+            .setParameter("status", ContentStatus.ACTIVE)
+            .setFirstResult(page * size)
+            .setMaxResults(size)
+            .getResultList();
+}
+
+
+//pagination
+@Override
+public long countPublishedCheatsheetsByTagId(Long tagId) {
+
+    return sessionFactory.getCurrentSession()
+            .createQuery(
+                    "select count(distinct c.id) from CheatsheetEntity c " +
+                    "inner join c.tags t " +
+                    "where t.id = :tagId " +
+                    "and c.publishStatus = :publishStatus " +
+                    "and c.visibility = :visibility " +
+                    "and c.status = :status",
+                    Long.class)
+            .setParameter("tagId", tagId)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+            .setParameter("status", ContentStatus.ACTIVE)
+            .getSingleResult();
+}
+
+
     
 }

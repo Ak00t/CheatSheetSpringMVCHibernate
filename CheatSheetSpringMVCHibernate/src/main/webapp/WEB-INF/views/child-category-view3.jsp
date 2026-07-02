@@ -348,51 +348,6 @@ body{
         grid-template-columns:1fr;
     }
 }
-
-/* Pagination UI */
-.category-pagination{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:12px;
-    margin-top:40px;
-    width:100%;
-    flex-wrap:wrap;
-}
-
-.category-pagination .page-btn{
-    min-width:48px;
-    height:48px;
-    padding:0 20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:14px;
-    background:#ffffff;
-    color:#0f172a !important;
-    text-decoration:none !important;
-    font-size:15px;
-    font-weight:900;
-    border:1px solid #e2e8f0;
-    box-shadow:0 8px 20px rgba(15,23,42,.08);
-    transition:.25s ease;
-}
-
-.category-pagination .page-btn:hover{
-    background:#2563eb;
-    color:white !important;
-    border-color:#2563eb;
-    transform:translateY(-3px);
-    box-shadow:0 14px 28px rgba(37,99,235,.22);
-}
-
-.category-pagination .page-btn.active{
-    background:#2563eb;
-    color:white !important;
-    border-color:#2563eb;
-    box-shadow:0 14px 28px rgba(37,99,235,.22);
-}
-
 </style>
 </head>
 
@@ -576,8 +531,6 @@ body{
             </div>
 
         </aside>
-        
-        
 
         <main class="main-card">
 
@@ -656,41 +609,6 @@ body{
                             </a>
 
                         </c:forEach>
-                        
-                      
-                      <c:if test="${totalPages > 1}">
-
-    <div class="category-pagination">
-
-        <c:if test="${page > 0}">
-            <a href="${pageContext.request.contextPath}${baseUrl}?page=${page - 1}"
-               class="page-btn">
-                ← Prev
-            </a>
-        </c:if>
-
-        <c:forEach begin="0"
-                   end="${totalPages - 1}"
-                   var="i">
-
-            <a href="${pageContext.request.contextPath}${baseUrl}?page=${i}"
-               class="page-btn ${i == page ? 'active' : ''}">
-                ${i + 1}
-            </a>
-
-        </c:forEach>
-
-        <c:if test="${page < totalPages - 1}">
-            <a href="${pageContext.request.contextPath}${baseUrl}?page=${page + 1}"
-               class="page-btn">
-                Next →
-            </a>
-        </c:if>
-
-    </div>
-
-</c:if>
-                           
 
                     </div>
                 </c:when>
