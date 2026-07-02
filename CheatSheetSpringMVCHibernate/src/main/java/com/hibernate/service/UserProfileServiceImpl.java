@@ -44,5 +44,10 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserEntity getUserProfile(Long id) {
         return userRepository.findById(id);
     }
+
+	@Override
+	public UserEntity findById(Long userId) {
+		return userRepository.findById(userId);
+	}
     
 }

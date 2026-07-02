@@ -46,6 +46,14 @@
             Logout
         </a>
     </c:when>
+    <c:otherwise>
+                <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    Login
+                </button>
+                <button type="button" class="btn btn-primary btn-sm fw-bold px-3 rounded-2" data-bs-toggle="modal" data-bs-target="#registerModal">
+                    Register
+                </button>
+            </c:otherwise>
     </c:choose>
     </nav>
 </header>

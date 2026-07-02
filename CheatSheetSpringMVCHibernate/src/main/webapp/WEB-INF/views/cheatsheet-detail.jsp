@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${cheatsheet.title} - Cheat Sheet</title>
-    
+    <!-- Bootstrap 5 Bundle (JS + Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    
     <style>
         body {
@@ -180,8 +181,10 @@
                 <span class="fw-medium">Bookmark</span>
             </div>
         </button>
+        
     </form>
 </div>
+
 
 
 
@@ -197,6 +200,14 @@
             </div>
         </div>
     </div>
+
+
+<button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2" 
+        onclick="openModal('${cheatsheet.id}')">
+    <i class="bi bi-collection-play"></i> Save to Playlist
+</button>
+
+
 
     <div class="card border-0 shadow-sm p-4 rounded-4 bg-white mb-5">
         <h3 class="fw-bold mb-4"><i class="bi bi-chat-left-text-fill me-2 text-muted"></i> Discussion Comments</h3>
@@ -281,6 +292,11 @@
                                 </button>
                             </div>
 
+
+
+
+
+
                             <div id="edit-form-${comment.id}" class="mt-3 p-3 bg-white border rounded-3" style="display:none;">
                                 <form method="post" action="${pageContext.request.contextPath}/comment/edit">
                                     <input type="hidden" name="commentId" value="${comment.id}" />
@@ -363,8 +379,26 @@
         </form>
     </div>
 </div>
-<jsp:include page="footer.jsp"/>
 
+<div id="playlistModal" style="display:none; position:fixed; z-index:9999; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <div style="background:white; margin:10% auto; padding:25px; width:350px; border-radius:15px; color:black;">
+        <h4 class="mb-3">Save to...</h4>
+        
+        <select id="playlistSelect" class="form-select mb-3">
+            <option value="">Select a playlist</option>
+        </select>
+        
+        <hr>
+        
+        <div id="createSection" class="mb-3">
+            <input type="text" id="newPlaylistName" class="form-control" placeholder="New Playlist Name">
+            <button onclick="createNewPlaylist()" class="btn btn-dark w-100 mt-2">Create Playlist</button>
+        </div>
+        
+        <button onclick="saveToSelectedPlaylist()" class="btn btn-success w-100">Save to Selected</button>
+        <button onclick="closeModal()" class="btn btn-light w-100 mt-2">Cancel</button>
+    </div>
+</div>
 <script>
 function toggleReplyForm(id) {
     let el = document.getElementById('reply-form-' + id);
@@ -411,6 +445,59 @@ function translateComment(commentId, targetLang) {
         .then(res => { if(!res.ok) throw new Error(); return res.text(); })
         .then(txt => { targetSpan.innerText = txt; })
         .catch(() => { targetSpan.innerText = originalText; alert("Could not fetch translation matrix body."); });
+}
+
+
+
+//Modal ဖွင့်ခြင်း
+function openModal(cheatsheetId) {
+    document.getElementById('playlistModal').style.display = "block";
+    fetch('${pageContext.request.contextPath}/collection/list')
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById('playlistSelect');
+            select.innerHTML = '<option value="">-- Choose Playlist --</option>';
+            data.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+        });
+}
+
+function closeModal() {
+    document.getElementById('playlistModal').style.display = "none";
+}
+
+// Playlist အသစ်ဆောက်ခြင်း
+function createNewPlaylist() {
+    const name = document.getElementById('newPlaylistName').value;
+    if(!name) return alert("Please enter a name");
+    
+    fetch('${pageContext.request.contextPath}/collection/create', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'name=' + encodeURIComponent(name)
+    }).then(() => {
+        alert("Playlist Created!");
+        openModal(); 
+    });
+}
+
+function saveToSelectedPlaylist() {
+    const collectionId = document.getElementById('playlistSelect').value;
+    const cheatsheetId = '${cheatsheet.id}'; // လက်ရှိ page ရဲ့ id
+
+    if(!collectionId) return alert("Please select a playlist first!");
+
+    fetch('${pageContext.request.contextPath}/collection/add-to-playlist', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `collectionId=${collectionId}&cheatsheetId=${cheatsheetId}`
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("Successfully added to your playlist!");
+        closeModal();
+    });
 }
 </script>
 </body>

@@ -3,12 +3,15 @@ package com.hibernate.controller;
 	
 import com.hibernate.entity.UserEntity;
 import com.hibernate.repository.UserProfileRepository;
+
 import com.hibernate.service.UserProfileService;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +25,13 @@ public class UserProfileController {
     private UserProfileService userService;
     @Autowired
     private UserProfileRepository userRepository;
+  
     @GetMapping("/{id}")
     public String viewProfile(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.getUserProfile(id));
+        
+       
+     
         return "profile";
     }
     

@@ -300,6 +300,11 @@ body{
     </c:choose>
 </div>
 
+
+
+
+
+
                             <div class="sheet-body">
 
                                 <div class="category-badge">
@@ -317,14 +322,15 @@ body{
                                 <span class="see-btn">
                                     See More
                                 </span>
-                                
-                                
+                       
 
                                 <%-- <div class="sheet-footer">
                                     Created By: <span class="creator-link">${sheet.user.name}</span>
                                     <br>
                                     Created At: ${sheet.createdAt}
                                 </div> --%>
+                                
+                       
                                 
                                <div class="sheet-footer">
                                
@@ -411,8 +417,25 @@ document.querySelectorAll(".see-btn").forEach(function(btn){
     flex-shrink: 0;
     margin-bottom: 10px; /* အောက်က စာသားနဲ့ ကပ်မနေအောင် */
 }
+function openModal() {
+    const modal = document.getElementById('playlistModal');
+    modal.style.display = "block";
 
+    // Hibernate မှတစ်ဆင့် Data လှမ်းယူခြင်း
+    fetch('${pageContext.request.contextPath}/collection/list')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('playlistSelect');
+            select.innerHTML = '<option>Select a playlist</option>';
+            data.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+        });
+}
 
+function closeModal() {
+    document.getElementById('playlistModal').style.display = "none";
+}
 </script>
 
 </body>
