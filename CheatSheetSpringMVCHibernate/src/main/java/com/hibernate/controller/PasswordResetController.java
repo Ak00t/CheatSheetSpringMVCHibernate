@@ -64,6 +64,6 @@ public class PasswordResetController {
 			model.addAttribute("token", token);
 			return "reset-password-form";
 		}
-		return "login";
+		return "redirect:/?resetSuccess=true";
 	}
 }

@@ -27,7 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public void createAndSendNotification(String title, String message, String type, ReferenceType refType, Long refId,
 			Long targetUserId, Long actorUserId) {
 
-		// 1. Create and populate the core entity properties
+		// 1. Create and populate the core entity propertiesx
 		NotificationEntity notification = new NotificationEntity();
 		notification.setTitle(title);
 		notification.setMessage(message);
@@ -42,7 +42,6 @@ public class NotificationServiceImpl implements NotificationService {
 		UserEntity targetUser = new UserEntity();
 		targetUser.setId(targetUserId);
 		notification.setUser(targetUser);
-
 		if (actorUserId != null) {
 			UserEntity actorUser = new UserEntity();
 			actorUser.setId(actorUserId);
@@ -54,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// 4. Map to clean DTO payload and dispatch over WebSockets
 		NotificationDTO payload = new NotificationDTO(notification);
-		messagingTemplate.convertAndSend("/queue/notifications-" + targetUserId, payload);
+		messagingTemplate.convertAndSend("/topic/notifications-" + targetUserId, payload);
 	}
 
 	@Override

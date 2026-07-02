@@ -44,8 +44,10 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
-									"reset-password", "/resources/**")
+							.requestMatchers("/admindashboard/**")
+								.hasRole("ADMIN")
+								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
+										"/reset-password", "/resources/**")
 								.permitAll()
 								.anyRequest()
 								.authenticated())
@@ -59,7 +61,7 @@ public class WebSecurityConfig {
 							}))
 
 					.formLogin()
-					.loginPage("/")
+					.loginPage("/?login=true")
 					.loginProcessingUrl("/login")
 					.successHandler(customSuccessHandler())
 
@@ -74,6 +76,7 @@ public class WebSecurityConfig {
 					.logoutSuccessUrl("/?logout=true")
 					.permitAll()
 					.and()
+
 					.rememberMe()
 					.key("myToken")
 					.tokenValiditySeconds(86400)

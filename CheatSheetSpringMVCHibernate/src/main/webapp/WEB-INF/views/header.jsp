@@ -116,6 +116,7 @@
 }
 </style>
 
+<!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -131,36 +132,37 @@
                     </div>
                 </c:if>
 
-						<form action="${pageContext.request.contextPath}/login" method="POST">
-						                    <div class="mb-3">
-						                        <label class="form-label small fw-bold text-secondary">Email Address</label>
-						                        <input type="email" name="email" class="form-control" required="required" placeholder="name@example.com" />
-						                    </div>
-						                    <div class="mb-3">
-						                        <label class="form-label small fw-bold text-secondary">Password</label>
-						                        <input type="password" name="password" class="form-control" required="required" placeholder="••••••••" />
-						                    </div>
-						                    
-						                    <div class="mb-4 d-flex justify-content-between align-items-center">
-						                        <div class="form-check m-0">
-						                            <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember-me">
-						                            <label class="form-check-label small text-muted" for="rememberMeCheck">Remember me</label>
-						                        </div>
-						                        <div>
-						                            <a href="${pageContext.request.contextPath}/forgot-password" class="small text-decoration-none fw-semibold">Forgot Password?</a>
-						                        </div>
-						                    </div>
-						                    
-						                    <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
-						                </form>
-						            </div>
-						            <div class="modal-footer bg-light justify-content-center border-0 py-3">
-						                <span class="small text-muted">New here? <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#registerModal" class="fw-bold text-decoration-none">Create an account</a></span>
-						            </div>
-						        </div>
-						    </div>
-						</div>
+                <form action="${pageContext.request.contextPath}/login" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Email Address</label>
+                        <input type="email" name="email" class="form-control" required="required" placeholder="name@example.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Password</label>
+                        <input type="password" name="password" class="form-control" required="required" placeholder="••••••••" />
+                    </div>
+                    
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <div class="form-check m-0">
+                            <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember-me">
+                            <label class="form-check-label small text-muted" for="rememberMeCheck">Remember me</label>
+                        </div>
+                        <div>
+                            <a href="${pageContext.request.contextPath}/forgot-password" class="small text-decoration-none fw-semibold">Forgot Password?</a>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
+                </form>
+            </div>
+            <div class="modal-footer bg-light justify-content-center border-0 py-3">
+                <span class="small text-muted">New here? <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#registerModal" class="fw-bold text-decoration-none">Create an account</a></span>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Register Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -203,9 +205,14 @@
     </div>
 </div>
 
+<!-- STEP 0 FIX: External Script Dependencies Added Here -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
+    const ctx = "${pageContext.request.contextPath}";
     
     function clearUrlParams() {
         const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
@@ -228,14 +235,13 @@ document.addEventListener("DOMContentLoaded", function() {
             clearUrlParams();
         }
     }
-    if (urlParams.get('login')==='true') {
+    if (urlParams.get('login') === 'true') {
 		const loginEl = document.getElementById('loginModal');
 		if (loginEl) {
 			bootstrap.Modal.getOrCreateInstance(loginEl).show();
 			clearUrlParams();
 		}
 	}
- // Add this inside your existing document.addEventListener("DOMContentLoaded", function() { ... }) block
 
     if (urlParams.get('unauthorized') === 'true') {
         const loginEl = document.getElementById('loginModal');
@@ -285,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById("headerSearchInput");
     const suggestBox = document.getElementById("searchSuggestBox");
     const suggestContent = document.getElementById("suggestContent");
-    const ctx = "${pageContext.request.contextPath}";
 
     searchInput.addEventListener("focus", function() {
         if (searchInput.value.trim() === "") {
@@ -298,13 +303,32 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                     
                     let html = `<div class="p-2 small fw-bold text-muted border-bottom mb-1"><i class="bi bi-clock-history me-1"></i> Recent Searches</div>`;
+                    let hasItems = false;
+                    
                     data.forEach(item => {
-                        let keyword = (typeof item === 'object') ? item.keyword : item;
-                        html += `<a href="` + ctx + `/search?query=` + encodeURIComponent(keyword) + `" class="dropdown-item py-2 text-truncate rounded px-3"><i class="bi bi-arrow-left-right me-2 text-muted small"></i>` + keyword + `</a>`;
+                        let keyword = "";
+                        if (typeof item === 'object' && item !== null) {
+                            keyword = item.keyword || ""; 
+                        } else {
+                            keyword = item; 
+                        }
+                        
+                        if (keyword && keyword.trim() !== "") {
+                            hasItems = true;
+                            html += `<a href="` + ctx + `/search?query=` + encodeURIComponent(keyword.trim()) + `" class="dropdown-item py-2 text-truncate rounded px-3"><i class="bi bi-arrow-left-right me-2 text-muted small"></i>` + keyword.trim() + `</a>`;
+                        }
                     });
                     
-                    suggestContent.innerHTML = html;
-                    suggestBox.classList.remove("d-none");
+                    if (hasItems) {
+                        suggestContent.innerHTML = html;
+                        suggestBox.classList.remove("d-none");
+                    } else {
+                        suggestBox.classList.add("d-none");
+                    }
+                })
+                .catch(err => {
+                    console.error("Failed to fetch search history:", err);
+                    suggestBox.classList.add("d-none");
                 });
         }
     });
@@ -322,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 let html = "";
                 let hasCheatsheets = false;
                 let hasCategories = false;
-                let hasUsers=false;
+                let hasUsers = false;
 
                 let cheatsheetHtml = `<div class="p-2 small fw-bold text-primary"><i class="bi bi-file-earmark-text me-1"></i> Cheatsheets</div>`;
                 let categoryHtml = `<div class="p-2 small fw-bold text-success mt-2"><i class="bi bi-folder me-1"></i> Categories</div>`;
@@ -343,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if (hasCheatsheets) html += cheatsheetHtml;
                 if (hasCategories) html += categoryHtml;
-                if(hasUsers) html += userHtml;
+                if (hasUsers) html += userHtml;
 
                 if (!hasCheatsheets && !hasCategories && !hasUsers) {
                     html = `<div class="p-3 text-center text-muted small">No immediate results match "` + query + `"</div>`;
@@ -362,8 +386,63 @@ document.addEventListener("DOMContentLoaded", function() {
             suggestBox.classList.add("d-none");
         }
     });
-    
+
+ // --- REAL-TIME WEBSOCKET LISTENER ---
+    const socket = new SockJS(ctx + '/ws-notifications');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected to WebSocket server successfully!');
+        
+        // Dynamically append the logged-in user's ID to match your backend destination precisely
+        stompClient.subscribe('/topic/notifications-' + '${sessionScope.currentUser.id}', function (response) {
+            const notiData = JSON.parse(response.body);
+            appendNewLiveNotification(notiData);
+        });
+    }, function(error) {
+        console.error('WebSocket broker connection failure:', error);
+    });
 });
+
+// --- INDEPENDENT GLOBAL SCOPE FUNCTIONS ---
+
+function appendNewLiveNotification(data) {
+    const badge = document.getElementById('notiBadge');
+    const notiList = document.getElementById('notiList');
+    
+    if (badge) {
+        let currentCount = parseInt(badge.innerText.trim()) || 0;
+        badge.innerText = currentCount + 1;
+    } else {
+        const dropdownBtn = document.querySelector("#notificationDropdownArea button");
+        if(dropdownBtn) {
+            dropdownBtn.insertAdjacentHTML('beforeend', 
+                `<span id="notiBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 0.35em 0.5em;">1</span>`
+            );
+        }
+    }
+    
+    if (notiList) {
+        const emptyPlaceholder = notiList.querySelector('.text-center');
+        if (emptyPlaceholder) {
+            notiList.innerHTML = ''; 
+        }
+        
+        const newNotiHtml = `
+            <li class="border-bottom list-unstyled">
+                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1" href="javascript:void(0);">
+                    <div class="fw-bold text-dark small d-flex align-items-center gap-1">
+                        <i class="bi bi-chat-left-text-fill text-primary small"></i> \${data.title}
+                    </div>
+                    <div class="text-secondary tracking-normal line-clamp-2" style="font-size: 12px; line-height:1.4;">
+                        \${data.message}
+                    </div>
+                </a>
+            </li>`;
+            
+        notiList.insertAdjacentHTML('afterbegin', newNotiHtml);
+    }
+}
 
 function readNotification(notificationId, redirectUrl) {
     fetch('${pageContext.request.contextPath}/notification/read?id=' + notificationId, {
@@ -380,8 +459,10 @@ function markAllAsRead() {
     .then(res => {
         if (res.ok) {
             document.getElementById('notiBadge')?.remove();
-            document.getElementById('notiList').innerHTML = 
-                `<li class="text-center py-4 text-muted small list-unstyled"><i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>No new notifications</li>`;
+            const notiList = document.getElementById('notiList');
+            if (notiList) {
+                notiList.innerHTML = `<li class="text-center py-4 text-muted small list-unstyled"><i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>No new notifications</li>`;
+            }
         }
     });
 }
