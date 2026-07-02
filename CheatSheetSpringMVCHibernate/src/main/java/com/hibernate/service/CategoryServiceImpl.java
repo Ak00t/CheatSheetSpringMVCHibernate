@@ -135,5 +135,28 @@ public class CategoryServiceImpl implements CategoryService {
 	            .findRecentByCategoryId(
 	                    categoryId);
 	}
+	
+	
+	@Override
+	@Transactional
+	public List<CategoryEntity>
+	findParentCategoriesWithPagination(
+	        int page,
+	        int size) {
+
+	    return categoryRepository
+	            .findParentCategoriesWithPagination(
+	                    page,
+	                    size);
+	}
+
+	@Override
+	@Transactional
+	public long countParentCategories() {
+
+	    return categoryRepository
+	            .countParentCategories();
+	}
+	
 
 }

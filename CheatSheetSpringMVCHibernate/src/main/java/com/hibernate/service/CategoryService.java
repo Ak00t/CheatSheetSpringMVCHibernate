@@ -49,5 +49,13 @@ public interface CategoryService {
 	        Long categoryId);
 	
 	
+	
+	// Home Parent Category Pagination
+	List<CategoryEntity> findParentCategoriesWithPagination(
+	        int page,
+	        int size);
+
+	long countParentCategories();
+	
 
 }

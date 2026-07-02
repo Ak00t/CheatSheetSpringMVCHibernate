@@ -142,6 +142,46 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	            .setParameter("status", CategoryStatus.ACTIVE)
 	            .getSingleResult();
 	}
-	
-	
+	// =========================
+	// Home Parent Category Pagination
+	// =========================
+
+	@Override
+	public List<CategoryEntity>
+	findParentCategoriesWithPagination(
+	        int page,
+	        int size) {
+
+	    return getSession()
+	            .createQuery(
+	                    "from CategoryEntity c " +
+	                    "where c.parent is null " +
+	                    "and c.status = :status " +
+	                    "order by c.id asc",
+	                    CategoryEntity.class)
+	            .setParameter(
+	                    "status",
+	                    CategoryStatus.ACTIVE)
+	            .setFirstResult(
+	                    page * size)
+	            .setMaxResults(
+	                    size)
+	            .getResultList();
+	}
+
+	@Override
+	public long countParentCategories() {
+
+	    return getSession()
+	            .createQuery(
+	                    "select count(c.id) " +
+	                    "from CategoryEntity c " +
+	                    "where c.parent is null " +
+	                    "and c.status = :status",
+	                    Long.class)
+	            .setParameter(
+	                    "status",
+	                    CategoryStatus.ACTIVE)
+	            .getSingleResult();
+	}
 }

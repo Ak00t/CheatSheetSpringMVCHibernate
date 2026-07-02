@@ -44,4 +44,13 @@ public interface CategoryRepository {
 	
 	
 	
+	List<CategoryEntity> findParentCategoriesWithPagination(
+	        int page,
+	        int size);
+
+	long countParentCategories();
+	
+	
+	
+	
 }

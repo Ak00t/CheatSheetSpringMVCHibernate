@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hibernate.service.CategoryService;
 import com.hibernate.service.CheatsheetService;
@@ -33,15 +34,54 @@ public class HomeController {
 	 */
     
     
+	/*
+	 * @RequestMapping("/") public String home(Model model) {
+	 * 
+	 * // Parent Categories model.addAttribute( "parentCategories",
+	 * categoryService.findParentCategories());
+	 * 
+	 * // Statistics model.addAttribute( "totalCheatsheets",
+	 * cheatsheetService.countPublicCheatsheets());
+	 * 
+	 * model.addAttribute( "totalCategories",
+	 * categoryService.countActiveCategories());
+	 * 
+	 * model.addAttribute( "totalUsers", userService.countActiveUsers());
+	 * 
+	 * // Home Lists model.addAttribute( "popularCheatsheets",
+	 * cheatsheetService.findPopularCheatsheets(6));
+	 * 
+	 * model.addAttribute( "recentCheatsheets",
+	 * cheatsheetService.findRecentCheatsheets(6));
+	 * 
+	 * model.addAttribute( "topContributors", userService.findTopContributors(5));
+	 * 
+	 * return "home"; }
+	 */
+    
+    
     @RequestMapping("/")
-    public String home(Model model) {
+    public String home(
+            @RequestParam(defaultValue = "0") int categoryPage,
+            Model model) {
 
-        // Parent Categories
+        int categorySize = 6;
+
         model.addAttribute(
                 "parentCategories",
-                categoryService.findParentCategories());
+                categoryService.findParentCategoriesWithPagination(
+                        categoryPage,
+                        categorySize));
 
-        // Statistics
+        long totalParentCategories =
+                categoryService.countParentCategories();
+
+        int totalCategoryPages =
+                (int) Math.ceil((double) totalParentCategories / categorySize);
+
+        model.addAttribute("categoryPage", categoryPage);
+        model.addAttribute("totalCategoryPages", totalCategoryPages);
+
         model.addAttribute(
                 "totalCheatsheets",
                 cheatsheetService.countPublicCheatsheets());
@@ -54,7 +94,6 @@ public class HomeController {
                 "totalUsers",
                 userService.countActiveUsers());
 
-        // Home Lists
         model.addAttribute(
                 "popularCheatsheets",
                 cheatsheetService.findPopularCheatsheets(6));
@@ -69,6 +108,7 @@ public class HomeController {
 
         return "home";
     }
+    
     
     
 }
