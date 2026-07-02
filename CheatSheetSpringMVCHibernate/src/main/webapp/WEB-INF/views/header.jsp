@@ -49,43 +49,98 @@
                         </c:if>
                     </button>
                     
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2" 
-                        style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
-                        
-                        <li class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
-                            <span>Notifications</span>
-                            <c:if test="${not empty unreadNotifications}">
-                                <button onclick="markAllAsRead()" class="btn btn-link p-0 text-decoration-none text-primary fw-semibold" style="font-size: 11px;">Mark all read</button>
-                            </c:if>
-                        </li>
-                        
-                        <div id="notiList">
-                            <c:choose>
-                                <c:when test="${empty unreadNotifications}">
-                                    <li class="text-center py-4 text-muted small list-unstyled">
-                                        <i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>
-                                        No new notifications
-                                    </li>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="noti" items="${unreadNotifications}">
-                                        <li class="border-bottom list-unstyled">
-                                            <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1" 
-                                               href="javascript:void(0);" 
-                                               onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
-                                                <div class="fw-bold text-dark small d-flex align-items-center gap-1">
-                                                    <i class="bi bi-chat-left-text-fill text-primary small"></i> ${noti.title}
-                                                </div>
-                                                <div class="text-secondary tracking-normal line-clamp-2" style="font-size: 12px; line-height:1.4;">
-                                                    ${noti.message}
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2"
+    style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
+
+    <!-- Header -->
+    <li class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
+        <span>Notifications</span>
+
+        <c:if test="${not empty unreadNotifications}">
+            <button onclick="markAllAsRead()"
+                    class="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
+                    style="font-size:11px;">
+                Mark all read
+            </button>
+        </c:if>
+    </li>
+
+    <div id="notiList">
+
+        <!-- ================= UNREAD ================= -->
+        <c:if test="${not empty unreadNotifications}">
+
+            <c:forEach var="noti" items="${unreadNotifications}">
+
+                <li class="border-bottom list-unstyled bg-light">
+
+                    <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                       href="javascript:void(0);"
+                       onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
+
+                        <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                            <i class="bi bi-bell-fill text-primary"></i>
+                            ${noti.title}
                         </div>
-                    </ul>
+
+                        <div class="text-secondary"
+                             style="font-size:12px;line-height:1.4;">
+                            ${noti.message}
+                        </div>
+
+                    </a>
+
+                </li>
+
+            </c:forEach>
+
+        </c:if>
+
+        <!-- Empty -->
+        <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
+            <li class="text-center py-4 text-muted small list-unstyled">
+                <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+                No notifications
+            </li>
+        </c:if>
+
+        <!-- ================= HISTORY ================= -->
+
+        <c:if test="${not empty readNotificationsHistory}">
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li class="dropdown-header fw-bold text-secondary">
+                Notification History
+            </li>
+
+            <c:forEach var="history" items="${readNotificationsHistory}">
+
+                <li class="border-bottom list-unstyled">
+
+                    <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
+                       href="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}">
+
+                        <div class="small d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            ${history.title}
+                        </div>
+
+                        <div style="font-size:12px;">
+                            ${history.message}
+                        </div>
+
+                    </a>
+
+                </li>
+
+            </c:forEach>
+
+        </c:if>
+
+    </div>
+
+</ul>
                 </div>
 
                 <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" class="text-decoration-none text-secondary fw-semibold">
@@ -114,6 +169,22 @@
 .dropdown-toggle.no-caret::after {
     display: none !important;
 }
+/* Reduce placeholder visibility by making it 40% opaque */
+.custom-placeholder::placeholder {
+    opacity: 0.4;
+}
+
+/* For older webkit browsers */
+.custom-placeholder::-webkit-input-placeholder {
+    opacity: 0.4;
+}
+
+/* Ensure focus highlights look clean even with a split border-group */
+.input-group:focus-within .form-control,
+.input-group:focus-within .input-group-text {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
 </style>
 
 <!-- Login Modal -->
@@ -137,10 +208,21 @@
                         <label class="form-label small fw-bold text-secondary">Email Address</label>
                         <input type="email" name="email" class="form-control" required="required" placeholder="name@example.com" />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Password</label>
-                        <input type="password" name="password" class="form-control" required="required" placeholder="••••••••" />
-                    </div>
+						<div class="mb-3">
+						    <label class="form-label small fw-bold text-secondary">Password</label>
+						    <div class="input-group">
+						        <!-- Added a custom class 'custom-placeholder' here -->
+						        <input type="password" id="loginPasswordInput" name="password" 
+						               class="form-control border-end-0 custom-placeholder" 
+						               required="required" placeholder="••••••••" />
+						        
+						        <!-- Toggle Icon Button -->
+						        <button class="input-group-text bg-white border-start-0 text-muted" 
+						                type="button" id="togglePasswordBtn" style="cursor: pointer;">
+						            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+						        </button>
+						    </div>
+						</div>
                     
                     <div class="mb-4 d-flex justify-content-between align-items-center">
                         <div class="form-check m-0">
@@ -187,14 +269,31 @@
                         <label class="form-label small fw-bold text-secondary">Email Address</label>
                         <input type="email" name="email" class="form-control" placeholder="john@example.com" required="required" value="<c:out value='${param.email}' />" />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Create password" required="required" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold text-secondary">Confirm Password</label>
-                        <input type="password" name="confirmPassword" class="form-control" placeholder="Repeat password" required="required" />
-                    </div>
+<div class="mb-3">
+    <label class="form-label small fw-bold text-secondary">Password</label>
+    <div class="input-group">
+        <input type="password" id="registerPasswordInput" name="password" 
+               class="form-control border-end-0 custom-placeholder" 
+               placeholder="Create password" required="required" />
+        <button class="input-group-text bg-white border-start-0 text-muted" 
+                type="button" id="toggleRegPasswordBtn" style="cursor: pointer;">
+            <i class="bi bi-eye" id="toggleRegPasswordIcon"></i>
+        </button>
+    </div>
+</div>
+
+<div class="mb-4">
+    <label class="form-label small fw-bold text-secondary">Confirm Password</label>
+    <div class="input-group">
+        <input type="password" id="registerConfirmPasswordInput" name="confirmPassword" 
+               class="form-control border-end-0 custom-placeholder" 
+               placeholder="Repeat password" required="required" />
+        <button class="input-group-text bg-white border-start-0 text-muted" 
+                type="button" id="toggleRegConfirmPasswordBtn" style="cursor: pointer;">
+            <i class="bi bi-eye" id="toggleRegConfirmPasswordIcon"></i>
+        </button>
+    </div>
+</div>
                     <button type="submit" class="btn btn-success w-100 fw-bold">Create Account</button>
                 </form>
             </div>
@@ -211,6 +310,51 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+	
+	// --- SHOW/HIDE PASSWORD TOGGLE ---
+    const passwordInput = document.getElementById("loginPasswordInput");
+    const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+    const togglePasswordIcon = document.getElementById("togglePasswordIcon");
+
+    if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener("click", function() {
+            // Check current type and flip it
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                // Swap icon to 'eye-slash'
+                togglePasswordIcon.classList.remove("bi-eye");
+                togglePasswordIcon.classList.add("bi-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                // Swap icon back to normal 'eye'
+                togglePasswordIcon.classList.remove("bi-eye-slash");
+                togglePasswordIcon.classList.add("bi-eye");
+            }
+        });
+    }
+ // --- REGISTRATION PASSWORD TOGGLES ---
+    function setupPasswordToggle(buttonId, inputId, iconId) {
+        const btn = document.getElementById(buttonId);
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (btn && input && icon) {
+            btn.addEventListener("click", function() {
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.replace("bi-eye", "bi-eye-slash");
+                } else {
+                    input.type = "password";
+                    icon.classList.replace("bi-eye-slash", "bi-eye");
+                }
+            });
+        }
+    }
+
+    // Initialize toggles for both registration fields
+    setupPasswordToggle("toggleRegPasswordBtn", "registerPasswordInput", "toggleRegPasswordIcon");
+    setupPasswordToggle("toggleRegConfirmPasswordBtn", "registerConfirmPasswordInput", "toggleRegConfirmPasswordIcon");
+	
     const urlParams = new URLSearchParams(window.location.search);
     const ctx = "${pageContext.request.contextPath}";
     

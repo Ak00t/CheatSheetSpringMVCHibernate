@@ -16,4 +16,6 @@ public interface NotificationRepository {
 
 	public void markAllAsReadByUserId(Long userId);
 
+	public List<NotificationEntity> findReadByUserId(Long userId);
+
 }

@@ -60,4 +60,16 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 					.executeUpdate();
 	}
 
+	@Override
+	public List<NotificationEntity> findReadByUserId(Long userId) {
+		return getSession()
+				.createQuery(
+						"FROM NotificationEntity n WHERE n.user.id = :userId AND n.isRead=true ORDER BY n.createdAt DESC ",
+						NotificationEntity.class)
+					.setParameter("userId", userId)
+					.setMaxResults(10)
+					.getResultList();
+
+	}
+
 }

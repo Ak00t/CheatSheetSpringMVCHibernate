@@ -12,6 +12,8 @@ public interface NotificationService {
 
 	public List<NotificationEntity> findUnreadByUserId(Long userId);
 
+	public List<NotificationEntity> findReadByUserId(Long userId);
+
 	public void markAsRead(Long notificationId);
 
 	public void markAllAsReadByUserId(Long userId);

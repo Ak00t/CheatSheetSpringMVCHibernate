@@ -213,12 +213,19 @@
                                                 </li>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li><hr class="dropdown-divider my-1"></li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-2 text-success py-2" href="javascript:void(0);" onclick="translateComment(${comment.id}, 'my')">
-                                                <i class="bi bi-translate"></i> Translate to Burmese
-                                            </a>
-                                        </li>
+										        <li><hr class="dropdown-divider my-1"></li>
+										<!-- Translate Option -->
+										<li id="translateOpt-${comment.id}">
+										    <a class="dropdown-item d-flex align-items-center gap-2 text-success py-2" href="javascript:void(0);" onclick="translateComment(${comment.id}, 'my')">
+										        <i class="bi bi-translate"></i> Translate to Burmese
+										    </a>
+										</li>
+										<!-- See Original Option (Hidden initially) -->
+										<li id="originalOpt-${comment.id}" class="d-none">
+										    <a class="dropdown-item d-flex align-items-center gap-2 text-secondary py-2" href="javascript:void(0);" onclick="restoreOriginalComment(${comment.id})">
+										        <i class="bi bi-arrow-clockwise"></i> See Original
+										    </a>
+										</li>
                                     </ul>
                                 </div>
                             </div>
@@ -328,17 +335,50 @@ function triggerReportAction(id) {
         alert("Report captured for safety analysis validation.");
     }
 }
+//Global memory cache to store text snapshots
+const commentCache = {};
+
 function translateComment(commentId, targetLang) {
     let targetSpan = document.getElementById("comment-text-" + commentId);
-    let originalText = targetSpan.innerText;
+    if (!targetSpan) return;
+
+    // 1. Snapshot and cache the original text right off the screen if not already done
+    if (!commentCache[commentId]) {
+        commentCache[commentId] = targetSpan.innerText;
+    }
+    
+    let originalText = commentCache[commentId];
     targetSpan.innerText = "Translating text payload...";
     
     let endpoint = '${pageContext.request.contextPath}/comment/translate?commentId=' + commentId + '&lang=' + targetLang;
     
     fetch(endpoint)
         .then(res => { if(!res.ok) throw new Error(); return res.text(); })
-        .then(txt => { targetSpan.innerText = txt; })
-        .catch(() => { targetSpan.innerText = originalText; alert("Could not fetch translation matrix body."); });
+        .then(txt => { 
+            targetSpan.innerText = txt; 
+            
+            // 2. Translation succeeded! Swap the dropdown options visibility
+            document.getElementById('translateOpt-' + commentId)?.classList.add('d-none');
+            document.getElementById('originalOpt-' + commentId)?.classList.remove('d-none');
+        })
+        .catch(() => { 
+            targetSpan.innerText = originalText; 
+            alert("Could not fetch translation matrix body."); 
+        });
+}
+
+// 3. New function to restore the text from memory instantly
+function restoreOriginalComment(commentId) {
+    let targetSpan = document.getElementById("comment-text-" + commentId);
+    let originalText = commentCache[commentId];
+    
+    if (targetSpan && originalText) {
+        targetSpan.innerText = originalText;
+        
+        // Swap dropdown options visibility back to default states
+        document.getElementById('originalOpt-' + commentId)?.classList.add('d-none');
+        document.getElementById('translateOpt-' + commentId)?.classList.remove('d-none');
+    }
 }
 </script>
 </body>

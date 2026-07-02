@@ -38,9 +38,12 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
-		return User.builder().username(user.getEmail()).password(user.getPassword()).roles(user.getRole().name())
-				.build();
-
+		return User
+				.builder()
+					.username(user.getEmail())
+					.password(user.getPassword())
+					.roles(user.getRole().name())
+					.build();
 	}
 
 	@Override

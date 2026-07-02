@@ -28,4 +28,20 @@ public class GlobalHeaderAdvice {
 		}
 		return null;
 	}
+
+	@ModelAttribute("readNotificationsHistory")
+	public List<NotificationEntity> populateReadNotifications(HttpSession session) {
+		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+		if (currentUser != null) {
+			// Make sure to add this method to your NotificationService / Repo layers
+			// e.g., return notificationRepository.findReadByUserId(currentUser.getId());
+			System.out
+					.println("Read notifications for user " + currentUser.getId() + ": "
+							+ notiService.findReadByUserId(currentUser.getId()));
+
+			return notiService.findReadByUserId(currentUser.getId());
+		}
+		System.out.println("error: currentUser is null in populateReadNotifications");
+		return null;
+	}
 }
