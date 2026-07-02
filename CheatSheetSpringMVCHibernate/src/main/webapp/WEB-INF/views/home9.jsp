@@ -461,66 +461,64 @@ body{background:#f8fafc;color:#1e293b;}
                 </c:choose>
             </section>
 
+            <section class="section">
+                <h2 class="section-title">🔥 Popular Cheatsheets</h2>
 
-<section class="section">
-    <h2 class="section-title">🔥 Popular Cheatsheets</h2>
+                <p class="section-subtitle">
+                    Most viewed and liked public cheatsheets.
+                </p>
 
-    <p class="section-subtitle">
-        Most viewed and liked public cheatsheets.
-    </p>
+                <c:choose>
+                    <c:when test="${not empty popularCheatsheets}">
+                        <div class="sheet-grid">
 
-    <c:choose>
-        <c:when test="${not empty popularCheatsheets}">
-            <div class="sheet-grid">
+                            <c:forEach items="${popularCheatsheets}" var="sheet">
+                                <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                                   class="sheet-card"
+                                   style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
 
-                <c:forEach items="${popularCheatsheets}" var="sheet">
-                    <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                       class="sheet-card"
-                       style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
+                                    <div class="sheet-cover">
+                                        <c:choose>
+                                            <c:when test="${not empty sheet.mediaList}">
+                                                <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                No Cover
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
 
-                        <div class="sheet-cover">
-                            <c:choose>
-                                <c:when test="${not empty sheet.mediaList}">
-                                    <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                </c:when>
-                                <c:otherwise>
-                                    No Cover
-                                </c:otherwise>
-                            </c:choose>
+                                    <span class="badge">
+                                        ${sheet.category.name}
+                                    </span>
+
+                                    <h3>${sheet.title}</h3>
+
+                                    <p class="sheet-desc">
+                                        ${sheet.description}
+                                    </p>
+
+                                    <div class="sheet-footer">
+                                        👤 ${sheet.user.name}
+                                        <br>
+                                        👁 ${sheet.viewCount}
+                                        &nbsp; ❤ ${sheet.likeCount}
+                                        &nbsp; 🔖 ${sheet.bookmarkCount}
+                                    </div>
+
+                                </a>
+                            </c:forEach>
+
                         </div>
+                    </c:when>
 
-                        <span class="badge">${sheet.category.name}</span>
-
-                        <h3>${sheet.title}</h3>
-
-                        <p class="sheet-desc">${sheet.description}</p>
-
-                        <div class="sheet-footer">
-                            👤
-                            <span onclick="event.preventDefault(); event.stopPropagation(); window.location.href='${pageContext.request.contextPath}/profile/${sheet.user.id}';"
-                                  style="cursor:pointer;text-decoration:underline;font-weight:700;">
-                                ${sheet.user.name}
-                            </span>
-                            <br>
-                            👁 ${sheet.viewCount}
-                            &nbsp; ❤ ${sheet.likeCount}
-                            &nbsp; 🔖 ${sheet.bookmarkCount}
+                    <c:otherwise>
+                        <div class="empty-box">
+                            No popular cheatsheets yet.
                         </div>
-
-                    </a>
-                </c:forEach>
-
-            </div>
-        </c:when>
-
-        <c:otherwise>
-            <div class="empty-box">
-                No popular cheatsheets yet.
-            </div>
-        </c:otherwise>
-    </c:choose>
-</section>
-
+                    </c:otherwise>
+                </c:choose>
+            </section>
 
         </main>
 
@@ -540,7 +538,7 @@ body{background:#f8fafc;color:#1e293b;}
                                     <div class="avatar">
                                         <c:choose>
                                             <c:when test="${not empty row[0].profileImg}">
-                                                <img src="${row[0].profileImg.startsWith('/profile') ? pageContext.request.contextPath.concat(row[0].profileImg) : row[0].profileImg}" alt="${row[0].name}">
+                                                <img src="${row[0].profileImg}" alt="${row[0].name}">
                                             </c:when>
                                             <c:otherwise>
                                                 ${row[0].name.substring(0,1)}
@@ -587,69 +585,69 @@ body{background:#f8fafc;color:#1e293b;}
             </div>
             
             
+            
+            
+            
+
             <div class="sidebar-card">
-    <h3>🆕 Recent Cheatsheets</h3>
+                <h3>🆕 Recent Cheatsheets</h3>
 
-    <c:choose>
-        <c:when test="${not empty recentCheatsheets}">
-            <div id="recentSidebar" class="sidebar-scroll-box">
+                <c:choose>
+                    <c:when test="${not empty recentCheatsheets}">
+                        <div id="recentSidebar" class="sidebar-scroll-box">
 
-                <c:forEach items="${recentCheatsheets}" var="sheet">
-                    <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                       class="mini-card">
+                            <c:forEach items="${recentCheatsheets}" var="sheet">
+                                <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                                   class="mini-card">
 
-                        <div class="mini-img">
-                            <c:choose>
-                                <c:when test="${not empty sheet.mediaList}">
-                                    <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                </c:when>
-                                <c:otherwise>
-                                    <div></div>
-                                </c:otherwise>
-                            </c:choose>
+                                    <div class="mini-img">
+                                        <c:choose>
+                                            <c:when test="${not empty sheet.mediaList}">
+                                                <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div></div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+
+                                    <div>
+                                        <div class="mini-title">
+                                            ${sheet.title}
+                                        </div>
+
+                                        <div class="mini-meta">
+                                            👤 ${sheet.user.name}
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </c:forEach>
+
                         </div>
 
-                        <div>
-                            <div class="mini-title">
-                                ${sheet.title}
-                            </div>
+                        <div class="scroll-controls">
+                            <button type="button"
+                                    class="scroll-btn"
+                                    onclick="scrollBox('recentSidebar', -160)">
+                                ▲
+                            </button>
 
-                            <div class="mini-meta">
-                                👤
-                                <span onclick="event.preventDefault(); event.stopPropagation(); window.location.href='${pageContext.request.contextPath}/profile/${sheet.user.id}';"
-                                      style="cursor:pointer;text-decoration:underline;font-weight:700;">
-                                    ${sheet.user.name}
-                                </span>
-                            </div>
+                            <button type="button"
+                                    class="scroll-btn"
+                                    onclick="scrollBox('recentSidebar', 160)">
+                                ▼
+                            </button>
                         </div>
+                    </c:when>
 
-                    </a>
-                </c:forEach>
-
+                    <c:otherwise>
+                        <div class="empty-box">
+                            No recent cheatsheets yet.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
-
-            <div class="scroll-controls">
-                <button type="button" class="scroll-btn"
-                        onclick="scrollBox('recentSidebar', -160)">
-                    ▲
-                </button>
-
-                <button type="button" class="scroll-btn"
-                        onclick="scrollBox('recentSidebar', 160)">
-                    ▼
-                </button>
-            </div>
-        </c:when>
-
-        <c:otherwise>
-            <div class="empty-box">
-                No recent cheatsheets yet.
-            </div>
-        </c:otherwise>
-    </c:choose>
-</div>
-            
-            
 
         </aside>
 

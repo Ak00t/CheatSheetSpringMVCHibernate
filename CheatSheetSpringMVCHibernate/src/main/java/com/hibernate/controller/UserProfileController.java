@@ -72,7 +72,11 @@ public class UserProfileController {
                 profileImg.transferTo(dest);
 
                 // DB ထဲ သိမ်းမယ့် path
-                user.setProfileImg(fileName);
+				/* user.setProfileImg(fileName); */
+                user.setProfileImg(
+                        "/profile/uploads/"
+                        + fileName);
+                
 
             } catch (IOException e) {
                 e.printStackTrace();
