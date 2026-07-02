@@ -27,7 +27,7 @@ public class SearchRepositoryImpl implements SearchRepository {
 	}
 
 	@Override
-	public SearchResultDTO searchAll(String keyword, Long currentUserId) {
+	public SearchResultDTO searchAll(String keyword) {
 
 		String wildcardKeyword = "%" + keyword.toLowerCase() + "%";
 		SearchResultDTO results = new SearchResultDTO();
@@ -38,7 +38,7 @@ public class SearchRepositoryImpl implements SearchRepository {
 								"FROM CheatsheetEntity c WHERE LOWER(c.title) LIKE :kw OR LOWER(c.description) LIKE :kw",
 								CheatsheetEntity.class)
 							.setParameter("kw", wildcardKeyword)
-							.setMaxResults(10) // Limit output stack size for speed optimization
+							.setMaxResults(10)
 							.getResultList());
 
 		results
@@ -57,23 +57,6 @@ public class SearchRepositoryImpl implements SearchRepository {
 							.setParameter("kw", wildcardKeyword)
 							.setMaxResults(5)
 							.getResultList());
-		// 2. Calculate dynamic combined total matching count
-		int totalCount = results.getCheatsheets().size() + results.getCategories().size() + results.getUsers().size();
-
-		// 3. Write search log (Handles both logged-in users and anonymous guests)
-		SearchLogEntity log = new SearchLogEntity();
-		log.setKeyword(keyword);
-		log.setResultCount(totalCount);
-
-		if (currentUserId != null) {
-			UserEntity userSessionRef = new UserEntity();
-			userSessionRef.setId(currentUserId);
-			log.setUser(userSessionRef); // Linked authenticated log
-		} else {
-			log.setUser(null); // Anonymous log (user_id remains NULL)
-		}
-
-		getSession().save(log);
 		return results;
 	}
 
@@ -86,5 +69,22 @@ public class SearchRepositoryImpl implements SearchRepository {
 					.setParameter("userId", userId)
 					.setMaxResults(6)
 					.getResultList();
+	}
+
+	@Override
+	public void saveSearchLog(String keyword, int resultCount, Long userId) {
+		SearchLogEntity log = new SearchLogEntity();
+		log.setKeyword(keyword);
+		log.setResultCount(resultCount);
+
+		if (userId != null) {
+			UserEntity userSessionRef = new UserEntity();
+			userSessionRef.setId(userId);
+			log.setUser(userSessionRef);
+		} else {
+			log.setUser(null); // Anonymous persistent log row
+		}
+
+		getSession().save(log);
 	}
 }

@@ -89,4 +89,13 @@ public class CommentRepositoyImpl implements CommentsRepository {
 		}
 	}
 
+	@Override
+	public CommentEntity findByParentId(Long id) {
+
+		return getSession()
+				.createQuery("select c from CommentEntity c where c.parentComment.id = :id", CommentEntity.class)
+					.setParameter("id", id)
+					.uniqueResult();
+	}
+
 }

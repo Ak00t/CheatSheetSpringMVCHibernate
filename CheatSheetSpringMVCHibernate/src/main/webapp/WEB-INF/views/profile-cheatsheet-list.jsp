@@ -9,7 +9,6 @@
 <title>My Cheatsheets</title>
 
 <style>
-/* 🌟 child-category-view ထဲက CSS အခင်းအကျင်းအတိုင်း ရာနှုန်းပြည့် ပြန်သုံးခြင်း 🌟 */
 *{
     margin:0;
     padding:0;
@@ -28,48 +27,46 @@ body{
     margin:40px auto;
 }
 
-h1 {
-    color: #2563eb;
-    font-size: 32px;
-    font-weight: 800;
-    margin-bottom: 25px;
+h1{
+    color:#2563eb;
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:25px;
 }
 
-/* Flex Wrap စနစ်ဖြင့် ကတ်ပြားများကို အလယ်တွင် ထားရှိခြင်း */
-.grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 24px;
-    padding-bottom: 18px;
+.grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:24px;
+    padding-bottom:18px;
 }
 
-/* 🌟 ရှိပြီးသား မူရင်း .sheet-card အတိုင်း ၁ ထပ်တည်း သတ်မှတ်ခြင်း 🌟 */
 .sheet-card{
     flex:0 0 380px;
     border-radius:28px;
     overflow:hidden;
     text-decoration:none;
-    color: white !important;   /* စာသားအားလုံး အဖြူရောင်ပေါ်ရန် */
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    color:white !important;
+    border:1px solid rgba(255,255,255,0.2);
     box-shadow:0 14px 35px rgba(0,0,0,.12);
     transition:.3s;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    height: 520px; /* Action buttons ကြောင့် အမြင့်အား အနည်းငယ် ညှိထားပါသည် */
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    height:520px;
 }
 
 .sheet-card:hover{
     transform:translateY(-6px);
-    box-shadow: 0 20px 40px rgba(0,0,0,.2);
+    box-shadow:0 20px 40px rgba(0,0,0,.2);
 }
 
 .sheet-cover{
-    width: 100%;
-    height: 180px;
-    border: 2px dashed rgba(255, 255, 255, 0.4);
-    border-radius: 18px;
+    width:100%;
+    height:180px;
+    border:2px dashed rgba(255,255,255,0.4);
+    border-radius:18px;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -77,8 +74,8 @@ h1 {
     font-size:22px;
     font-weight:800;
     overflow:hidden;
-    background: rgba(0, 0, 0, 0.05);
-    flex-shrink: 0;
+    background:rgba(0,0,0,0.05);
+    flex-shrink:0;
 }
 
 .sheet-cover img{
@@ -88,88 +85,104 @@ h1 {
 }
 
 .sheet-body{
-    padding: 12px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden;
+    padding:12px 0 0 0;
+    display:flex;
+    flex-direction:column;
+    flex-grow:1;
+    overflow:hidden;
 }
 
 .category-badge{
     display:inline-block;
     padding:5px 15px;
     border-radius:999px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+    background:rgba(255,255,255,0.2);
+    color:white;
     font-size:13px;
     font-weight:800;
     margin-bottom:12px;
-    align-self: flex-start;
-    text-transform: uppercase;
+    align-self:flex-start;
+    text-transform:uppercase;
 }
 
 .sheet-title{
     font-size:24px;
-    color: white;
+    color:white;
     margin-bottom:8px;
     font-weight:800;
 }
 
 .sheet-description{
-    color: rgba(255, 255, 255, 0.9);
+    color:rgba(255,255,255,0.9);
     line-height:1.6;
-    max-height: 80px;
+    max-height:80px;
     overflow:hidden;
-    font-size: 14px;
+    font-size:14px;
 }
 
 .see-btn{
     display:inline-block;
     margin-top:5px;
-    color: white;
-    text-decoration: underline;
-    font-weight: 800;
+    color:white;
+    text-decoration:underline;
+    font-weight:800;
     cursor:pointer;
-    font-size: 14px;
+    font-size:14px;
 }
 
-/* 🌟 Profile View ဖြစ်၍ မူရင်း .sheet-footer နေရာတွင် Edit/Delete ခလုတ်များ အစားထိုးခြင်း 🌟 */
-.sheet-footer-actions {
-    margin-top: auto;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    display: flex;
-    gap: 12px;
+.sheet-footer{
+    margin-top:auto;
+    padding-top:12px;
+    border-top:1px solid rgba(255,255,255,0.2);
+    color:rgba(255,255,255,0.8);
+    font-size:13px;
+    line-height:1.6;
 }
 
-.btn-action {
-    flex: 1;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 14px;
-    transition: 0.2s;
-    cursor: pointer;
+.creator-link{
+    color:white;
+    text-decoration:none;
+    font-weight:800;
 }
 
-.btn-profile-edit {
-    background: rgba(255, 255, 255, 0.2);
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-}
-.btn-profile-edit:hover {
-    background: rgba(255, 255, 255, 0.35);
+.sheet-footer-actions{
+    margin-top:auto;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.2);
+    display:flex;
+    gap:12px;
 }
 
-.btn-profile-delete {
-    background: rgba(239, 68, 68, 0.85);
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.btn-action{
+    flex:1;
+    text-align:center;
+    padding:10px 0;
+    font-size:14px;
+    font-weight:bold;
+    text-decoration:none;
+    border-radius:14px;
+    transition:0.2s;
+    cursor:pointer;
 }
-.btn-profile-delete:hover {
-    background: rgba(220, 38, 38, 0.95);
+
+.btn-profile-edit{
+    background:rgba(255,255,255,0.2);
+    color:white !important;
+    border:1px solid rgba(255,255,255,0.4);
+}
+
+.btn-profile-edit:hover{
+    background:rgba(255,255,255,0.35);
+}
+
+.btn-profile-delete{
+    background:rgba(239,68,68,0.85);
+    color:white !important;
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+.btn-profile-delete:hover{
+    background:rgba(220,38,38,0.95);
 }
 
 .empty-box{
@@ -182,9 +195,9 @@ h1 {
 </style>
 
 <script>
-    function confirmDelete() {
-        return confirm("ဤ Cheat Sheet အား ဖျက်ရန် သေချာပါသလား?");
-    }
+function confirmDelete(){
+    return confirm("ဤ Cheat Sheet အား ဖျက်ရန် သေချာပါသလား?");
+}
 </script>
 </head>
 
@@ -221,9 +234,57 @@ h1 {
                             <div class="sheet-body">
                                 <div class="category-badge">${sheet.category.name}</div>
 
-                                <h3 class="sheet-title">${sheet.title}</h3>
-                                <p class="sheet-description">${sheet.description}</p>
-                                <span class="see-btn">See More</span>
+                        <a href="${pageContext.request.contextPath}/profile-cheatsheets/detail/${sheet.id}"
+                           style="text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%;">
+
+                            <div class="sheet-cover">
+                                <c:choose>
+                                    <c:when test="${not empty sheet.mediaList}">
+                                        <img src="${sheet.mediaList[0].mediaUrl}"
+                                             alt="${sheet.title}">
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        No Cover
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+
+                            <div class="sheet-body">
+                                <div class="category-badge">
+                                    ${sheet.category.name}
+                                </div>
+
+                                <h3 class="sheet-title">
+                                    ${sheet.title}
+                                </h3>
+
+                                <p class="sheet-description">
+                                    ${sheet.description}
+                                </p>
+
+                                <span class="see-btn">
+                                    See More
+                                </span>
+
+                                <div class="sheet-footer">
+                                    Created By:
+                                    <span class="creator-link">
+                                        ${sheet.user.name}
+                                    </span>
+
+                                    <br>
+
+                                    🗓
+                                    <fmt:parseDate
+                                            value="${sheet.createdAt}"
+                                            pattern="yyyy-MM-dd'T'HH:mm:ss"
+                                            var="createdDate"/>
+
+                                    <fmt:formatDate
+                                            value="${createdDate}"
+                                            pattern="dd MMM yyyy"/>
+                                </div>
                             </div>
                         </a>
 

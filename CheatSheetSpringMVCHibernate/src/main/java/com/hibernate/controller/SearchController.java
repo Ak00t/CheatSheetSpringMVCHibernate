@@ -37,11 +37,20 @@ public class SearchController {
 			UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
 			Long userId = (currentUser != null) ? currentUser.getId() : null;
 
-			// Fetch results and persist DB log if user is logged in
-			SearchResultDTO searchResults = searchService.searchAll(cleanQuery, userId);
+			SearchResultDTO searchResults = searchService.searchAll(cleanQuery);
 			model.addAttribute("results", searchResults);
 
-			// Track history for guests via session
+			int totalCount = 0;
+			if (searchResults.getCheatsheets() != null)
+				totalCount += searchResults.getCheatsheets().size();
+			if (searchResults.getCategories() != null)
+				totalCount += searchResults.getCategories().size();
+			if (searchResults.getUsers() != null)
+				totalCount += searchResults.getUsers().size();
+
+			searchService.saveSearchLog(cleanQuery, totalCount, userId);
+
+			// 4. Track history for guests via session container
 			if (userId == null) {
 				List<String> guestHistory = (List<String>) session.getAttribute("guestSearchHistory");
 				if (guestHistory == null) {
@@ -61,7 +70,7 @@ public class SearchController {
 		}
 
 		model.addAttribute("query", query);
-		return "search-results"; // Returns search-results.jsp
+		return "search-results";
 	}
 
 	@GetMapping("/live")
@@ -69,12 +78,12 @@ public class SearchController {
 	public List<SearchSuggestionDTO> liveSearch(@RequestParam("query") String query) {
 		List<SearchSuggestionDTO> suggestions = new ArrayList<>();
 
-		if (query == null || query.trim().isEmpty()) {
+		if (query == null || query.isBlank()) {
 			return suggestions;
 		}
 
 		// Fetch your normal entities. This still triggers the SQL work beautifully.
-		SearchResultDTO results = searchService.searchAll(query.trim(), null);
+		SearchResultDTO results = searchService.searchAll(query.trim());
 
 		// Manually extract just the fields the UI needs to display in the dropdown list
 		if (results.getCheatsheets() != null) {
@@ -94,7 +103,6 @@ public class SearchController {
 				suggestions.add(new SearchSuggestionDTO(usr.getId(), usr.getName(), "user"));
 			}
 		}
-
 		return suggestions;
 	}
 

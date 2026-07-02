@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,26 +9,72 @@
     <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <style>
-        body { background-color: #f4f7f6; color: #4a5568; font-family: 'Segoe UI', sans-serif; }
-        .profile-card { 
-            background: #ffffff; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-            padding: 2rem; 
-            margin-top: 50px; 
+        body{
+            background-color:#f4f7f6;
+            color:#4a5568;
+            font-family:'Segoe UI',sans-serif;
         }
-        .profile-img { 
-            width: 150px; height: 150px; 
-            object-fit: cover; 
-            border: 4px solid #f8f9fa;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+        .profile-card{
+            background:#ffffff;
+            border-radius:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.05);
+            padding:2rem;
+            margin-top:50px;
         }
-        label { font-weight: 600; color: #718096; margin-bottom: 0.5rem; }
-        .form-control { border-radius: 10px; border: 1px solid #e2e8f0; padding: 0.75rem; }
-        .btn-save { 
-            background-color: #4a90e2; color: white; 
-            border-radius: 10px; padding: 0.75rem 2rem; 
-            transition: 0.3s; width: 100%; 
+
+        .profile-img{
+            width:150px !important;
+            height:150px !important;
+            object-fit:cover;
+            border-radius:50%;
+            border:4px solid #f8f9fa;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            display:block;
+            margin:0 auto;
+        }
+
+        label{
+            font-weight:600;
+            color:#718096;
+            margin-bottom:0.5rem;
+        }
+
+        .form-control{
+            border-radius:10px;
+            border:1px solid #e2e8f0;
+            padding:0.75rem;
+        }
+
+        .btn-save{
+            background-color:#4a90e2;
+            color:white;
+            border-radius:10px;
+            padding:0.75rem 2rem;
+            transition:0.3s;
+            width:100%;
+            border:none;
+        }
+
+        .btn-save:hover{
+            background-color:#357abd;
+            color:white;
+        }
+
+        .btn-back{
+            background:#6b7280;
+            color:white;
+            border-radius:10px;
+            padding:0.75rem 2rem;
+            text-decoration:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .btn-back:hover{
+            background:#4b5563;
+            color:white;
         }
         .btn-save:hover { background-color: #357abd; color: white; }
         
@@ -58,10 +105,13 @@
     }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
     <div class="row justify-content-center">
+
         <div class="col-md-6 profile-card">
             <h2 class="text-center mb-4 fw-bold" style="color: #2d3748;">Edit Profile</h2>
             
@@ -89,9 +139,18 @@
 
 
                 <div class="mb-3">
-                    <label>Name:</label>
-                    <input type="text" name="name" class="form-control" value="${user.name}">
+
+                    <label>
+                        Change Photo:
+                    </label>
+
+                    <input type="file"
+                           name="profileImg"
+                           class="form-control">
+
                 </div>
+
+                <!-- Name -->
 
                 <div class="mb-3">
                     <label>Bio:</label>
@@ -123,8 +182,11 @@
     </c:if>
 </div>
             </form>
+
         </div>
+
     </div>
+
 </div>
 
 

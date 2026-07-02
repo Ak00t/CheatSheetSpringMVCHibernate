@@ -38,7 +38,7 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
-		return User.builder().username(user.getEmail()).password(user.getPassword()).roles(user.getRole().name())
+		return User.builder().username((String) user.getEmail()).password(user.getPassword()).roles(user.getRole().name())
 				.build();
 
 	}
@@ -47,5 +47,5 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 	public UserEntity findByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
-
+	
 }

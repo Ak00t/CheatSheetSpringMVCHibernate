@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.CategoryEntity;
+import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.TagEntity;
 import com.hibernate.entity.enums.CategoryStatus;
 import com.hibernate.entity.enums.TagStatus;
 import com.hibernate.repository.CategoryRepository;
+import com.hibernate.repository.CheatsheetRepository;
 import com.hibernate.repository.TagRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final TagRepository tagRepository;
+	private final CheatsheetRepository cheatsheetRepository;
 
 	@Override
 	@Transactional
@@ -45,57 +48,92 @@ public class CategoryServiceImpl implements CategoryService {
 		categoryRepository.update(category);
 	}
 
-	
-	
-	
 	@Override
 	@Transactional
 	public void delete(Long id) {
-	    CategoryEntity category = categoryRepository.findById(id);
+		CategoryEntity category = categoryRepository.findById(id);
 
-	    if (category != null) {
-	        softDeleteCategory(category);
-	    }
+		if (category != null) {
+			softDeleteCategory(category);
+		}
 	}
 	
 	private void softDeleteCategory(CategoryEntity category) {
+		category.setStatus(CategoryStatus.INACTIVE);
+		categoryRepository.update(category);
 
-	    category.setStatus(CategoryStatus.INACTIVE);
-	    categoryRepository.update(category);
+		List<TagEntity> tags = tagRepository.findByCategoryId(category.getId());
 
-	    List<TagEntity> tags = tagRepository.findByCategoryId(category.getId());
+		for (TagEntity tag : tags) {
+			tag.setStatus(TagStatus.INACTIVE);
+			tagRepository.update(tag);
+		}
 
-	    for (TagEntity tag : tags) {
-	        tag.setStatus(TagStatus.INACTIVE);
-	        tagRepository.update(tag);
-	    }
+		List<CategoryEntity> children = categoryRepository.findByParentId(category.getId());
 
-	    List<CategoryEntity> children =
-	        categoryRepository.findByParentId(category.getId());
-
-	    for (CategoryEntity child : children) {
-	        softDeleteCategory(child);
-	    }
+		for (CategoryEntity child : children) {
+			softDeleteCategory(child);
+		}
 	}
 	
 	//home view parent category list
-	
-	
 	@Override
 	@Transactional
 	public List<CategoryEntity> findParentCategories() {
-	    return categoryRepository.findParentCategories();
+		return categoryRepository.findParentCategories();
 	}
 	
 	//next homeview childcategory view by parent Id
-	
 	@Override
 	@Transactional
 	public List<CategoryEntity> findChildrenByParentId(Long parentId) {
-	    return categoryRepository.findChildrenByParentId(parentId);
+		return categoryRepository.findChildrenByParentId(parentId);
+	}
+
+	// 🚨 Fixed: Repository ဆီက နေပြီး အမှန်/အမှား လှမ်းယူပြီး ပြန်ပေးခြင်း
+	@Override
+	@Transactional
+	public boolean existsBySlug(String slug) {
+		return categoryRepository.existsBySlug(slug);
 	}
 	
+	//final
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	@Override
+	@Transactional
+	public long countActiveCategories() {
+	    return categoryRepository.countActiveCategories();
+	}
+
+	@Override
+	@Transactional
+	public long countChildrenByParentId(Long parentId) {
+	    return categoryRepository.countChildrenByParentId(parentId);
+	}
 	
-	
-	
+	// =========================
+	// Child Category View
+	// =========================
+
+	@Override
+	public List<CheatsheetEntity> findPopularByCategoryId(
+	        Long categoryId) {
+
+	    return cheatsheetRepository
+	            .findPopularByCategoryId(
+	                    categoryId);
+	}
+
+	@Override
+	public List<CheatsheetEntity> findRecentByCategoryId(
+	        Long categoryId) {
+
+	    return cheatsheetRepository
+	            .findRecentByCategoryId(
+	                    categoryId);
+	}
+
 }

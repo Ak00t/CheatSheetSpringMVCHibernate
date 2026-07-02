@@ -83,13 +83,39 @@
 
 <div class="container py-4">
 
+
+<%-- 
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
             <li class="breadcrumb-item"><a href="#">${cheatsheet.category.name}</a></li>
             <li class="breadcrumb-item active" aria-current="page">${cheatsheet.title} Sheets</li>
         </ol>
-    </nav>
+    </nav> --%>
+    
+   <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="${pageContext.request.contextPath}/">
+                Home
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="${pageContext.request.contextPath}/child-category/${cheatsheet.category.id}">
+                ${cheatsheet.category.name}
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            ${cheatsheet.title}
+        </li>
+
+    </ol>
+</nav>
+   
+   
 
     <div class="mb-4">
         <h1 class="fw-bold title mb-2">

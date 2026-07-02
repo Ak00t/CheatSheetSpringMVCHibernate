@@ -97,6 +97,8 @@ public class LoginRegisterController {
 		session.removeAttribute("regErrorMessage");
 
 		return "redirect:/home?regSuccess=true";
+		
+		
 	}
 
 	/*

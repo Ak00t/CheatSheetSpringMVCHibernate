@@ -12,17 +12,28 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
+import java.nio.file.Files;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-	
+
+import com.hibernate.entity.UserEntity;
+import com.hibernate.repository.UserProfileRepository;
+import com.hibernate.service.UserProfileService;
+
 @Controller
 @RequestMapping("/profile")
 public class UserProfileController {
-	
+
     @Autowired
     private UserProfileService userService;
+
     @Autowired
     private UserProfileRepository userRepository;
   
@@ -34,7 +45,7 @@ public class UserProfileController {
      
         return "profile";
     }
-    
+
     @PostMapping("/update")
     public String updateProfile(@RequestParam("id") Long id,
                                 @RequestParam("name") String name,
@@ -86,6 +97,4 @@ public class UserProfileController {
         model.addAttribute("profileUser", userService.getUserProfile(id));
         return "profile-detail"; // profile detail ကို ပြမယ့် jsp နာမည်
     }
-    
-    
 }

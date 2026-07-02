@@ -135,8 +135,73 @@ public class CheatsheetServiceImpl implements CheatsheetService {
         return cheatsheet;
     }
     //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
- 
+ // profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
+
+    @Override
+    public CheatsheetEntity findVisibleCheatsheet(
+            Long cheatsheetId,
+            Long loginUserId) {
+
+        return cheatsheetRepository.findVisibleCheatsheet(
+                cheatsheetId,
+                loginUserId);
+    }
+
     
+    //final
+ // =========================
+ // Home Page Statistics
+ // =========================
+
+ @Override
+ public long countPublicCheatsheets() {
+     return cheatsheetRepository.countPublicCheatsheets();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularCheatsheets(int limit) {
+     return cheatsheetRepository.findPopularCheatsheets(limit);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentCheatsheets(int limit) {
+     return cheatsheetRepository.findRecentCheatsheets(limit);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularByParentCategoryId(Long parentId) {
+     return cheatsheetRepository.findPopularByParentCategoryId(parentId);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentByParentCategoryId(Long parentId) {
+     return cheatsheetRepository.findRecentByParentCategoryId(parentId);
+ }
     
-    
+//=========================
+//Child Category View
+//=========================
+
+@Override
+public List<CheatsheetEntity> findPopularByCategoryId(
+      Long categoryId) {
+
+  return cheatsheetRepository
+          .findPopularByCategoryId(
+                  categoryId);
 }
+
+@Override
+public List<CheatsheetEntity> findRecentByCategoryId(
+      Long categoryId) {
+
+  return cheatsheetRepository
+          .findRecentByCategoryId(
+                  categoryId);
+}
+    
+    
+    }
+    
+    
+    
