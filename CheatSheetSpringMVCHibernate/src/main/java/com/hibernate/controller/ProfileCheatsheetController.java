@@ -30,13 +30,13 @@ public class ProfileCheatsheetController {
     private final CommentService commentService;
     private final CheatsheetService cheatsheetService;
 
-	/*
-	 * @RequestMapping("/{userId}") public String list(@PathVariable Long userId,
-	 * Model model) { model.addAttribute("userId", userId);
-	 * model.addAttribute("cheatsheets",
-	 * cheatsheetService.findProfileCheatsheetByUserId(userId)); return
-	 * "profile-cheatsheet-list"; }
-	 */
+  /*
+   * @RequestMapping("/{userId}") public String list(@PathVariable Long userId,
+   * Model model) { model.addAttribute("userId", userId);
+   * model.addAttribute("cheatsheets",
+   * cheatsheetService.findProfileCheatsheetByUserId(userId)); return
+   * "profile-cheatsheet-list"; }
+   */
     
     
     @RequestMapping
@@ -60,7 +60,7 @@ public class ProfileCheatsheetController {
         return "profile-cheatsheet-list";
     }
     
-	
+  
     @RequestMapping("/detail/{id}")
     public String detail(@PathVariable Long id,
                          HttpSession session,
@@ -114,8 +114,7 @@ public class ProfileCheatsheetController {
 
         return "profile-cheatsheet-edit";
     }
-
-    @PostMapping("/update")
+@PostMapping("/update")
     public String update(@RequestParam Long id,
                          @RequestParam String title,
                          @RequestParam(required = false) String description,
@@ -130,25 +129,6 @@ public class ProfileCheatsheetController {
                          HttpSession session,
                          javax.servlet.http.HttpServletRequest request) {
 
-    	
-    	
-    	CheatsheetEntity cheatsheet1 = cheatsheetService.findDetailsById(id);
-    	
-    	// ၄။ Image ပုံသိမ်းဆည်းခြင်း (Controller အတွင်းပိုင်း)
-    	if (coverPhoto != null && !coverPhoto.isEmpty()) {
-    	    
-    	    if (cheatsheet1.getMediaList() == null) {
-    	        cheatsheet1.setMediaList(new java.util.ArrayList<>());
-    	    } else {
-    	        cheatsheet1.getMediaList().clear();
-    	    }
-    	    
-    	    try {
-    	        // mvc:resources မှာ သတ်မှတ်ထားတဲ့အတိုင်း Path ကို ပြောင်းပေးပါ
-    	        String userHome = System.getProperty("user.home");
-    	        String uploadDir = userHome + "/app_uploads/cheatsheets/";
-    	        java.io.File dir = new java.io.File(uploadDir);
-    	        if (!dir.exists()) dir.mkdirs();
         UserEntity currentUser =
                 (UserEntity) session.getAttribute("currentUser");
 
@@ -156,20 +136,6 @@ public class ProfileCheatsheetController {
             return "redirect:/";
         }
 
-    	        // Browser က ခေါ်တဲ့ Mapping နှင့် ကိုက်ညီအောင် /uploads/cheatsheets/ နဲ့ စပါ
-    	        String dbMediaUrl = "/uploads/cheatsheets/" + fileName;
-    	        
-    	        com.hibernate.entity.CheatsheetMediaEntity media = new com.hibernate.entity.CheatsheetMediaEntity();
-    	        media.setMediaUrl(dbMediaUrl);
-    	        media.setMediaType(com.hibernate.entity.enums.MediaType.IMAGE);
-    	        media.setCheatsheet(cheatsheet1);
-    	        cheatsheet1.getMediaList().add(media);
-    	    } catch (Exception e) { e.printStackTrace(); }
-    	}
-    	
-    	
-    	
-        // ၁။ DB မှ Data ဆွဲထုတ်ခြင်း
         CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(id);
 
         if (!cheatsheet.getUser().getId().equals(currentUser.getId())) {
@@ -237,8 +203,7 @@ public class ProfileCheatsheetController {
                 String dbMediaUrl = request.getContextPath()
                         + "/profile-cheatsheets/uploads/"
                         + fileName;
-
-                if (cheatsheet.getMediaList() == null) {
+ if (cheatsheet.getMediaList() == null) {
                     cheatsheet.setMediaList(new java.util.ArrayList<>());
                 } else {
                     cheatsheet.getMediaList().clear();
@@ -322,8 +287,7 @@ public class ProfileCheatsheetController {
                     + File.separator + "app_uploads"
                     + File.separator + "cheatsheets"
                     + File.separator + fileName);
-
-            if (file.exists()) {
+if (file.exists()) {
                 byte[] imageBytes = Files.readAllBytes(file.toPath());
                 return ResponseEntity.ok().body(imageBytes);
             }
