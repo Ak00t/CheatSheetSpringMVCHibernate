@@ -401,7 +401,8 @@
                         const ctx = "${pageContext.request.contextPath}";
 
                         function clearUrlParams() {
-                            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                            // window.location.origin gives you exactly "http://localhost:8080" cleanly without string hacking
+                            const cleanUrl = window.location.origin + window.location.pathname;
                             window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
                         }
 
