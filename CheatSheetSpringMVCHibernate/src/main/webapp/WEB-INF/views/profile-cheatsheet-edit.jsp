@@ -476,7 +476,12 @@ input[type="color"]{
                     <div class="cover-preview" id="coverPreview">
                         <c:choose>
                             <c:when test="${not empty cheatsheet.mediaList}">
-                             <img src="${pageContext.request.contextPath}${cheatsheet.mediaList[0].mediaUrl}" alt="Cover">
+                            
+                            
+                             <img src="${cheatsheet.mediaList[0].mediaUrl}"
+                 alt="Cover">
+                             
+                             
                             </c:when>
                             <c:otherwise>Cover preview</c:otherwise>
                         </c:choose>

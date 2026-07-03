@@ -25,5 +25,32 @@ public interface CategoryRepository {
 	//next homeview childcategory view by parent Id
 	
 	List<CategoryEntity> findChildrenByParentId(Long parentId);
+
+	boolean existsBySlug(String slug);
+	
+	
+	
+	//final
+	// =========================
+	// Home / Parent Category Statistics
+	// =========================
+
+	// Home total active categories
+	long countActiveCategories();
+
+	// Parent category card child count
+	long countChildrenByParentId(Long parentId);
+	
+	
+	
+	
+	List<CategoryEntity> findParentCategoriesWithPagination(
+	        int page,
+	        int size);
+
+	long countParentCategories();
+	
+	
+	
 	
 }

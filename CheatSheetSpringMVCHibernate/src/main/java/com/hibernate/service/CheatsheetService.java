@@ -48,7 +48,70 @@ public interface CheatsheetService {
     // profile edit အတွက် edit view မှာ မူလ old data များ ပြန်ပေါ်ရန်
 	CheatsheetEntity findDetailsForEdit(Long id);
 	 //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
+	// Owner / Public permission စစ်ပြီး detail ပြရန်
+	CheatsheetEntity findVisibleCheatsheet(
+	        Long cheatsheetId,
+	        Long loginUserId);
 	
+	
+	//final
+	// =========================
+	// Home Page Statistics
+	// =========================
+
+	// Total Public Cheatsheets
+	long countPublicCheatsheets();
+
+	// Home Popular Cheatsheets
+	List<CheatsheetEntity> findPopularCheatsheets(int limit);
+
+	// Home Recent Cheatsheets
+	List<CheatsheetEntity> findRecentCheatsheets(int limit);
+
+	// Parent Category Popular Cheatsheets
+	List<CheatsheetEntity> findPopularByParentCategoryId(Long parentId);
+
+	// Parent Category Recent Cheatsheets
+	List<CheatsheetEntity> findRecentByParentCategoryId(Long parentId);
+	
+	// =========================
+	// Child Category View
+	// =========================
+
+	List<CheatsheetEntity> findPopularByCategoryId(Long categoryId);
+
+	List<CheatsheetEntity> findRecentByCategoryId(Long categoryId);
+	//pagination
+	List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
+	        Long categoryId,
+	        int page,
+	        int size);
+
+	long countPublishedCheatsheetsByCategoryId(Long categoryId);
+
+	List<CheatsheetEntity> findPublishedCheatsheetsByTagIdWithPagination(
+	        Long tagId,
+	        int page,
+	        int size);
+
+	long countPublishedCheatsheetsByTagId(Long tagId);
+	// profile cheatsheet list status 
+	List<CheatsheetEntity> findPublishedByUserId(
+	        Long userId);
+
+	List<CheatsheetEntity> findDraftByUserId(
+	        Long userId);
+
+	List<CheatsheetEntity> findArchivedByUserId(
+	        Long userId);
+
+	List<CheatsheetEntity> findPrivateByUserId(
+	        Long userId);
+	//profile cheatsheet list
+	long countAllByUserId(Long userId);
+	
+	List<CheatsheetEntity> findUnlistedByUserId(
+	        Long userId);
 	
 
 }

@@ -79,4 +79,21 @@ public class NotificationServiceImpl implements NotificationService {
 		return notificationRepository.findReadByUserId(userId);
 	}
 
+	@Override
+	public List<NotificationEntity> findUnreadByUserId(Long userId) {
+
+		return notificationRepository.findUnreadByUserId(userId);
+	}
+
+	@Override
+	public void markAsRead(Long notificationId) {
+		notificationRepository.markAsRead(notificationId);
+
+	}
+
+	@Override
+	public void markAllAsReadByUserId(Long userId) {
+		notificationRepository.markAllAsReadByUserId(userId);
+	}
+
 }

@@ -135,8 +135,161 @@ public class CheatsheetServiceImpl implements CheatsheetService {
         return cheatsheet;
     }
     //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
- 
+ // profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
+
+    @Override
+    public CheatsheetEntity findVisibleCheatsheet(
+            Long cheatsheetId,
+            Long loginUserId) {
+
+        return cheatsheetRepository.findVisibleCheatsheet(
+                cheatsheetId,
+                loginUserId);
+    }
+
     
+    //final
+ // =========================
+ // Home Page Statistics
+ // =========================
+
+ @Override
+ public long countPublicCheatsheets() {
+     return cheatsheetRepository.countPublicCheatsheets();
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularCheatsheets(int limit) {
+     return cheatsheetRepository.findPopularCheatsheets(limit);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentCheatsheets(int limit) {
+     return cheatsheetRepository.findRecentCheatsheets(limit);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findPopularByParentCategoryId(Long parentId) {
+     return cheatsheetRepository.findPopularByParentCategoryId(parentId);
+ }
+
+ @Override
+ public List<CheatsheetEntity> findRecentByParentCategoryId(Long parentId) {
+     return cheatsheetRepository.findRecentByParentCategoryId(parentId);
+ }
     
-    
+//=========================
+//Child Category View
+//=========================
+
+@Override
+public List<CheatsheetEntity> findPopularByCategoryId(
+      Long categoryId) {
+
+  return cheatsheetRepository
+          .findPopularByCategoryId(
+                  categoryId);
 }
+
+@Override
+public List<CheatsheetEntity> findRecentByCategoryId(
+      Long categoryId) {
+
+  return cheatsheetRepository
+          .findRecentByCategoryId(
+                  categoryId);
+}
+    
+//pagination
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
+        Long categoryId,
+        int page,
+        int size) {
+
+    return cheatsheetRepository
+            .findPublishedCheatsheetsByCategoryIdWithPagination(
+                    categoryId,
+                    page,
+                    size);
+}
+
+@Override
+public long countPublishedCheatsheetsByCategoryId(Long categoryId) {
+
+    return cheatsheetRepository
+            .countPublishedCheatsheetsByCategoryId(categoryId);
+}
+
+@Override
+public List<CheatsheetEntity> findPublishedCheatsheetsByTagIdWithPagination(
+        Long tagId,
+        int page,
+        int size) {
+
+    return cheatsheetRepository
+            .findPublishedCheatsheetsByTagIdWithPagination(
+                    tagId,
+                    page,
+                    size);
+}
+
+@Override
+public long countPublishedCheatsheetsByTagId(Long tagId) {
+
+    return cheatsheetRepository
+            .countPublishedCheatsheetsByTagId(tagId);
+}
+
+
+@Override
+public List<CheatsheetEntity> findPublishedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findPublishedByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findDraftByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findDraftByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findArchivedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findArchivedByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findPrivateByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findPrivateByUserId(userId);
+}
+
+@Override
+public long countAllByUserId(Long userId) {
+
+    return cheatsheetRepository
+            .countAllByUserId(userId);
+}
+@Override
+public List<CheatsheetEntity> findUnlistedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findUnlistedByUserId(userId);
+}
+
+    
+    }
+    
+    
+    

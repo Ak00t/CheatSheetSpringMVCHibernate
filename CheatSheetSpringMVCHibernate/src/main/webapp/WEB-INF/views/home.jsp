@@ -1,359 +1,786 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+        <!DOCTYPE html>
+        <html>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>CheatSheet Hub</title>
+        <head>
+            <meta charset="UTF-8">
+            <title>CheatSheet Hub</title>
 
-<style>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: 'Segoe UI', sans-serif;
+                }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
+                body {
+                    background: #f8fafc;
+                    color: #1e293b;
+                }
 
-body{
-    background:#f8fafc;
-    color:#1e293b;
-}
+                .container {
+                    width: 95%;
+                    max-width: 1400px;
+                    margin: auto;
+                }
 
-.container{
-    width:95%;
-    max-width:1400px;
-    margin:auto;
-}
+                .hero {
+                    margin: 30px 0;
+                    padding: 55px;
+                    border-radius: 32px;
+                    background: linear-gradient(135deg, #2563eb, #10b981);
+                    color: white;
+                    box-shadow: 0 20px 45px rgba(37, 99, 235, .22);
+                }
 
+                .hero h1 {
+                    font-size: 54px;
+                    margin-bottom: 15px;
+                }
 
-.hero{
-    margin:30px 0;
-    padding:60px;
-    border-radius:30px;
-    background:linear-gradient(135deg,#2563eb,#10b981);
-    color:white;
-}
+                .hero p {
+                    font-size: 18px;
+                    line-height: 1.8;
+                    max-width: 820px;
+                }
 
-.hero-badge{
-    display:inline-block;
-    background:#d1fae5;
-    color:#065f46;
-    padding:10px 18px;
-    border-radius:999px;
-    font-size:14px;
-    font-weight:600;
-    margin-bottom:20px;
-}
+                .hero-stats {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                    gap: 20px;
+                    margin-top: 35px;
+                }
 
-.hero h1{
-    font-size:60px;
-    margin-bottom:20px;
-}
+                .stat-card {
+                    background: rgba(255, 255, 255, .18);
+                    border: 1px solid rgba(255, 255, 255, .25);
+                    padding: 24px;
+                    border-radius: 22px;
+                }
 
-.hero p{
-    font-size:20px;
-    line-height:1.8;
-    max-width:750px;
-}
+                .stat-card h2 {
+                    font-size: 38px;
+                    margin-bottom: 6px;
+                }
 
-/* ================= SECTION ================= */
+                .page-layout {
+                    display: grid;
+                    grid-template-columns: 1fr 330px;
+                    gap: 28px;
+                    align-items: start;
+                    margin-top: 45px;
+                }
 
-.section-title{
-    font-size:44px;
-    font-weight:800;
-    margin-bottom:10px;
-}
+                .section {
+                    margin-bottom: 55px;
+                }
 
-.section-subtitle{
-    color:#64748b;
-    font-size:18px;
-    margin-bottom:30px;
-}
+                .section-title {
+                    font-size: 34px;
+                    font-weight: 900;
+                    margin-bottom: 8px;
+                }
 
-/* ================= CATEGORY ================= */
+                .section-subtitle {
+                    color: #64748b;
+                    margin-bottom: 25px;
+                }
 
-.category-section{
-    margin-top:60px;
-}
+                /* Category Cards */
 
-.category-grid{
-    display:flex;
-    gap:25px;
+                .category-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 32px;
+                }
 
-    overflow-x:auto;
-    overflow-y:hidden;
+                .category-card {
+                    position: relative;
+                    min-height: 250px;
+                    padding: 36px;
+                    border-radius: 32px;
+                    background: #fff;
+                    border: 1px solid #edf2f7;
+                    text-decoration: none;
+                    color: #1e293b;
+                    overflow: hidden;
+                    box-shadow: 0 10px 35px rgba(15, 23, 42, .06);
+                    transition: .3s;
 
-    padding-bottom:15px;
-    scroll-behavior:smooth;
-}
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
 
-.category-grid::-webkit-scrollbar{
-    height:10px;
-}
+                .category-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 20px 50px rgba(15, 23, 42, .10);
+                }
 
-.category-grid::-webkit-scrollbar-track{
-    background:#dbeafe;
-    border-radius:999px;
-}
+                .category-card::before {
+                    content: '';
+                    position: absolute;
+                    width: 230px;
+                    height: 230px;
+                    right: -90px;
+                    bottom: -90px;
+                    border-radius: 50%;
+                    opacity: .75;
+                    z-index: 1;
+                }
 
-.category-grid::-webkit-scrollbar-thumb{
-    background:linear-gradient(90deg,#2563eb,#10b981);
-    border-radius:999px;
-}
+                .gradient-0::before {
+                    background: radial-gradient(circle, #dbeafe, #ffffff);
+                }
 
-.category-card{
-    min-width:280px;
-    height:220px;
-    flex-shrink:0;
+                .gradient-1::before {
+                    background: radial-gradient(circle, #ede9fe, #ffffff);
+                }
 
-    background:white;
-    border-radius:30px;
-    padding:30px;
+                .gradient-2::before {
+                    background: radial-gradient(circle, #fee2e2, #ffffff);
+                }
 
-    text-decoration:none;
+                .gradient-3::before {
+                    background: radial-gradient(circle, #dcfce7, #ffffff);
+                }
 
-    border:1px solid #dbeafe;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+                .gradient-4::before {
+                    background: radial-gradient(circle, #fef3c7, #ffffff);
+                }
 
-    transition:.3s;
+                .gradient-5::before {
+                    background: radial-gradient(circle, #e0e7ff, #ffffff);
+                }
 
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-}
+                .category-top {
+                    position: relative;
+                    z-index: 2;
+                }
 
-.category-card:hover{
-    transform:translateY(-8px);
-}
+                .category-name {
+                    color: #2563eb;
+                    font-size: 28px;
+                    font-weight: 800;
+                }
 
-.category-card h3{
-    color:#2563eb;
-    font-size:32px;
-    margin-bottom:15px;
-}
+                .category-desc {
+                    margin-top: 28px;
+                    color: #64748b;
+                    line-height: 1.8;
+                    font-size: 16px;
+                    position: relative;
+                    z-index: 2;
+                }
 
-.category-card p{
-    color:#475569;
-    line-height:1.7;
-}
-
-/* ================= POPULAR ================= */
-
-.placeholder-section{
-    margin-top:80px;
-}
-
-.placeholder-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:25px;
-}
-
-.placeholder-card{
-    background:white;
-    border:2px dashed #cbd5e1;
-    border-radius:30px;
-    padding:30px;
-    min-height:220px;
-}
-
-.placeholder-card h3{
-    color:#10b981;
-    margin-bottom:15px;
-}
-
-.placeholder-card p{
-    color:#64748b;
-    line-height:1.8;
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:768px){
-
-    .hero{
-        padding:30px;
-    }
-
-    .hero h1{
-        font-size:38px;
-    }
-
-    .placeholder-grid{
-        grid-template-columns:1fr;
-    }
-
-}
+                .category-count {
+                    margin-top: 40px;
+                    color: #475569;
+                    font-size: 18px;
+                    font-weight: 700;
+                    position: relative;
+                    z-index: 2;
+                }
 
 
-</style>
+                /* Pagination */
+                .category-pagination {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 40px;
+                    flex-wrap: wrap;
+                }
 
-</head>
-<body>
+                .page-btn {
+                    padding: 12px 18px;
+                    border-radius: 12px;
+                    background: white;
+                    text-decoration: none;
+                    color: #0f172a;
+                    font-weight: 800;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+                    transition: .2s;
+                }
 
-<jsp:include page="header.jsp"/>
+                .page-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
+                }
 
-<div class="container">
+                .sheet-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+                    gap: 24px;
+                }
 
-    <!-- HERO -->
+                .sheet-card {
+                    min-height: 440px;
+                    border-radius: 26px;
+                    padding: 22px;
+                    text-decoration: none;
+                    color: white !important;
+                    box-shadow: 0 14px 35px rgba(0, 0, 0, .14);
+                    transition: .3s;
+                    display: flex;
+                    flex-direction: column;
+                }
 
-    <section class="hero">
+                .sheet-card:hover {
+                    transform: translateY(-7px);
+                }
 
-        <span class="hero-badge">
-            Learn Faster
-        </span>
+                .sheet-cover {
+                    height: 165px;
+                    border-radius: 18px;
+                    overflow: hidden;
+                    background: rgba(0, 0, 0, .08);
+                    border: 2px dashed rgba(255, 255, 255, .4);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 800;
+                    margin-bottom: 15px;
+                }
 
-        <h1>
-            Explore Public Cheatsheets
-        </h1>
+                .sheet-cover img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
 
-        <p>
-            Browse cheatsheets by category, discover organized learning notes,
-            and find useful references quickly.
-        </p>
+                .badge {
+                    display: inline-block;
+                    padding: 6px 14px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, .24);
+                    font-size: 12px;
+                    font-weight: 900;
+                    margin-bottom: 12px;
+                    align-self: flex-start;
+                }
 
-    </section>
+                .sheet-card h3 {
+                    font-size: 21px;
+                    line-height: 1.35;
+                    margin-bottom: 10px;
+                }
 
-    <!-- CATEGORY -->
+                .sheet-desc {
+                    color: rgba(255, 255, 255, .9);
+                    line-height: 1.6;
+                    max-height: 80px;
+                    overflow: hidden;
+                }
 
-    <section class="category-section">
+                .sheet-footer {
+                    margin-top: auto;
+                    padding-top: 13px;
+                    border-top: 1px solid rgba(255, 255, 255, .25);
+                    font-size: 13px;
+                    line-height: 1.7;
+                }
 
-        <h2 class="section-title">
-            Browse Categories
-        </h2>
+                .sidebar-card {
+                    background: white;
+                    border-radius: 24px;
+                    padding: 24px;
+                    margin-bottom: 24px;
+                    box-shadow: 0 12px 30px rgba(15, 23, 42, .08);
+                    border: 1px solid #e2e8f0;
+                }
 
-        <p class="section-subtitle">
-            Choose a category to view public cheatsheets.
-        </p>
+                .sidebar-card h3 {
+                    font-size: 22px;
+                    margin-bottom: 20px;
+                }
 
-        <div class="category-grid">
+                .sidebar-scroll-box {
+                    max-height: 330px;
+                    overflow-y: auto;
+                    scroll-behavior: smooth;
+                    padding-right: 6px;
+                }
 
-            <c:forEach items="${parentCategories}" var="category">
+                .sidebar-scroll-box::-webkit-scrollbar {
+                    width: 6px;
+                }
 
-                <a href="${pageContext.request.contextPath}/category/${category.id}"
-                   class="category-card">
+                .sidebar-scroll-box::-webkit-scrollbar-thumb {
+                    background: #cbd5e1;
+                    border-radius: 999px;
+                }
 
-                    <h3>${category.name}</h3>
+                .scroll-controls {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 14px;
+                }
+
+                .scroll-btn {
+                    flex: 1;
+                    border: none;
+                    padding: 10px;
+                    border-radius: 12px;
+                    background: #eff6ff;
+                    color: #2563eb;
+                    font-weight: 900;
+                    cursor: pointer;
+                }
+
+                .author-item {
+                    display: flex;
+                    gap: 14px;
+                    align-items: center;
+                    padding: 14px 0;
+                    border-bottom: 1px solid #e2e8f0;
+                    text-decoration: none;
+                    color: #1e293b;
+                }
+
+                .avatar {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #2563eb, #10b981);
+                    color: white;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 900;
+                    overflow: hidden;
+                }
+
+                .avatar img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .author-name {
+                    font-weight: 900;
+                }
+
+                .author-count {
+                    color: #64748b;
+                    font-size: 13px;
+                    margin-top: 3px;
+                }
+
+                .mini-card {
+                    display: flex;
+                    gap: 12px;
+                    text-decoration: none;
+                    color: #1e293b;
+                    margin-bottom: 16px;
+                    align-items: center;
+                }
+
+                .mini-img {
+                    width: 72px;
+                    height: 58px;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    background: #e2e8f0;
+                    flex-shrink: 0;
+                }
+
+                .mini-img img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .mini-title {
+                    font-size: 14px;
+                    font-weight: 900;
+                    line-height: 1.4;
+                }
+
+                .mini-meta {
+                    margin-top: 4px;
+                    font-size: 12px;
+                    color: #64748b;
+                }
+
+                .empty-box {
+                    background: white;
+                    border: 2px dashed #cbd5e1;
+                    color: #64748b;
+                    padding: 25px;
+                    border-radius: 20px;
+                }
+
+                @media(max-width:1200px) {
+                    .category-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+
+                @media(max-width:950px) {
+                    .page-layout {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media(max-width:768px) {
+                    .hero {
+                        padding: 32px;
+                    }
+
+                    .hero h1 {
+                        font-size: 38px;
+                    }
+
+                    .category-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+
+        </head>
+
+        <body>
+
+            <jsp:include page="header.jsp" />
+
+            <div class="container">
+
+                <section class="hero">
+                    <h1>Explore Public Cheatsheets</h1>
 
                     <p>
-
-                        <c:choose>
-
-                            <c:when test="${not empty category.description}">
-                                ${category.description}
-                            </c:when>
-
-                            <c:otherwise>
-                                Explore child categories and related cheatsheets.
-                            </c:otherwise>
-
-                        </c:choose>
-
+                        Discover useful cheatsheets shared by the community.
+                        Browse categories, learn faster, and find quick references
+                        for your study and development work.
                     </p>
 
-                </a>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <h2>${totalCheatsheets}</h2>
+                            <span>Public Cheatsheets</span>
+                        </div>
 
-            </c:forEach>
+                        <div class="stat-card">
+                            <h2>${totalCategories}</h2>
+                            <span>Categories</span>
+                        </div>
 
-        </div>
+                        <div class="stat-card">
+                            <h2>${totalUsers}</h2>
+                            <span>Community Members</span>
+                        </div>
+                    </div>
+                </section>
 
-    </section>
+                <div class="page-layout">
 
-    <!-- POPULAR -->
+                    <main>
 
-    <section class="placeholder-section">
+                        <section class="section">
+                            <h2 class="section-title">Explore Categories</h2>
 
-        <h2 class="section-title">
-            Popular Cheatsheets
-        </h2>
+                            <p class="section-subtitle">
+                                Choose a main category and browse related topics.
+                            </p>
 
-        <div class="placeholder-grid">
+                            <c:choose>
+                                <c:when test="${not empty parentCategories}">
 
-            <div class="placeholder-card">
+                                    <div class="category-grid">
 
-                <h3>Coming Soon</h3>
+                                        <c:forEach items="${parentCategories}" var="cat" varStatus="st">
 
-                <p>
-                    Popular cheatsheets will appear after rating,
-                    view count and recommendation features are completed.
-                </p>
+                                            <a href="${pageContext.request.contextPath}/category/${cat.id}"
+                                                class="category-card gradient-${st.index % 6}">
+
+                                                <div class="category-top">
+                                                    <div class="category-name">
+                                                        ${cat.name}
+                                                    </div>
+
+                                                    <!--   <div class="category-arrow">
+                                            →
+                                        </div>-->
+                                                </div>
+
+                                                <div class="category-desc">
+                                                    <c:choose>
+                                                        <c:when test="${not empty cat.description}">
+                                                            ${cat.description}
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Explore related topics and public cheatsheets.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+
+
+
+                                            </a>
+
+                                        </c:forEach>
+
+                                    </div>
+
+                                    <c:if test="${totalCategoryPages > 1}">
+                                        <div class="category-pagination">
+
+                                            <c:if test="${categoryPage > 0}">
+                                                <a href="?categoryPage=${categoryPage - 1}" class="page-btn">
+                                                    ← Prev
+                                                </a>
+                                            </c:if>
+
+                                            <c:forEach begin="0" end="${totalCategoryPages - 1}" var="i">
+
+                                                <a href="?categoryPage=${i}" class="page-btn" style="
+                                       background:${i == categoryPage ? '#2563eb' : 'white'};
+                                       color:${i == categoryPage ? 'white' : '#0f172a'};">
+
+                                                    ${i + 1}
+
+                                                </a>
+
+                                            </c:forEach>
+
+                                            <c:if test="${categoryPage < totalCategoryPages - 1}">
+                                                <a href="?categoryPage=${categoryPage + 1}" class="page-btn">
+                                                    Next →
+                                                </a>
+                                            </c:if>
+
+                                        </div>
+                                    </c:if>
+
+                                </c:when>
+
+                                <c:otherwise>
+                                    <div class="empty-box">
+                                        No parent categories found.
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </section>
+
+
+                        <section class="section">
+                            <h2 class="section-title">🔥 Popular Cheatsheets</h2>
+
+                            <p class="section-subtitle">
+                                Most viewed and liked public cheatsheets.
+                            </p>
+
+                            <c:choose>
+                                <c:when test="${not empty popularCheatsheets}">
+                                    <div class="sheet-grid">
+
+                                        <c:forEach items="${popularCheatsheets}" var="sheet">
+                                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                                                class="sheet-card"
+                                                style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
+
+                                                <div class="sheet-cover">
+                                                    <c:choose>
+                                                        <c:when test="${not empty sheet.mediaList}">
+                                                            <img src="${sheet.mediaList[0].mediaUrl}"
+                                                                alt="${sheet.title}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            No Cover
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+
+                                                <span class="badge">${sheet.category.name}</span>
+
+                                                <h3>${sheet.title}</h3>
+
+                                                <p class="sheet-desc">${sheet.description}</p>
+
+                                                <div class="sheet-footer">
+                                                    👤
+                                                    <span
+                                                        onclick="event.preventDefault(); event.stopPropagation(); window.location.href='${pageContext.request.contextPath}/profile/${sheet.user.id}';"
+                                                        style="cursor:pointer;text-decoration:underline;font-weight:700;">
+                                                        ${sheet.user.name}
+                                                    </span>
+                                                    <br>
+                                                    👁 ${sheet.viewCount}
+                                                    &nbsp; ❤ ${sheet.likeCount}
+                                                    &nbsp; 🔖 ${sheet.bookmarkCount}
+                                                </div>
+
+                                            </a>
+                                        </c:forEach>
+
+                                    </div>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <div class="empty-box">
+                                        No popular cheatsheets yet.
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </section>
+
+
+                    </main>
+
+                    <aside>
+
+                        <div class="sidebar-card">
+                            <h3>🏆 Top Contributors</h3>
+
+                            <c:choose>
+                                <c:when test="${not empty topContributors}">
+                                    <div id="authorSidebar" class="sidebar-scroll-box">
+
+                                        <c:forEach items="${topContributors}" var="row">
+                                            <a href="${pageContext.request.contextPath}/profile/${row[0].id}"
+                                                class="author-item">
+
+                                                <div class="avatar">
+                                                    <c:choose>
+                                                        <c:when test="${not empty row[0].profileImg}">
+                                                            <img src="${row[0].profileImg.startsWith('/profile') ? pageContext.request.contextPath.concat(row[0].profileImg) : row[0].profileImg}"
+                                                                alt="${row[0].name}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${row[0].name.substring(0,1)}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+
+                                                <div>
+                                                    <div class="author-name">
+                                                        ${row[0].name}
+                                                    </div>
+
+                                                    <div class="author-count">
+                                                        ${row[1]} public cheatsheets
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                        </c:forEach>
+
+                                    </div>
+
+                                    <div class="scroll-controls">
+                                        <button type="button" class="scroll-btn"
+                                            onclick="scrollBox('authorSidebar', -160)">
+                                            ▲
+                                        </button>
+
+                                        <button type="button" class="scroll-btn"
+                                            onclick="scrollBox('authorSidebar', 160)">
+                                            ▼
+                                        </button>
+                                    </div>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <div class="empty-box">
+                                        No contributors found.
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+
+
+                        <div class="sidebar-card">
+                            <h3>🆕 Recent Cheatsheets</h3>
+
+                            <c:choose>
+                                <c:when test="${not empty recentCheatsheets}">
+                                    <div id="recentSidebar" class="sidebar-scroll-box">
+
+                                        <c:forEach items="${recentCheatsheets}" var="sheet">
+                                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
+                                                class="mini-card">
+
+                                                <div class="mini-img">
+                                                    <c:choose>
+                                                        <c:when test="${not empty sheet.mediaList}">
+                                                            <img src="${sheet.mediaList[0].mediaUrl}"
+                                                                alt="${sheet.title}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div></div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+
+                                                <div>
+                                                    <div class="mini-title">
+                                                        ${sheet.title}
+                                                    </div>
+
+                                                    <div class="mini-meta">
+                                                        👤
+                                                        <span
+                                                            onclick="event.preventDefault(); event.stopPropagation(); window.location.href='${pageContext.request.contextPath}/profile/${sheet.user.id}';"
+                                                            style="cursor:pointer;text-decoration:underline;font-weight:700;">
+                                                            ${sheet.user.name}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                        </c:forEach>
+
+                                    </div>
+
+                                    <div class="scroll-controls">
+                                        <button type="button" class="scroll-btn"
+                                            onclick="scrollBox('recentSidebar', -160)">
+                                            ▲
+                                        </button>
+
+                                        <button type="button" class="scroll-btn"
+                                            onclick="scrollBox('recentSidebar', 160)">
+                                            ▼
+                                        </button>
+                                    </div>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <div class="empty-box">
+                                        No recent cheatsheets yet.
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+
+
+
+                    </aside>
+
+                </div>
 
             </div>
 
-            <div class="placeholder-card">
+            <jsp:include page="footer.jsp" />
 
-                <h3>Featured Content</h3>
+            <script>
+                function scrollBox(id, amount) {
+                    const box = document.getElementById(id);
 
-                <p>
-                    Placeholder card for future popular cheatsheet content.
-                </p>
+                    if (box) {
+                        box.scrollBy({
+                            top: amount,
+                            behavior: "smooth"
+                        });
+                    }
+                }
+            </script>
 
-            </div>
+        </body>
 
-            <div class="placeholder-card">
-
-                <h3>Top Rated</h3>
-
-                <p>
-                    Rating based cheatsheets will be displayed here later.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- RECENT -->
-
-    <section class="placeholder-section">
-
-        <h2 class="section-title">
-            Recent Cheatsheets
-        </h2>
-
-        <div class="placeholder-grid">
-
-            <div class="placeholder-card">
-
-                <h3>Recent #1</h3>
-
-                <p>
-                    Latest public cheatsheet placeholder.
-                </p>
-
-            </div>
-
-            <div class="placeholder-card">
-
-                <h3>Recent #2</h3>
-
-                <p>
-                    Latest public cheatsheet placeholder.
-                </p>
-
-            </div>
-
-            <div class="placeholder-card">
-
-                <h3>Recent #3</h3>
-
-                <p>
-                    Latest public cheatsheet placeholder.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</div>
-
-<jsp:include page="footer.jsp"/>
-
-</body>
-</html>
+        </html>
