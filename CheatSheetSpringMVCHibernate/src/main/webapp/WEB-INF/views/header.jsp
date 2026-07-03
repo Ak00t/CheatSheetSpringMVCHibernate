@@ -5,7 +5,18 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
-
+<style>
+@media (min-width: 768px) {
+    .profile-hover-dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+    }
+}
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #2563eb !important;
+}
+</style>
 <header class="bg-white px-4 py-3 d-flex justify-content-between align-items-center shadow-sm">
     <h2 class="m-0" style="color:#2563eb; font-weight: 700;">
         <a href="${pageContext.request.contextPath}/" class="text-decoration-none">
@@ -93,10 +104,48 @@
                 </a>
                 
                 
-                 <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}" 
-           class="text-decoration-none text-secondary fw-semibold">
-            Profile
-        </a>
+                 <!-- 💡 header.jsp ထဲက Profile Button နေရာအား ဤကုဒ်ဖြင့် အစားထိုးပါ -->
+<div class="dropdown d-inline-block profile-hover-dropdown">
+    <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}" 
+       class="text-decoration-none text-secondary fw-semibold dropdown-toggle d-flex align-items-center gap-2" 
+       id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        👤 Profile
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-0" style="border-radius: 12px; font-size: 14px; min-width: 180px;">
+        <li>
+            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2" 
+               href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
+                <i class="bi bi-person-circle text-primary"></i> My Profile
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2" 
+               href="${pageContext.request.contextPath}/profile/bookmarks">
+                <i class="bi bi-bookmark-heart-fill text-warning"></i> Cheatsheet Bookmarks
+            </a>
+            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2" 
+       href="${pageContext.request.contextPath}/collection/manage">
+        <i class="bi bi-folder-fill text-primary"></i> My Collection
+    </a>
+            
+            
+        </li>
+    </ul>
+</div>
+
+<!-- 💡 CSS လေးကိုလည်း header ရဲ့ <style> အောက်ထဲ ထည့်ပေးပါဦးဗျာ -->
+<style>
+@media (min-width: 768px) {
+    .profile-hover-dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+    }
+}
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #2563eb !important;
+}
+</style>
         
         <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
             Logout

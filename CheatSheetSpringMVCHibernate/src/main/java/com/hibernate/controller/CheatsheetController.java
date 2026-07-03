@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hibernate.entity.enums.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,136 +42,16 @@ public class CheatsheetController {
         return "cheatsheet-create";
     }
 
-	/*
-	 * @PostMapping("/save") public String saveCheatsheet(
-	 * 
-	 * @RequestParam Long categoryId,
-	 * 
-	 * @RequestParam String title,
-	 * 
-	 * @RequestParam(required = false) String description,
-	 * 
-	 * @RequestParam(required = false) String themeColor,
-	 * 
-	 * @RequestParam String action,
-	 * 
-	 * @RequestParam(required = false) Long[] tagIds,
-	 * 
-	 * @RequestParam(required = false) String[] requestedTags,
-	 * 
-	 * @RequestParam(required = false) Integer[] sectionIndexes,
-	 * 
-	 * @RequestParam(required = false) String[] sectionTitles,
-	 * 
-	 * @RequestParam(required = false) MultipartFile coverPhoto, HttpServletRequest
-	 * request) throws IOException {
-	 * 
-	 * UserEntity user = new UserEntity(); user.setId(1L);
-	 * 
-	 * CategoryEntity category = categoryService.findById(categoryId);
-	 * 
-	 * CheatsheetEntity cheatsheet = new CheatsheetEntity();
-	 * cheatsheet.setUser(user); cheatsheet.setCategory(category);
-	 * cheatsheet.setTitle(title); cheatsheet.setSlug(makeSlug(title) + "-" +
-	 * System.currentTimeMillis()); cheatsheet.setDescription(description);
-	 * cheatsheet.setThemeColor(themeColor);
-	 * cheatsheet.setStatus(ContentStatus.ACTIVE);
-	 * cheatsheet.setCreatedAt(LocalDateTime.now());
-	 * cheatsheet.setUpdatedAt(LocalDateTime.now());
-	 * 
-	 * if ("draft".equals(action)) {
-	 * cheatsheet.setPublishStatus(PublishStatus.DRAFT);
-	 * cheatsheet.setVisibility(CheatsheetVisibility.PRIVATE); } else {
-	 * cheatsheet.setPublishStatus(PublishStatus.PUBLISHED);
-	 * cheatsheet.setVisibility(CheatsheetVisibility.PUBLIC); }
-	 * 
-	 * Long cheatsheetId = cheatsheetService.saveCheatsheet(cheatsheet);
-	 * 
-	 * if (tagIds != null) { for (Long tagId : tagIds) {
-	 * cheatsheetService.saveCheatsheetTag(cheatsheetId, tagId); } }
-	 * 
-	 * if (requestedTags != null) { for (String tagName : requestedTags) { if
-	 * (tagName != null && !tagName.trim().isEmpty()) { TagRequestEntity tagRequest
-	 * = new TagRequestEntity(); tagRequest.setName(tagName.trim());
-	 * tagRequest.setStatus(TagRequestStatus.PENDING);
-	 * tagRequest.setCategory(category); tagRequest.setRequestedBy(user);
-	 * tagRequest.setCreatedAt(LocalDateTime.now());
-	 * cheatsheetService.saveTagRequest(tagRequest); } } }
-	 * 
-	 * if (sectionIndexes != null && sectionTitles != null) { for (int i = 0; i <
-	 * sectionIndexes.length; i++) { Integer sectionIndex = sectionIndexes[i];
-	 * String sectionTitle = sectionTitles[i];
-	 * 
-	 * if (sectionTitle == null || sectionTitle.trim().isEmpty()) { continue; }
-	 * 
-	 * CheatsheetSectionEntity section = new CheatsheetSectionEntity();
-	 * section.setCheatsheet(cheatsheet); section.setTitle(sectionTitle.trim());
-	 * section.setSortOrder(i); section.setCreatedAt(LocalDateTime.now());
-	 * cheatsheetService.saveSection(section);
-	 * 
-	 * String[] rowTitles = request.getParameterValues("rowTitles_" + sectionIndex);
-	 * String[] cellKeys = request.getParameterValues("cellKeys_" + sectionIndex);
-	 * String[] cellValues = request.getParameterValues("cellValues_" +
-	 * sectionIndex);
-	 * 
-	 * if (rowTitles != null) { for (int r = 0; r < rowTitles.length; r++) { if
-	 * (rowTitles[r] == null || rowTitles[r].trim().isEmpty()) { continue; }
-	 * 
-	 * CheatsheetRowEntity row = new CheatsheetRowEntity(); row.setSection(section);
-	 * row.setRowTitle(rowTitles[r].trim()); row.setSortOrder(r);
-	 * row.setCreatedAt(LocalDateTime.now()); cheatsheetService.saveRow(row);
-	 * 
-	 * CheatsheetRowCellEntity cell = new CheatsheetRowCellEntity();
-	 * cell.setRow(row); cell.setCellKey(cellKeys != null && r < cellKeys.length ?
-	 * cellKeys[r] : ""); cell.setCellValue(cellValues != null && r <
-	 * cellValues.length ? cellValues[r] : ""); cell.setSortOrder(r);
-	 * cheatsheetService.saveRowCell(cell); } }
-	 * 
-	 * String[] noteTitles = request.getParameterValues("noteTitles_" +
-	 * sectionIndex); String[] noteContents =
-	 * request.getParameterValues("noteContents_" + sectionIndex);
-	 * 
-	 * if (noteTitles != null) { for (int n = 0; n < noteTitles.length; n++) { if
-	 * ((noteTitles[n] == null || noteTitles[n].trim().isEmpty()) && (noteContents
-	 * == null || n >= noteContents.length || noteContents[n].trim().isEmpty())) {
-	 * continue; }
-	 * 
-	 * CheatsheetNoteEntity note = new CheatsheetNoteEntity();
-	 * note.setCheatsheet(cheatsheet); note.setSection(section);
-	 * note.setNoteTitle(noteTitles[n]); note.setNoteContent(noteContents != null &&
-	 * n < noteContents.length ? noteContents[n] : ""); note.setSortOrder(n);
-	 * note.setCreatedAt(LocalDateTime.now()); cheatsheetService.saveNote(note); } }
-	 * } }
-	 * 
-	 * if (coverPhoto != null && !coverPhoto.isEmpty()) { String userHome =
-	 * System.getProperty("user.home"); String uploadDir = userHome + File.separator
-	 * + "app_uploads" + File.separator + "cheatsheets" + File.separator;
-	 * 
-	 * File dir = new File(uploadDir); if (!dir.exists()) { dir.mkdirs(); }
-	 * 
-	 * String originalName = coverPhoto.getOriginalFilename(); if (originalName ==
-	 * null) { originalName = "cover.jpg"; }
-	 * 
-	 * String cleanFileName = originalName.replaceAll("\\s+", "_"); String fileName
-	 * = "cheatsheet_" + cheatsheetId + "_" + System.currentTimeMillis() + "_" +
-	 * cleanFileName;
-	 * 
-	 * File serverFile = new File(uploadDir + fileName);
-	 * coverPhoto.transferTo(serverFile);
-	 * 
-	 * String relativePath = request.getContextPath() + "/admin/cheatsheet/uploads/"
-	 * + fileName;
-	 * 
-	 * CheatsheetMediaEntity media = new CheatsheetMediaEntity();
-	 * media.setCheatsheet(cheatsheet); media.setMediaType(MediaType.IMAGE);
-	 * media.setMediaUrl(relativePath); media.setCaption(title);
-	 * media.setSortOrder(0); media.setCreatedAt(LocalDateTime.now());
-	 * 
-	 * cheatsheetService.saveMedia(media); }
-	 * 
-	 * return "redirect:/admin/cheatsheet/create"; }
-	 */
-    
+    private String makeSlug(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.toLowerCase()
+                .trim()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-+", "-");
+    }
     
     @PostMapping("/save")
     public String saveCheatsheet(
@@ -245,26 +126,6 @@ public class CheatsheetController {
                     continue;
                 }
 
-	    if (coverPhoto != null && !coverPhoto.isEmpty()) {
-	        // Dynamic Path တည်ဆောက်ခြင်း
-	        String baseDir = System.getProperty("user.home") + File.separator + "app_uploads" + File.separator + "cheatsheets" + File.separator;
-	        File dir = new File(baseDir);
-	        if (!dir.exists()) dir.mkdirs();
-
-	        String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename().replaceAll("\\s+", "");
-	        File file = new File(dir, fileName);
-	        coverPhoto.transferTo(file);
-
-	        CheatsheetMediaEntity media = new CheatsheetMediaEntity();
-	        media.setCheatsheet(cheatsheet);
-	        media.setMediaType(MediaType.IMAGE);
-	        // URL ကို သိမ်းဆည်းသည့်အခါ filename သက်သက်သာ သိမ်းပါ
-	        media.setMediaUrl(fileName);
-	        media.setCaption(title);
-	        media.setSortOrder(0);
-	        media.setCreatedAt(LocalDateTime.now());
-	        cheatsheetService.saveMedia(media);
-	    }
                 CheatsheetSectionEntity section = new CheatsheetSectionEntity();
                 section.setCheatsheet(cheatsheet);
                 section.setTitle(sectionTitle.trim());
@@ -342,16 +203,13 @@ public class CheatsheetController {
             String fileName = "cheatsheet_" + cheatsheetId + "_" + System.currentTimeMillis() + "_" + cleanFileName;
 
             File serverFile = new File(uploadDir + fileName);
-            coverPhoto.transferTo(serverFile);
-
-            String relativePath = request.getContextPath()
-                    + "/admin/cheatsheet/uploads/"
-                    + fileName;
+            
+            java.nio.file.Files.copy(coverPhoto.getInputStream(), serverFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
             CheatsheetMediaEntity media = new CheatsheetMediaEntity();
             media.setCheatsheet(cheatsheet);
             media.setMediaType(MediaType.IMAGE);
-            media.setMediaUrl(relativePath);
+            media.setMediaUrl(fileName); 
             media.setCaption(title);
             media.setSortOrder(0);
             media.setCreatedAt(LocalDateTime.now());
@@ -361,9 +219,8 @@ public class CheatsheetController {
 
         return "redirect:/admin/cheatsheet/create";
     }
-    
-    
-    
+
+    // 💡 🛑 (အသစ်ထည့်သွင်းချက်) - View တွေဘက်က တောင်းဆိုလာတဲ့ ဓာတ်ပုံတွေကို Byte array ပြန်ထုတ်ပေးမည့် API Endpoint
     @GetMapping("/uploads/{fileName:.+}")
     @ResponseBody
     public ResponseEntity<byte[]> getCheatsheetImage(@PathVariable String fileName) {
@@ -376,24 +233,15 @@ public class CheatsheetController {
 
             if (file.exists()) {
                 byte[] imageBytes = Files.readAllBytes(file.toPath());
-                return ResponseEntity.ok().body(imageBytes);
+                
+                // 💡 🛑 အဓိကပြင်ဆင်ချက်: Spring ရဲ့ MediaType ကို တိုက်ရိုက် Full Path ရေးပေးလိုက်တာမို့လို့ Import မလိုတော့ဘဲ တန်းအလုပ်လုပ်သွားပါလိမ့်မယ်
+                return ResponseEntity.ok()
+                        .contentType(org.springframework.http.MediaType.IMAGE_JPEG) 
+                        .body(imageBytes);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return ResponseEntity.notFound().build();
-    }
-
-    private String makeSlug(String text) {
-        if (text == null) {
-            return "";
-        }
-
-        return text.toLowerCase()
-                .trim()
-                .replaceAll("[^a-z0-9\\s-]", "")
-                .replaceAll("\\s+", "-")
-                .replaceAll("-+", "-");
     }
 }

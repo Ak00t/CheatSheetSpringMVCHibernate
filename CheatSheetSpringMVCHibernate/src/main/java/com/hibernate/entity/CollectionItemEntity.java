@@ -40,5 +40,9 @@ public class CollectionItemEntity {
 	private CheatsheetEntity cheatsheet;
 
 	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	
 	private LocalDateTime createdAt;
+	
+	
+	
 }

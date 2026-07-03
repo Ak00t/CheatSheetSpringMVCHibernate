@@ -82,4 +82,6 @@ public interface CheatsheetService {
 
 	List<CheatsheetEntity> findRecentByCategoryId(Long categoryId);
 
+	Object findBookmarkedByUserId(Long id);
+
 }

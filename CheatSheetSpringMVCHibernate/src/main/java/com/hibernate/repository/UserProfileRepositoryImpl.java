@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.UserEntity;
+import com.hibernate.entity.UserFollowEntity;
 @Repository
 @Transactional
 public class UserProfileRepositoryImpl implements UserProfileRepository {
     
     @Autowired
     private SessionFactory sessionFactory;
-    @Autowired
-    private UserProfileRepository userRepository;
+    
     @Override
     public UserEntity findById(Long id) {
         return sessionFactory.getCurrentSession().get(UserEntity.class, id);
@@ -40,4 +40,14 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
             e.printStackTrace();
             return null;
         }
-    }}
+    }
+    @Override
+    public UserEntity findByEmail(String email) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM UserEntity WHERE email = :email", UserEntity.class)
+                .setParameter("email", email)
+                .uniqueResult();
+    }
+
+   
+}

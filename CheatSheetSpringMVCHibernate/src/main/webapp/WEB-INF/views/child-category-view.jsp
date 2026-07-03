@@ -215,7 +215,7 @@ body{
     border-radius:22px;
     overflow:hidden;
     text-decoration:none;
-    color:white !important;
+    color: var(--text-color, white) !important; 
     box-shadow:0 12px 30px rgba(0,0,0,.13);
     transition:.3s;
     padding:20px;
@@ -237,7 +237,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    color:white;
+    color: var(--text-color, white);
     font-size:18px;
     font-weight:800;
     overflow:hidden;
@@ -263,8 +263,8 @@ body{
     display:inline-block;
     padding:6px 14px;
     border-radius:999px;
-    background:rgba(255,255,255,0.25);
-    color:white;
+    background:rgba(0,0,0,0.12); 
+    color: var(--text-color, white);
     font-size:12px;
     font-weight:800;
     margin-bottom:12px;
@@ -273,14 +273,15 @@ body{
 
 .sheet-title{
     font-size:21px;
-    color:white;
+    color: var(--text-color, white);
     margin-bottom:8px;
     font-weight:900;
     line-height:1.35;
 }
 
 .sheet-description{
-    color:rgba(255,255,255,0.92);
+    color: var(--text-color, white);
+    opacity: 0.9;
     line-height:1.55;
     max-height:95px;
     overflow:hidden;
@@ -290,7 +291,7 @@ body{
 .see-btn{
     display:inline-block;
     margin-top:6px;
-    color:white;
+    color: var(--text-color, white);
     text-decoration:underline;
     font-weight:800;
     cursor:pointer;
@@ -299,14 +300,15 @@ body{
 .sheet-footer{
     margin-top:auto;
     padding-top:12px;
-    border-top:1px solid rgba(255,255,255,0.25);
-    color:rgba(255,255,255,0.9);
+    border-top:1px solid rgba(0,0,0,0.1);
+    color: var(--text-color, white);
+    opacity: 0.8;
     font-size:13px;
     line-height:1.7;
 }
 
 .creator-link{
-    color:white;
+    color: var(--text-color, white);
     text-decoration:none;
     font-weight:900;
 }
@@ -323,12 +325,10 @@ body{
     .page-layout{
         grid-template-columns:1fr;
     }
-
     .hero-top{
         flex-direction:column;
         align-items:flex-start;
     }
-
     .hero-stats{
         width:100%;
         justify-content:space-between;
@@ -339,11 +339,9 @@ body{
     .hero-top{
         padding:30px;
     }
-
     .hero h1{
         font-size:36px;
     }
-
     .sheet-grid{
         grid-template-columns:1fr;
     }
@@ -358,308 +356,302 @@ body{
 <div class="container">
 
     <section class="hero">
-
         <div class="hero-top">
-
             <div>
                 <h1>${childCategory.name}</h1>
-
                 <p>
                     <c:choose>
                         <c:when test="${not empty childCategory.description}">
                             ${childCategory.description}
                         </c:when>
-
                         <c:otherwise>
                             Browse cheatsheets, tags and resources related to ${childCategory.name}.
                         </c:otherwise>
                     </c:choose>
                 </p>
             </div>
-
             <div class="hero-stats">
                 <div>
                     <h2>${followersCount}</h2>
                     <span>Followers</span>
                 </div>
-
                 <div>
                     <h2>${cheatsheets.size()}</h2>
                     <span>Cheatsheets</span>
                 </div>
             </div>
-
         </div>
 
         <div class="follow-bar">
-
             <div class="follow-info">
                 <small>Category</small>
                 <h3>${childCategory.name}</h3>
             </div>
-
             <c:choose>
                 <c:when test="${isFollowing}">
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/category/unfollow/${childCategory.id}">
-                        <button type="submit" class="following-btn">
-                            ✓ Following
-                        </button>
+                    <form method="post" action="${pageContext.request.contextPath}/category/unfollow/${childCategory.id}">
+                        <button type="submit" class="following-btn">✓ Following</button>
                     </form>
                 </c:when>
-
                 <c:otherwise>
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/category/follow/${childCategory.id}">
-                        <button type="submit" class="follow-btn">
-                            + Follow
-                        </button>
+                    <form method="post" action="${pageContext.request.contextPath}/category/follow/${childCategory.id}">
+                        <button type="submit" class="follow-btn">+ Follow</button>
                     </form>
                 </c:otherwise>
             </c:choose>
-
         </div>
-
     </section>
 
     <div class="page-layout">
-
         <aside>
-
             <div class="sidebar-card">
                 <h3>🏷 Tags</h3>
-
                 <c:choose>
                     <c:when test="${not empty tags}">
                         <div class="tags">
                             <c:forEach items="${tags}" var="tag">
-                                <a href="${pageContext.request.contextPath}/tag/${tag.id}" class="tag-card">
-                                    #${tag.name}
-                                </a>
+                                <a href="${pageContext.request.contextPath}/tag/${tag.id}" class="tag-card">#${tag.name}</a>
                             </c:forEach>
                         </div>
                     </c:when>
-
                     <c:otherwise>
-                        <div class="empty-box">
-                            No tags found.
-                        </div>
+                        <div class="empty-box">No tags found.</div>
                     </c:otherwise>
                 </c:choose>
             </div>
 
             <div class="sidebar-card">
                 <h3>🔥 Popular Cheatsheets</h3>
-
-                        <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                           class="sheet-card"
-                           style="background-color: ${sheet.themeColor};">
-<div class="sheet-cover">
-    <c:choose>
-        <c:when test="${not empty sheet.mediaList and not empty sheet.mediaList[0].mediaUrl}">
-            <img src="${pageContext.request.contextPath}/uploads/cheatsheets/${sheet.mediaList[0].mediaUrl}" 
-                 alt="${sheet.title}" />
-        </c:when>
-        <c:otherwise>
-            <span style="color:white; font-size:12px;">No Image</span>
-        </c:otherwise>
-    </c:choose>
-</div>
-
-
-
-
-
-
-                            <div class="sheet-body">
-
-                                <div class="category-badge">
-                                    ${sheet.category.name}
+                <c:choose>
+                    <c:when test="${not empty popularCheatsheets}">
+                        <c:forEach items="${popularCheatsheets}" var="sheet">
+                            <div class="sheet-card mb-3 auto-text-color" data-color="${sheet.themeColor}" style="background-color: ${sheet.themeColor}; min-height: auto; padding: 15px; border-radius: 14px; cursor: pointer;" onclick="location.href='${pageContext.request.contextPath}/cheatsheet/${sheet.id}'">
+                               <div class="sheet-cover" style="height: 120px;">
+                                    <c:choose>
+                                        <c:when test="${not empty sheet.mediaList}">
+                                            <%-- 💡 ပတ်လမ်းပြင်ဆင်ချက်: Profile Controller Upload Image API လမ်းကြောင်းအတိုင်း ညှိလိုက်ခြင်း --%>
+                                            <img src="${pageContext.request.contextPath}/admin/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="font-size:12px;">No Image</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
-
-                                <div>
-                                    <div class="mini-title">${sheet.title}</div>
-                                    <div class="mini-meta">👁 ${sheet.viewCount} views</div>
+                                <div class="sheet-body">
+                                    <div class="category-badge">${sheet.category.name}</div>
+                                    <div class="d-flex align-items-center gap-2 mt-2">
+                                        <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}" onclick="event.stopPropagation();" style="flex-shrink:0;">
+                                            <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty sheet.user.profileImg ? sheet.user.profileImg : 'default.png'}" 
+                                                 style="width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 1px solid white;" alt="creator" />
+                                        </a>
+                                        <div style="overflow:hidden;">
+                                            <div class="mini-title text-truncate" style="font-size:14px; font-weight:800;">${sheet.title}</div>
+                                            <div class="mini-meta" style="opacity:0.8; font-size:11px;">👁 ${sheet.viewCount} views</div>
+                                        </div>
+                                    </div>
                                 </div>
-
-                            </a>
+                            </div>
                         </c:forEach>
                     </c:when>
-
-                                <span class="see-btn">
-                                    See More
-                                </span>
-                       
-
-                                <%-- <div class="sheet-footer">
-                                    Created By: <span class="creator-link">${sheet.user.name}</span>
-                                    <br>
-                                    Created At: ${sheet.createdAt}
-                                </div> --%>
-                                
-                       
-                                
-                               <div class="sheet-footer">
-                               
-                               
-                               
-                               
-                               
                     <c:otherwise>
-                        <div class="empty-box">
-                            No popular cheatsheets.
-                        </div>
+                        <div class="empty-box">No popular cheatsheets.</div>
                     </c:otherwise>
                 </c:choose>
             </div>
 
             <div class="sidebar-card">
                 <h3>🆕 Recent Cheatsheets</h3>
-
                 <c:choose>
                     <c:when test="${not empty recentCheatsheets}">
                         <c:forEach items="${recentCheatsheets}" var="sheet">
                             <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}" class="mini-card">
-
                                 <div class="mini-img">
                                     <c:choose>
                                         <c:when test="${not empty sheet.mediaList}">
-                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                            <%-- 💡 ပတ်လမ်းပြင်ဆင်ချက် --%>
+                                            <img src="${pageContext.request.contextPath}/profile/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
                                         </c:when>
                                         <c:otherwise>
                                             <div></div>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-
-    🗓
-    <%-- အရင်ရှိနေတဲ့ fmt:parseDate ကို ဖျက်ပြီး ဒါနဲ့ အစားထိုးပါ --%>
-<c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
-<c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
-
-🗓 ${datePart} ${timePart}
-            
-            
-
+                                <c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+                                <c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
+                                🗓 ${datePart} ${timePart}
                             </a>
                         </c:forEach>
                     </c:when>
-
                     <c:otherwise>
-                        <div class="empty-box">
-                            No recent cheatsheets.
-                        </div>
+                        <div class="empty-box">No recent cheatsheets.</div>
                     </c:otherwise>
                 </c:choose>
             </div>
-
         </aside>
 
         <main class="main-card">
-
             <div class="main-head">
                 <div>
-                    <div class="main-title">
-                        📚 All Cheatsheets
-                    </div>
-                    <p class="main-subtitle">
-                        Browse all public cheatsheets under ${childCategory.name}.
-                    </p>
+                    <div class="main-title">📚 All Cheatsheets</div>
+                    <p class="main-subtitle">Browse all public cheatsheets under ${childCategory.name}.</p>
                 </div>
             </div>
 
             <c:choose>
                 <c:when test="${not empty cheatsheets}">
                     <div class="sheet-grid">
-
                         <c:forEach items="${cheatsheets}" var="sheet">
-
-                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                               class="sheet-card"
-                               style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
+                            <div class="sheet-card auto-text-color" data-color="${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'}"
+                               style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'}; cursor: pointer; position: relative;"
+                               onclick="location.href='${pageContext.request.contextPath}/cheatsheet/${sheet.id}'">
 
                                 <div class="sheet-cover">
                                     <c:choose>
                                         <c:when test="${not empty sheet.mediaList}">
-                                            <img src="${sheet.mediaList[0].mediaUrl}"
-                                                 alt="${sheet.title}">
+                                            <%-- 💡 🛑 အဓိကပြင်ဆင်ချက်: All Cheatsheets Card ကြီးတွေမှာလည်း Cover Photo ပုံမှန်အတိုင်း ပြန်ပေါ်လာအောင် သက်ဆိုင်ရာ Upload API လမ်းကြောင်း /profile/uploads/ ခံပြီး ပတ်လမ်းညှိပေးလိုက်ခြင်း ဖြစ်ပါတယ်ဗျာ။ --%>
+                                           <img src="${pageContext.request.contextPath}/admin/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
                                         </c:when>
-
-                                        <c:otherwise>
-                                            No Cover
-                                        </c:otherwise>
+                                        <c:otherwise>No Cover</c:otherwise>
                                     </c:choose>
                                 </div>
 
                                 <div class="sheet-body">
-
-                                    <div class="category-badge">
-                                        ${sheet.category.name}
+                                    <div class="category-badge">${sheet.category.name}</div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h3 class="sheet-title mb-0" style="flex-grow: 1; padding-right: 10px;">
+                                            ${sheet.title}
+                                        </h3>
+                                        
+                                        <div class="dropdown" onclick="event.stopPropagation();">
+                                            <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
+                                                    type="button" 
+                                                    data-bs-toggle="dropdown" 
+                                                    aria-expanded="false"
+                                                    style="color: var(--text-color, white) !important; opacity: 0.8;">
+                                                <i class="bi bi-three-dots-vertical fs-5"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px;">
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" 
+                                                       href="javascript:void(0);" 
+                                                       onclick="openPlaylistModal('${sheet.id}')">
+                                                        <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
-                                    <h3 class="sheet-title">
-                                        ${sheet.title}
-                                    </h3>
+                                    <p class="sheet-description">${sheet.description}</p>
+                                    <span class="see-btn">See More</span>
 
-                                    <p class="sheet-description">
-                                        ${sheet.description}
-                                    </p>
-
-                                    <span class="see-btn">
-                                        See More
-                                    </span>
-
-                                    <div class="sheet-footer">
-                                        Created By:
-                                        <span class="creator-link">
-                                            ${sheet.user.name}
-                                        </span>
-
-                                        <br>
-
-                                        🗓
-                                        <fmt:parseDate
-                                                value="${sheet.createdAt}"
-                                                pattern="yyyy-MM-dd'T'HH:mm:ss"
-                                                var="createdDate"/>
-
-                                        <fmt:formatDate
-                                                value="${createdDate}"
-                                                pattern="dd MMM yyyy"/>
+                                    <div class="sheet-footer d-flex align-items-center justify-content-between mt-auto pt-2" style="border-top: 1px solid rgba(0,0,0,0.1);">
+                                        <div>
+                                            <span style="font-size: 11px; opacity: 0.7; display:block;">Created By:</span>
+                                            <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}" class="creator-link" onclick="event.stopPropagation();">
+                                                ${sheet.user.name}
+                                            </a>
+                                            <div style="font-size: 11px; opacity: 0.7; margin-top: 2px;">
+                                                🗓 <c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+                                                <c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
+                                                <span style="font-size: 12px; opacity: 0.9;">${datePart} ${timePart}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}" onclick="event.stopPropagation();" style="flex-shrink:0;">
+                                            <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty sheet.user.profileImg ? sheet.user.profileImg : 'default.png'}" 
+                                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" alt="creator" />
+                                        </a>
                                     </div>
-
                                 </div>
-                            </a>
-
+                            </div>
                         </c:forEach>
-
                     </div>
                 </c:when>
-
                 <c:otherwise>
-                    <div class="empty-box">
-                        No published cheatsheets found for this category.
-                    </div>
+                    <div class="empty-box">No published cheatsheets found for this category.</div>
                 </c:otherwise>
             </c:choose>
-
         </main>
-
     </div>
-
 </div>
 
 <jsp:include page="footer.jsp"/>
 
-<script>
-document.querySelectorAll(".see-btn").forEach(function(btn){
+<div class="modal fade" id="bootstrapPlaylistModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; color: #1e293b;">
+      <div class="modal-header border-0 pb-0 pt-4 px-4">
+        <h5 class="modal-title fw-bold text-dark fs-4">Save to playlist</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <label class="small fw-semibold text-muted mb-2">Choose Playlist</label>
+        <select id="playlistSelect" class="form-select form-select-lg mb-4" style="border-radius: 8px; font-size: 0.95rem;">
+            <option value="">-- Select a playlist --</option>
+        </select>
+        
+        <button onclick="saveToSelectedPlaylist()" class="btn btn-primary btn-lg w-100 fw-bold mb-3" style="border-radius: 8px; font-size: 1rem;">
+            Save to Selected
+        </button>
 
+        <hr class="text-muted my-3">
+        
+        <div id="createSection">
+            <label class="small fw-semibold text-muted mb-2">Create New Playlist</label>
+            <input type="text" id="newPlaylistName" class="form-control mb-2" placeholder="Choose a title" style="border-radius: 8px;">
+            
+            <label class="small fw-semibold text-muted mb-1">Visibility</label>
+            <select id="newPlaylistVisibility" class="form-select form-select-sm mb-3" style="border-radius: 8px;">
+                <option value="PRIVATE">Private</option>
+                <option value="PUBLIC">Public</option>
+                <option value="UNLISTED">Unlisted</option>
+            </select>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <label class="form-check-label fw-semibold text-dark" for="newPlaylistCollaborate">Collaborate</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="newPlaylistCollaborate" style="width: 2.5em; height: 1.3em; cursor:pointer;">
+                </div>
+            </div>
+            
+            <button onclick="createNewPlaylist()" class="btn btn-dark fw-bold w-100" type="button" style="border-radius: 8px;">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function getContrastColor(hexColor) {
+    if (!hexColor || hexColor === "null") hexColor = "#2563eb";
+    hexColor = hexColor.replace("#", "");
+    if (hexColor.length === 3) {
+        hexColor = hexColor[0] + hexColor[0] + hexColor[1] + hexColor[1] + hexColor[2] + hexColor[2];
+    }
+    const r = parseInt(hexColor.substr(0, 2), 16);
+    const g = parseInt(hexColor.substr(2, 2), 16);
+    const b = parseInt(hexColor.substr(4, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? "#1e293b" : "#ffffff";
+}
+
+function applyDynamicTextColors() {
+    document.querySelectorAll(".auto-text-color").forEach(function(card) {
+        const bgHex = card.getAttribute("data-color");
+        const idealTextColor = getContrastColor(bgHex);
+        card.style.setProperty("--text-color", idealTextColor);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", applyDynamicTextColors);
+
+document.querySelectorAll(".see-btn").forEach(function(btn){
     btn.addEventListener("click", function(e){
         e.preventDefault();
         e.stopPropagation();
-
         const desc = this.previousElementSibling;
-
         if(desc.style.maxHeight === "none"){
             desc.style.maxHeight = "95px";
             this.innerText = "See More";
@@ -668,40 +660,82 @@ document.querySelectorAll(".see-btn").forEach(function(btn){
             this.innerText = "See Less";
         }
     });
-
 });
-.sheet-cover {
-    width: 100%;
-    height: 180px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    flex-shrink: 0;
-    margin-bottom: 10px; /* အောက်က စာသားနဲ့ ကပ်မနေအောင် */
-}
-function openModal() {
-    const modal = document.getElementById('playlistModal');
-    modal.style.display = "block";
 
-    // Hibernate မှတစ်ဆင့် Data လှမ်းယူခြင်း
+let selectedCheatsheetIdForPlaylist = null;
+let playlistModalObj = null;
+
+function openPlaylistModal(cheatsheetId) {
+    selectedCheatsheetIdForPlaylist = cheatsheetId;
+    if(!playlistModalObj) {
+        playlistModalObj = new bootstrap.Modal(document.getElementById('bootstrapPlaylistModal'));
+    }
+    playlistModalObj.show();
+    loadPlaylists();
+}
+
+function loadPlaylists() {
     fetch('${pageContext.request.contextPath}/collection/list')
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             const select = document.getElementById('playlistSelect');
-            select.innerHTML = '<option>Select a playlist</option>';
+            select.innerHTML = '<option value="">-- Choose Playlist --</option>';
             data.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                select.innerHTML += `<option value="\${c.id}">\${c.name}</option>`;
             });
-        });
+        })
+        .catch(err => console.error("Error loading playlists:", err));
 }
 
-function closeModal() {
-    document.getElementById('playlistModal').style.display = "none";
+function createNewPlaylist() {
+    const nameInput = document.getElementById('newPlaylistName');
+    const visibilitySelect = document.getElementById('newPlaylistVisibility');
+    const collaborateCheck = document.getElementById('newPlaylistCollaborate');
+    
+    const name = nameInput.value.trim();
+    const visibility = visibilitySelect.value;
+    const collaborate = collaborateCheck.checked;
+    
+    if(!name) return alert("Please enter a playlist name!");
+    
+    fetch('${pageContext.request.contextPath}/collection/create', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `name=\${encodeURIComponent(name)}&visibility=\${visibility}&collaborate=\${collaborate}`
+    })
+    .then(res => res.text())
+    .then(() => {
+        alert("Playlist Created!");
+        nameInput.value = "";
+        collaborateCheck.checked = false;
+        loadPlaylists(); 
+    })
+    .catch(() => alert("Error creating playlist"));
+}
+
+function saveToSelectedPlaylist() {
+    const collectionId = document.getElementById('playlistSelect').value;
+    const cheatsheetId = selectedCheatsheetIdForPlaylist; 
+
+    if(!collectionId) return alert("Please select a playlist first!");
+    if(!cheatsheetId) return alert("No cheatsheet context captured!");
+
+    fetch('${pageContext.request.contextPath}/collection/add-to-playlist', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `collectionId=\${collectionId}&cheatsheetId=\${cheatsheetId}`
+    })
+    .then(res => res.text())
+    .then(data => {
+        if(data === "Item already added!") {
+            alert("This cheat sheet is already in the selected playlist.");
+        } else {
+            alert("Successfully added to your playlist!");
+            if(playlistModalObj) playlistModalObj.hide();
+        }
+    })
+    .catch(() => alert("Error saving to playlist"));
 }
 </script>
-
 </body>
 </html>

@@ -1,14 +1,19 @@
 package com.hibernate.controller;
 	
 	
+import com.hibernate.entity.CollectionEntity;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.repository.UserProfileRepository;
-
+import com.hibernate.service.BookmarkService;
+import com.hibernate.service.ShareService;
 import com.hibernate.service.UserProfileService;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,13 +41,40 @@ public class UserProfileController {
 
     @Autowired
     private UserProfileRepository userRepository;
-  
+    @Autowired
+    private BookmarkService bookmarkService;
+    @Autowired
+    private ShareService shareService;
+	/*
+	 * @GetMapping("/{id}") public String viewProfile(@PathVariable Long id, Model
+	 * model) { model.addAttribute("user", userService.getUserProfile(id));
+	 * 
+	 * 
+	 * 
+	 * return "profile"; }
+	 */
+    
     @GetMapping("/{id}")
-    public String viewProfile(@PathVariable Long id, Model model) {
-        model.addAttribute("user", userService.getUserProfile(id));
+    public String viewProfile(@PathVariable Long id, Model model, HttpSession session) {
+        UserEntity targetUser = userService.getUserProfile(id);
+        if (targetUser == null) return "redirect:/";
+
+        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+        Long currentUserId = (currentUser != null) ? currentUser.getId() : null;
+
+        // ၁။ Target Profile ပိုင်ရှင် သိမ်းဆည်းထားသော Bookmarks များဆွဲထုတ်ခြင်း
+        model.addAttribute("user", targetUser);
+        model.addAttribute("bookmarkedSheets", cheatsheetService.findBookmarkedByUserId(id));
+        model.addAttribute("sharedLogs", shareService.findSharesByUserId(id));
+        // ၂။ Target Profile ပိုင်ရှင် ဖန်တီးထားသော Collections များဆွဲထုတ်ခြင်း
+        List <CollectionEntity> rawCollections = collectionService.getCollectionsByInterface(id, 1, 100);
         
-       
-     
+        // 🛡️ Security Check: ကိုယ့် profile ကိုယ်ကြည့်တာမဟုတ်ရင် 'PUBLIC' collection တွေပဲ သီးသန့်စစ်ထုတ်ပြသမည်
+        if (currentUserId == null || !id.equals(currentUserId)) {
+            rawCollections.removeIf(col -> !"PUBLIC".equals(col.getVisibility().toString()));
+        }
+        model.addAttribute("userCollections", rawCollections);
+
         return "profile";
     }
 
@@ -90,11 +122,23 @@ public class UserProfileController {
           userRepository.updateProfile(user);
           // userService.updateProfile(id, name, bio, profileImg); // ဒီ code ထပ်နေတယ်ဆိုရင် ပြန်စစ်ပါ
           return "redirect:/profile/" + id;
-      }
+  /*    }
  // UserProfileController.java
     @GetMapping("/view/{id}")
     public String viewProfileDetail(@PathVariable Long id, Model model) {
         model.addAttribute("profileUser", userService.getUserProfile(id));
         return "profile-detail"; // profile detail ကို ပြမယ့် jsp နာမည်
     }
+    */
+    
+   
+    }
+ // 💡 UserProfileController.java ထဲက viewProfile method ကို ဤကုဒ်ဖြင့် အစားထိုးပါဦးဗျာ
+
+    @Autowired
+    private com.hibernate.service.CheatsheetService cheatsheetService;
+    @Autowired
+    private com.hibernate.service.CollectionService collectionService;
+
+    
 }

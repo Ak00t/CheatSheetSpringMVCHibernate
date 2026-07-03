@@ -8,5 +8,6 @@ public interface UserProfileService {
     UserEntity getUserProfile(Long id);
     void updateProfile(Long id, String name, String bio, MultipartFile file);
 	UserEntity findById(Long userId);
+	
     
 }

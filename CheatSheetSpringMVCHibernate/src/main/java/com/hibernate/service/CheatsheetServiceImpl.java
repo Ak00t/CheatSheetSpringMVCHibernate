@@ -2,6 +2,7 @@ package com.hibernate.service;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ public class CheatsheetServiceImpl implements CheatsheetService {
     private final CheatsheetNoteRepository cheatsheetNoteRepository;
     private final CheatsheetMediaRepository cheatsheetMediaRepository;
     private final TagRequestRepository tagRequestRepository;
-
+    private final SessionFactory sessionFactory;
     @Override
     public Long saveCheatsheet(CheatsheetEntity cheatsheet) {
         return cheatsheetRepository.save(cheatsheet);
@@ -199,8 +200,22 @@ public List<CheatsheetEntity> findRecentByCategoryId(
           .findRecentByCategoryId(
                   categoryId);
 }
+//💡 CheatsheetServiceImpl.java ရဲ့ အတွင်းထဲတွင် ဤကုဒ်ကို ထည့်သွင်းပါ
+@Override
+@Transactional(readOnly = true)
+public List<CheatsheetEntity> findBookmarkedByUserId(Long userId) {
+    // 💡 🛑 အဓိကပြင်ဆင်ချက်: b.cheatsheet ရဲ့ နောက်မှာ category နဲ့ user ကို JOIN FETCH ခံပြီး တစ်ခါတည်း ဆွဲထုတ်ခိုင်းလိုက်ပါတယ်
+    String hql = "SELECT c FROM BookmarkEntity b "
+               + "JOIN b.cheatsheet c "
+               + "JOIN FETCH c.category "
+               + "JOIN FETCH c.user "
+               + "WHERE b.userId = :userId";
     
-    
+    return sessionFactory.getCurrentSession()
+            .createQuery(hql, CheatsheetEntity.class)
+            .setParameter("userId", userId)
+            .getResultList();
+}
     }
     
     

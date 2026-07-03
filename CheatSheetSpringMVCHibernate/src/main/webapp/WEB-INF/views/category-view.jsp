@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -369,8 +369,8 @@ body{
                             <div class="sheet-cover">
                                 <c:choose>
                                     <c:when test="${not empty sheet.mediaList}">
-                                        <img src="${sheet.mediaList[0].mediaUrl}"
-                                             alt="${sheet.title}">
+                                        <%-- 💡 Popular ရော Recent နေရာက img src တွေကို ဤလမ်းကြောင်းအတိုင်း ညှိပေးပါ --%>
+<img src="${pageContext.request.contextPath}/admin/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
                                     </c:when>
                                     <c:otherwise>
                                         No Cover
@@ -462,14 +462,8 @@ body{
                                 👤 ${sheet.user.name}
                                 <br>
                                 🗓
-                                <fmt:parseDate
-                                        value="${sheet.createdAt}"
-                                        pattern="yyyy-MM-dd'T'HH:mm:ss"
-                                        var="createdDate"/>
-
-                                <fmt:formatDate
-                                        value="${createdDate}"
-                                        pattern="dd MMM yyyy"/>
+                                🗓 <c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+                                <span style="font-size: 13px;">${datePart}</span>
                             </div>
 
                         </a>
