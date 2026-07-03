@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hibernate.entity.UserEntity;
-import com.hibernate.service.UserLoginRegisterService;
 import com.hibernate.service.AdminActivityLogService;
+import com.hibernate.service.UserLoginRegisterService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -112,53 +112,10 @@ public class LoginRegisterController {
 
 		Integer registeredId = (newUser.getId() != null) ? newUser.getId().intValue() : 0;
 
-		adminActivityLogService.log(
-				null,
-				"NOTI",
-				"users",
-				registeredId,
-				"A new user '" + newUser.getName() + "' has successfully registered.");
+		adminActivityLogService
+				.log(null, "NOTI", "users", registeredId,
+						"A new user '" + newUser.getName() + "' has successfully registered.");
 
 		return "redirect:/login?success=true";
-	}
-
-	@PostMapping("/login")
-	public String processLogin(@Valid @ModelAttribute("loginDto") LoginDTO loginDto, BindingResult result,
-			HttpSession session) {
-		if (result.hasErrors()) {
-			return "login";
-		}
-
-		UserEntity user = userService.findByEmail(loginDto.getEmail());
-
-		if (user == null || !encoder.matches(loginDto.getPassword(), user.getPassword())) {
-			result.rejectValue("email", "error.loginDto", "Invalid email or password authentication.");
-			return "login";
-		}
-
-		session.setAttribute("currentUser", user);
-
-		if (user.getRole() != null && "ADMIN".equals(user.getRole().name())) {
-			int userId = user.getId().intValue();
-
-			adminActivityLogService.log(
-					userId,
-					"LOGIN",
-					"users",
-					userId,
-					"Admin successfully authenticated via login form.");
-
-			return "redirect:/admindashboard";
-		}
-
-		int regularUserId = user.getId().intValue();
-		adminActivityLogService.log(
-				regularUserId,
-				"LOGIN",
-				"users",
-				regularUserId,
-				"User '" + user.getName() + "' successfully logged in.");
-
-		return "redirect:/home";
 	}
 }

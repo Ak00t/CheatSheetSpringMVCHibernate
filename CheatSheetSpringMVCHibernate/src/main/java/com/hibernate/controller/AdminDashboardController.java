@@ -1,5 +1,10 @@
 package com.hibernate.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,50 +18,45 @@ import com.hibernate.service.DashboardService;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @Controller
-@RequestMapping("/admindashboard") 
+@RequestMapping("/admindashboard")
 @RequiredArgsConstructor
 public class AdminDashboardController {
 
-    private final DashboardService dashboardService;
-    private final AdminProfileService adminService; 
+	private final DashboardService dashboardService;
+	private final AdminProfileService adminService;
 
-    @GetMapping("") 
-    public String showDashboard(HttpSession session, Model model) {
-        
-        // Check if the user session exists
-        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
-        
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	@GetMapping("")
+	public String showDashboard(HttpSession session, Model model) {
 
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+		// Check if the user session exists
+		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+		if (currentUser == null) {
+			return "redirect:/?login=true";
+		}
 
-        if (!isAdmin) {
-            return "redirect:/home"; 
-        }
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Refresh user profile metadata from DB on every dashboard load
-        UserEntity freshUserData = adminService.getAdminProfile(currentUser.getId());
-        session.setAttribute("currentUser", freshUserData);
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+		if (!isAdmin) {
+			return "redirect:/";
+		}
 
-        model.addAttribute("totalUsers", dashboardService.getTotalUsersCount());
-        model.addAttribute("totalCheatsheets", dashboardService.getTotalCheatsheetsCount());
-        model.addAttribute("pendingReports", dashboardService.getPendingReportsCount());
-        model.addAttribute("bannedContents", dashboardService.getBannedContentsCount());
-        model.addAttribute("newUsersToday", dashboardService.getTodayNewUsersCount(startOfToday));
-        model.addAttribute("newCheatsheetsToday", dashboardService.getTodayNewCheatsheetsCount(startOfToday));
-        model.addAttribute("newReportsToday", dashboardService.getTodayNewReportsCount(startOfToday));
+		// Refresh user profile metadata from DB on every dashboard load
+		UserEntity freshUserData = adminService.getAdminProfile(currentUser.getId());
+		session.setAttribute("currentUser", freshUserData);
 
-        return "admin-dashboard";
-    }
+		LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+
+		model.addAttribute("totalUsers", dashboardService.getTotalUsersCount());
+		model.addAttribute("totalCheatsheets", dashboardService.getTotalCheatsheetsCount());
+		model.addAttribute("pendingReports", dashboardService.getPendingReportsCount());
+		model.addAttribute("bannedContents", dashboardService.getBannedContentsCount());
+		model.addAttribute("newUsersToday", dashboardService.getTodayNewUsersCount(startOfToday));
+		model.addAttribute("newCheatsheetsToday", dashboardService.getTodayNewCheatsheetsCount(startOfToday));
+		model.addAttribute("newReportsToday", dashboardService.getTodayNewReportsCount(startOfToday));
+
+		return "admin-dashboard";
+	}
 }

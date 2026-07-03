@@ -17,8 +17,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.hibernate.entity.UserEntity;
-import com.hibernate.service.UserLoginRegisterService;
 import com.hibernate.service.AdminActivityLogService;
+import com.hibernate.service.UserLoginRegisterService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,45 +44,45 @@ public class WebSecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 				.csrf()
-				.disable()
-				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/admindashboard/**")
-						.hasRole("ADMIN")
-						.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
-								"/reset-password", "/resources/**")
-						.permitAll()
-						.anyRequest()
-						.authenticated())
+					.disable()
+					.authorizeHttpRequests(auth -> auth
+							.requestMatchers("/admindashboard/**", "/admin/**")
+								.hasRole("ADMIN")
+								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
+										"/uploads/**", "/reset-password", "/resources/**")
+								.permitAll()
+								.anyRequest()
+								.authenticated())
 
-				// 3. UNAUTHENTICATED REDIRECT HANDLER
-				.exceptionHandling(
-						exception -> exception.authenticationEntryPoint((request, response, authException) -> {
-							// Automatically routes unauthenticated users home and tells your JS to pop open
-							// the modal with an error
-							response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
-						}))
+					// 3. UNAUTHENTICATED REDIRECT HANDLER
+					.exceptionHandling(
+							exception -> exception.authenticationEntryPoint((request, response, authException) -> {
+								// Automatically routes unauthenticated users home and tells your JS to pop open
+								// the modal with an error
+								response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
+							}))
 
-				.formLogin()
-				.loginPage("/?login=true")
-				.loginProcessingUrl("/login")
-				.successHandler(customSuccessHandler())
+					.formLogin()
+					.loginPage("/?login=true")
+					.loginProcessingUrl("/login")
+					.successHandler(customSuccessHandler())
 
-				.failureUrl("/?error=true")
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.permitAll()
+					.failureUrl("/?error=true")
+					.usernameParameter("email")
+					.passwordParameter("password")
+					.permitAll()
 
-				.and()
-				.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/?logout=true")
-				.permitAll()
-				.and()
+					.and()
+					.logout()
+					.logoutUrl("/logout")
+					.logoutSuccessUrl("/?logout=true")
+					.permitAll()
+					.and()
 
-				.rememberMe()
-				.key("myToken")
-				.tokenValiditySeconds(86400)
-				.rememberMeParameter("remember-me");
+					.rememberMe()
+					.key("myToken")
+					.tokenValiditySeconds(86400)
+					.rememberMeParameter("remember-me");
 		return http.build();
 	}
 
@@ -90,10 +90,10 @@ public class WebSecurityConfig {
 	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
 		return http
 				.getSharedObject(AuthenticationManagerBuilder.class)
-				.userDetailsService(userDetailsService)
-				.passwordEncoder(passwordEncoder())
-				.and()
-				.build();
+					.userDetailsService(userDetailsService)
+					.passwordEncoder(passwordEncoder())
+					.and()
+					.build();
 	}
 
 	@Bean
@@ -117,7 +117,7 @@ public class WebSecurityConfig {
 				} else {
 					description = "User '" + loggedInUser.getName() + "' successfully logged in.";
 					adminActivityLogService.log(userId, "LOGIN", "users", userId, description);
-					response.sendRedirect(request.getContextPath() + "/home");
+					response.sendRedirect(request.getContextPath() + "/");
 				}
 			} else {
 				response.sendRedirect(request.getContextPath() + "/login?error=true");

@@ -40,10 +40,10 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 		}
 		return User
 				.builder()
-				.username(user.getEmail())
-				.password(user.getPassword())
-				.roles(user.getRole().name())
-				.build();
+					.username(user.getEmail())
+					.password(user.getPassword())
+					.roles(user.getRole().name())
+					.build();
 	}
 
 	@Override
