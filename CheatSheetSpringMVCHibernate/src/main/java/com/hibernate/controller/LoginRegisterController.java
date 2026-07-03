@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hibernate.entity.UserEntity;
 import com.hibernate.service.UserLoginRegisterService;
+import com.hibernate.service.AdminActivityLogService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginRegisterController {
 
-	public final UserLoginRegisterService userService;
-	public final PasswordEncoder encoder;
+	private final UserLoginRegisterService userService;
+	private final PasswordEncoder encoder;
+	private final AdminActivityLogService adminActivityLogService;
 
 	/*
 	 * @GetMapping("/register") public ModelAndView showRegisterForm(HttpSession
@@ -96,21 +98,67 @@ public class LoginRegisterController {
 		// Clean session data on success
 		session.removeAttribute("regErrorMessage");
 
-		return "redirect:/home?regSuccess=true";
-		
-		
+		/*
+		 * @GetMapping("/login") public ModelAndView loginForm(HttpSession session) {
+		 * 
+		 * UserEntity user = (UserEntity) session.getAttribute("currentUser");
+		 * 
+		 * if (user == null) { ModelAndView mv = new ModelAndView("login", "loginDto",
+		 * new LoginDTO()); return mv; } if ("ADMIN".equals(user.getRole().name())) {
+		 * return new ModelAndView("redirect:/admindashboard"); }
+		 * 
+		 * return new ModelAndView("redirect:/home"); }
+		 */
+
+		Integer registeredId = (newUser.getId() != null) ? newUser.getId().intValue() : 0;
+
+		adminActivityLogService.log(
+				null,
+				"NOTI",
+				"users",
+				registeredId,
+				"A new user '" + newUser.getName() + "' has successfully registered.");
+
+		return "redirect:/login?success=true";
 	}
 
-	/*
-	 * @GetMapping("/login") public ModelAndView loginForm(HttpSession session) {
-	 * 
-	 * UserEntity user = (UserEntity) session.getAttribute("currentUser");
-	 * 
-	 * if (user == null) { ModelAndView mv = new ModelAndView("login", "loginDto",
-	 * new LoginDTO()); return mv; } if ("ADMIN".equals(user.getRole().name())) {
-	 * return new ModelAndView("redirect:/admindashboard"); }
-	 * 
-	 * return new ModelAndView("redirect:/home"); }
-	 */
+	@PostMapping("/login")
+	public String processLogin(@Valid @ModelAttribute("loginDto") LoginDTO loginDto, BindingResult result,
+			HttpSession session) {
+		if (result.hasErrors()) {
+			return "login";
+		}
 
+		UserEntity user = userService.findByEmail(loginDto.getEmail());
+
+		if (user == null || !encoder.matches(loginDto.getPassword(), user.getPassword())) {
+			result.rejectValue("email", "error.loginDto", "Invalid email or password authentication.");
+			return "login";
+		}
+
+		session.setAttribute("currentUser", user);
+
+		if (user.getRole() != null && "ADMIN".equals(user.getRole().name())) {
+			int userId = user.getId().intValue();
+
+			adminActivityLogService.log(
+					userId,
+					"LOGIN",
+					"users",
+					userId,
+					"Admin successfully authenticated via login form.");
+
+			return "redirect:/admindashboard";
+		}
+
+		int regularUserId = user.getId().intValue();
+		adminActivityLogService.log(
+				regularUserId,
+				"LOGIN",
+				"users",
+				regularUserId,
+				"User '" + user.getName() + "' successfully logged in.");
+
+		return "redirect:/home";
+	}
 }
