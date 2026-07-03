@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDate; // အရေးကြီး: ဒီ Import လေးထည့်ပေးပါ
 
 @Controller
 @RequestMapping("/admin/users")
@@ -24,7 +25,18 @@ public class UserListController {
             @RequestParam(required = false) String day,
             Model model) {
         
-       
+        // --- အခုမှထည့်မယ့် Logic ---
+        // Browser ကနေ 0 သို့မဟုတ် null ပို့လာရင် လက်ရှိနှစ်/လ ကို အတင်းသတ်မှတ်ပေးလိုက်ပါတယ်
+        LocalDate now = LocalDate.now();
+        
+        if (year == null || year == 0) {
+            year = now.getYear();
+        }
+        if (month == null || month == 0) {
+            month = now.getMonthValue();
+        }
+        // ---------------------------
+
         model.addAttribute("users", userListService.getUsersByPeriod(type, year, month, week, day));
         return "user_list";
     }

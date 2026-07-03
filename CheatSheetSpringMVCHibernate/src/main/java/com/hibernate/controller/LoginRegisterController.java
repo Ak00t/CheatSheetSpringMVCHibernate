@@ -1,4 +1,3 @@
-
 package com.hibernate.controller;
 
 import javax.servlet.http.HttpSession;
@@ -17,8 +16,8 @@ import com.hibernate.DTO.LoginDTO;
 import com.hibernate.DTO.RegisterDTO;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.service.UserLoginRegisterService;
+import com.hibernate.service.AdminActivityLogService;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -27,8 +26,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class LoginRegisterController {
 
-    public final UserLoginRegisterService userService;
-    public final PasswordEncoder encoder;
+    private final UserLoginRegisterService userService;
+    private final PasswordEncoder encoder;
+    private final AdminActivityLogService adminActivityLogService;
 
     @GetMapping("/register")
     public ModelAndView showRegisterForm() {
@@ -59,27 +59,72 @@ public class LoginRegisterController {
         newUser.setPassword(hashCodedpw);
 
         userService.registerUser(newUser);
+        
+        Integer registeredId = (newUser.getId() != null) ? newUser.getId().intValue() : 0;
+        
+        adminActivityLogService.log(
+            null, 
+            "NOTI", 
+            "users", 
+            registeredId, 
+            "A new user '" + newUser.getName() + "' has successfully registered."
+        );
+
         return "redirect:/login?success=true";
     }
 
+    @GetMapping("/login")
+    public ModelAndView loginForm(HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("currentUser");
 
+        if (user == null) {
+            return new ModelAndView("login", "loginDto", new LoginDTO());
+        }
+        if (user.getRole() != null && "ADMIN".equals(user.getRole().name())) {
+            return new ModelAndView("redirect:/admindashboard");
+        }
 
-	@GetMapping("/login")
-	public ModelAndView loginForm(HttpSession session) {
+        return new ModelAndView("redirect:/home");
+    }
 
-		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+    @PostMapping("/login")
+    public String processLogin(@Valid @ModelAttribute("loginDto") LoginDTO loginDto, BindingResult result, HttpSession session) {
+        if (result.hasErrors()) {
+            return "login";
+        }
 
-		if (user == null) {
-			ModelAndView mv = new ModelAndView("login", "loginDto", new LoginDTO());
-			return mv;
-		}
-		if ("ADMIN".equals(user.getRole().name())) {
-			return new ModelAndView("redirect:/admindashboard");
-		}
+        UserEntity user = userService.findByEmail(loginDto.getEmail());
 
-		return new ModelAndView("redirect:/home");
-	}
+        if (user == null || !encoder.matches(loginDto.getPassword(), user.getPassword())) {
+            result.rejectValue("email", "error.loginDto", "Invalid email or password authentication.");
+            return "login";
+        }
+
+        session.setAttribute("currentUser", user);
+
+        if (user.getRole() != null && "ADMIN".equals(user.getRole().name())) {
+            int userId = user.getId().intValue(); 
+            
+            adminActivityLogService.log(
+                userId, 
+                "LOGIN", 
+                "users", 
+                userId, 
+                "Admin successfully authenticated via login form."
+            );
+            
+            return "redirect:/admindashboard";
+        }
+
+        int regularUserId = user.getId().intValue();
+        adminActivityLogService.log(
+            regularUserId,
+            "LOGIN",
+            "users",
+            regularUserId,
+            "User '" + user.getName() + "' successfully logged in."
+        );
+
+        return "redirect:/home";
+    }
 }
-	
-
-	

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.hibernate.entity.UserEntity;
 import com.hibernate.service.UserLoginRegisterService;
+import com.hibernate.service.AdminActivityLogService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 	private final UserDetailsService userDetailsService;
 	private final UserLoginRegisterService userRepo;
+	private final AdminActivityLogService adminActivityLogService; // Injecting Activity Log Service
 
 	@Bean(name = "mvcHandlerMappingIntrospector")
 	public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
@@ -89,12 +91,24 @@ public class WebSecurityConfig {
 
 			String email = authentication.getName();
 			UserEntity loggedInUser = userRepo.findByEmail(email);
-			request.getSession().setAttribute("currentUser", loggedInUser);
+			
+			if (loggedInUser != null) {
+				request.getSession().setAttribute("currentUser", loggedInUser);
+				
+				int userId = loggedInUser.getId().intValue();
+				String description;
 
-			if (roles.contains("ROLE_ADMIN")) {
-				response.sendRedirect(request.getContextPath() + "/admindashboard");
+				if (roles.contains("ROLE_ADMIN")) {
+					description = "Admin successfully authenticated via login form.";
+					adminActivityLogService.log(userId, "LOGIN", "users", userId, description);
+					response.sendRedirect(request.getContextPath() + "/admindashboard");
+				} else {
+					description = "User '" + loggedInUser.getName() + "' successfully logged in.";
+					adminActivityLogService.log(userId, "LOGIN", "users", userId, description);
+					response.sendRedirect(request.getContextPath() + "/home");
+				}
 			} else {
-				response.sendRedirect(request.getContextPath() + "/home");
+				response.sendRedirect(request.getContextPath() + "/login?error=true");
 			}
 		};
 	}

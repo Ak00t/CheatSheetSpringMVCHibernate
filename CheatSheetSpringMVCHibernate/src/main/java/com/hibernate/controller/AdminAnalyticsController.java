@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hibernate.DTO.AdminAnalyticsDTO;
 import com.hibernate.service.AdminAnalyticsService;
+import com.hibernate.service.TagRequestProcessService; // Import ထည့်ပေးထားပါတယ်
 
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -23,6 +24,9 @@ public class AdminAnalyticsController {
 
     @Autowired
     private AdminAnalyticsService adminAnalyticsService;
+    
+    @Autowired
+    private TagRequestProcessService tagRequestProcessService; // Service အသစ်ထည့်ပေးထားပါတယ်
 
     @GetMapping("/analytics")
     public String displayDashboardView(
@@ -48,6 +52,9 @@ public class AdminAnalyticsController {
         // Analytics Data ကို Service မှ ဆွဲယူခြင်း
         AdminAnalyticsDTO structuredPayload = adminAnalyticsService.getCompiledAnalyticsDashboard(type, year, month, week, day);
         model.addAttribute("analytics", structuredPayload);
+        
+        // **အသစ်ထည့်ထားတဲ့အပိုင်း:** Pending Tag Requests အရေအတွက်ကို Model ထဲထည့်ခြင်း
+        model.addAttribute("pendingTagRequests", tagRequestProcessService.getPendingCount());
         
         // Filter parameters များကိုလည်း Model ထဲထည့်ပေးလိုက်ပါ (JSP မှာ အသုံးပြုရန်)
         model.addAttribute("currentType", type);
