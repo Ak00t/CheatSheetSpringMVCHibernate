@@ -242,6 +242,52 @@ public long countPublishedCheatsheetsByTagId(Long tagId) {
 }
 
 
+@Override
+public List<CheatsheetEntity> findPublishedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findPublishedByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findDraftByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findDraftByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findArchivedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findArchivedByUserId(userId);
+}
+
+@Override
+public List<CheatsheetEntity> findPrivateByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findPrivateByUserId(userId);
+}
+
+@Override
+public long countAllByUserId(Long userId) {
+
+    return cheatsheetRepository
+            .countAllByUserId(userId);
+}
+@Override
+public List<CheatsheetEntity> findUnlistedByUserId(
+        Long userId) {
+
+    return cheatsheetRepository
+            .findUnlistedByUserId(userId);
+}
+
     
     }
     

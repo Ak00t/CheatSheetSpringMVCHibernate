@@ -72,6 +72,22 @@ public interface CheatsheetRepository {
 	        int size);
 
 	long countPublishedCheatsheetsByTagId(Long tagId);
+	
+	
+	// profile cheatsheet list status 
+	List<CheatsheetEntity> findPublishedByUserId(Long userId);
+
+	List<CheatsheetEntity> findDraftByUserId(Long userId);
+
+	List<CheatsheetEntity> findArchivedByUserId(Long userId);
+
+	List<CheatsheetEntity> findPrivateByUserId(Long userId);
+	
+	
+	long countAllByUserId(Long userId);
+	
+	List<CheatsheetEntity> findUnlistedByUserId(
+	        Long userId);
 
     }
     

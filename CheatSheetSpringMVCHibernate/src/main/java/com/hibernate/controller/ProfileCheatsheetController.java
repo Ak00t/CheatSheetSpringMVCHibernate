@@ -30,17 +30,30 @@ public class ProfileCheatsheetController {
     private final CommentService commentService;
     private final CheatsheetService cheatsheetService;
 
+	
+    
+    
 	/*
-	 * @RequestMapping("/{userId}") public String list(@PathVariable Long userId,
-	 * Model model) { model.addAttribute("userId", userId);
-	 * model.addAttribute("cheatsheets",
-	 * cheatsheetService.findProfileCheatsheetByUserId(userId)); return
-	 * "profile-cheatsheet-list"; }
+	 * @RequestMapping public String list(HttpSession session, Model model) {
+	 * 
+	 * UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+	 * 
+	 * if (currentUser == null) { return "redirect:/"; }
+	 * 
+	 * Long userId = currentUser.getId();
+	 * 
+	 * model.addAttribute("userId", userId);
+	 * 
+	 * model.addAttribute( "cheatsheets",
+	 * cheatsheetService.findProfileCheatsheetByUserId(userId));
+	 * 
+	 * return "profile-cheatsheet-list"; }
 	 */
     
     
     @RequestMapping
-    public String list(HttpSession session, Model model) {
+    public String list(HttpSession session,
+                       Model model) {
 
         UserEntity currentUser =
                 (UserEntity) session.getAttribute("currentUser");
@@ -52,13 +65,46 @@ public class ProfileCheatsheetController {
         Long userId = currentUser.getId();
 
         model.addAttribute("userId", userId);
+        
+        model.addAttribute(
+                "currentUser",
+                currentUser);
 
         model.addAttribute(
-                "cheatsheets",
+                "publishedCheatsheets",
+                cheatsheetService.findPublishedByUserId(userId));
+
+        model.addAttribute(
+                "draftCheatsheets",
+                cheatsheetService.findDraftByUserId(userId));
+
+        model.addAttribute(
+                "archivedCheatsheets",
+                cheatsheetService.findArchivedByUserId(userId));
+
+        model.addAttribute(
+                "privateCheatsheets",
+                cheatsheetService.findPrivateByUserId(userId));
+        
+        model.addAttribute(
+                "totalCheatsheets",
+                cheatsheetService.countAllByUserId(
+                        userId));
+        
+        model.addAttribute(
+                "allCheatsheets",
                 cheatsheetService.findProfileCheatsheetByUserId(userId));
+        
+        model.addAttribute(
+                "unlistedCheatsheets",
+                cheatsheetService.findUnlistedByUserId(userId));
+
+        
 
         return "profile-cheatsheet-list";
     }
+    
+    
     
 	
     @RequestMapping("/detail/{id}")

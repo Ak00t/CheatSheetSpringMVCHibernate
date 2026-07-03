@@ -293,10 +293,6 @@ h1{
     color:#64748b;
 }
 
-
-.folder-card.all::before{background:radial-gradient(circle,#ddd6fe,#ffffff);} 
-.folder-card.all .folder-title{color:#7c3aed;}
-
 @media(max-width:1100px){
     .folder-grid{
         grid-template-columns:repeat(2,1fr);
@@ -312,21 +308,6 @@ h1{
         flex:0 0 100%;
     }
 }
-
-.folder-card.unlisted::before{
-    background:
-        radial-gradient(
-            circle,
-            #cffafe,
-            #ffffff
-        );
-}
-
-.folder-card.unlisted .folder-title{
-    color:#0891b2;
-}
-
-
 </style>
 
 <script>
@@ -376,33 +357,12 @@ function toggleFolder(id, card){
 
 <div class="container">
 
-   
-    <h1>
-    👤 ${currentUser.name}'s Cheatsheets
-</h1>
-    
-    
+    <h1>User ${userId} Cheatsheets</h1>
     <p class="page-subtitle">
         Choose a folder to view your cheatsheets by status and visibility.
     </p>
 
     <div class="folder-grid">
-
-        
-        <div class="folder-card all"
-             onclick="toggleFolder('allFolder', this)">
-
-            <div class="folder-top">
-                <div class="folder-title">
-                    📚 All Cheatsheets
-                </div>
-            </div>
-
-            <div class="folder-count">
-                ${totalCheatsheets} Cheatsheets
-            </div>
-
-        </div>
 
         <div class="folder-card published"
              onclick="toggleFolder('publishedFolder', this)">
@@ -479,58 +439,8 @@ function toggleFolder(id, card){
             </div>
 
         </div>
-        
-        <div class="folder-card unlisted"
-     onclick="toggleFolder('unlistedFolder', this)">
-
-    <div class="folder-top">
-
-        <div class="folder-title">
-            🔗 Unlisted
-        </div>
 
     </div>
-
-    <div class="folder-count">
-        ${unlistedCheatsheets.size()}
-        Cheatsheets
-    </div>
-
-</div>
-        
-        
-        
-
-    </div>
-
-
-    <h2 class="section-heading">📚 All Cheatsheets</h2>
-
-<div id="allFolder" class="folder-content">
-    <div class="grid">
-        <c:forEach items="${allCheatsheets}" var="sheet">
-            <div class="sheet-card" style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
-                <a href="${pageContext.request.contextPath}/profile-cheatsheets/detail/${sheet.id}" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%;">
-                    <div class="sheet-cover">
-                        <c:choose>
-                            <c:when test="${not empty sheet.mediaList}">
-                                <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                            </c:when>
-                            <c:otherwise>No Cover</c:otherwise>
-                        </c:choose>
-                    </div>
-                    <div class="sheet-body">
-                        <div class="category-badge">${sheet.category.name}</div>
-                        <h3 class="sheet-title">${sheet.title}</h3>
-                        <p class="sheet-description">${sheet.description}</p>
-                        <span class="see-btn">See More</span>
-                        <div class="sheet-footer">Created By: <span class="creator-link">${sheet.user.name}</span></div>
-                    </div>
-                </a>
-            </div>
-        </c:forEach>
-    </div>
-</div>
 
     <h2 class="section-heading">📢 Published</h2>
 
@@ -874,101 +784,6 @@ function toggleFolder(id, card){
     </c:choose>
 
 </div>
-
-<h2 class="section-heading">
-    🔗 Unlisted
-</h2>
-
-<div id="unlistedFolder"
-     class="folder-content">
-
-    <c:choose>
-
-        <c:when test="${not empty unlistedCheatsheets}">
-
-            <div class="grid">
-
-<c:forEach items="${unlistedCheatsheets}" var="sheet">
-
-    <div class="sheet-card"
-         style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
-
-        <a href="${pageContext.request.contextPath}/profile-cheatsheets/detail/${sheet.id}"
-           style="text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%;">
-
-            <div class="sheet-cover">
-                <c:choose>
-                    <c:when test="${not empty sheet.mediaList}">
-                        <img src="${sheet.mediaList[0].mediaUrl}"
-                             alt="${sheet.title}">
-                    </c:when>
-
-                    <c:otherwise>
-                        No Cover
-                    </c:otherwise>
-                </c:choose>
-            </div>
-
-            <div class="sheet-body">
-
-                <div class="category-badge">
-                    ${sheet.category.name}
-                </div>
-
-                <h3 class="sheet-title">
-                    ${sheet.title}
-                </h3>
-
-                <p class="sheet-description">
-                    ${sheet.description}
-                </p>
-
-                <span class="see-btn">
-                    See More
-                </span>
-
-                <div class="sheet-footer">
-                    Created By:
-                    <span class="creator-link">
-                        ${sheet.user.name}
-                    </span>
-
-                    <br>
-
-                    🗓
-                    <fmt:parseDate
-                            value="${sheet.createdAt}"
-                            pattern="yyyy-MM-dd'T'HH:mm:ss"
-                            var="createdDate"/>
-
-                    <fmt:formatDate
-                            value="${createdDate}"
-                            pattern="dd MMM yyyy"/>
-                </div>
-
-            </div>
-        </a>
-
-    </div>
-
-</c:forEach>
-
-            </div>
-
-        </c:when>
-
-        <c:otherwise>
-
-            <div class="empty-box">
-                No unlisted cheatsheets.
-            </div>
-
-        </c:otherwise>
-
-    </c:choose>
-
-</div></div>
-
 
 
 </div>

@@ -175,6 +175,109 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
                 .setParameter("deletedStatus", ContentStatus.DELETED)
                 .getResultList();
     }
+ // profile cheatsheet list status 
+    @Override
+    public List<CheatsheetEntity> findPublishedByUserId(
+            Long userId) {
+
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "select distinct c from CheatsheetEntity c " +
+                        "left join fetch c.user " +
+                        "left join fetch c.category " +
+                        "left join fetch c.mediaList " +
+                        "where c.user.id = :userId " +
+                        "and c.publishStatus = :publishStatus " +
+                        "and c.status != :deletedStatus " +
+                        "order by c.updatedAt desc",
+                        CheatsheetEntity.class)
+                .setParameter("userId", userId)
+                .setParameter(
+                        "publishStatus",
+                        PublishStatus.PUBLISHED)
+                .setParameter(
+                        "deletedStatus",
+                        ContentStatus.DELETED)
+                .getResultList();
+    }
+    
+    @Override
+    public List<CheatsheetEntity> findDraftByUserId(
+            Long userId) {
+
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "select distinct c from CheatsheetEntity c " +
+                        "left join fetch c.user " +
+                        "left join fetch c.category " +
+                        "left join fetch c.mediaList " +
+                        "where c.user.id = :userId " +
+                        "and c.publishStatus = :publishStatus " +
+                        "and c.status != :deletedStatus " +
+                        "order by c.updatedAt desc",
+                        CheatsheetEntity.class)
+                .setParameter("userId", userId)
+                .setParameter(
+                        "publishStatus",
+                        PublishStatus.DRAFT)
+                .setParameter(
+                        "deletedStatus",
+                        ContentStatus.DELETED)
+                .getResultList();
+    }
+    @Override
+    public List<CheatsheetEntity> findArchivedByUserId(
+            Long userId) {
+
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "select distinct c from CheatsheetEntity c " +
+                        "left join fetch c.user " +
+                        "left join fetch c.category " +
+                        "left join fetch c.mediaList " +
+                        "where c.user.id = :userId " +
+                        "and c.publishStatus = :publishStatus " +
+                        "and c.status != :deletedStatus " +
+                        "order by c.updatedAt desc",
+                        CheatsheetEntity.class)
+                .setParameter("userId", userId)
+                .setParameter(
+                        "publishStatus",
+                        PublishStatus.ARCHIVED)
+                .setParameter(
+                        "deletedStatus",
+                        ContentStatus.DELETED)
+                .getResultList();
+    }
+    @Override
+    public List<CheatsheetEntity> findPrivateByUserId(
+            Long userId) {
+
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "select distinct c from CheatsheetEntity c " +
+                        "left join fetch c.user " +
+                        "left join fetch c.category " +
+                        "left join fetch c.mediaList " +
+                        "where c.user.id = :userId " +
+                        "and c.visibility = :visibility " +
+                        "and c.status != :deletedStatus " +
+                        "order by c.updatedAt desc",
+                        CheatsheetEntity.class)
+                .setParameter("userId", userId)
+                .setParameter(
+                        "visibility",
+                        CheatsheetVisibility.PRIVATE)
+                .setParameter(
+                        "deletedStatus",
+                        ContentStatus.DELETED)
+                .getResultList();
+    }
+    
 
     @Override
     public CheatsheetEntity findProfileDetailById(Long id) {
@@ -480,6 +583,57 @@ public long countPublishedCheatsheetsByTagId(Long tagId) {
             .setParameter("status", ContentStatus.ACTIVE)
             .getSingleResult();
 }
+//profile cheatsheet list status
+
+
+@Override
+public long countAllByUserId(Long userId) {
+
+    return sessionFactory
+            .getCurrentSession()
+            .createQuery(
+                    "select count(c.id) " +
+                    "from CheatsheetEntity c " +
+                    "where c.user.id = :userId " +
+                    "and c.status != :deletedStatus",
+                    Long.class)
+            .setParameter("userId", userId)
+            .setParameter(
+                    "deletedStatus",
+                    ContentStatus.DELETED)
+            .getSingleResult();
+}
+
+
+@Override
+public List<CheatsheetEntity> findUnlistedByUserId(
+        Long userId) {
+
+    return sessionFactory
+            .getCurrentSession()
+            .createQuery(
+                    "select distinct c " +
+                    "from CheatsheetEntity c " +
+                    "left join fetch c.user " +
+                    "left join fetch c.category " +
+                    "left join fetch c.mediaList " +
+                    "where c.user.id = :userId " +
+                    "and c.visibility = :visibility " +
+                    "and c.status != :deletedStatus " +
+                    "order by c.updatedAt desc",
+                    CheatsheetEntity.class)
+            .setParameter(
+                    "userId",
+                    userId)
+            .setParameter(
+                    "visibility",
+                    CheatsheetVisibility.UNLISTED)
+            .setParameter(
+                    "deletedStatus",
+                    ContentStatus.DELETED)
+            .getResultList();
+}
+
 
 
     
