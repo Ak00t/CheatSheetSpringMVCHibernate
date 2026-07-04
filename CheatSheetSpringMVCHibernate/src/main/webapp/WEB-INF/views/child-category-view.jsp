@@ -503,7 +503,7 @@
                             </div>
 
                             <div class="mini-meta">
-                                👁 ${sheet.viewCount}
+                               <%--  👁 ${sheet.viewCount} --%>
                                 &nbsp; ❤ ${sheet.likeCount}
                             </div>
                         </div>

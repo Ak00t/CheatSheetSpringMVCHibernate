@@ -874,7 +874,7 @@
                                         <div>
                                             <div class="mini-title">${sheet.title}</div>
                                             <div class="mini-meta">
-                                                👁 ${sheet.viewCount} &nbsp; ❤ ${sheet.likeCount}
+                                               <%--  👁 ${sheet.viewCount}  --%>&nbsp; ❤ ${sheet.likeCount}
                                             </div>
                                         </div>
                                     </a>
