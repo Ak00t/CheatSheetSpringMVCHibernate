@@ -73,18 +73,46 @@ public class SearchRepositoryImpl implements SearchRepository {
 
 	@Override
 	public void saveSearchLog(String keyword, int resultCount, Long userId) {
-		SearchLogEntity log = new SearchLogEntity();
-		log.setKeyword(keyword);
-		log.setResultCount(resultCount);
+		SearchLogEntity existingLog = null;
 
+		// 1. Try to find an existing log entry for this keyword + user combination
 		if (userId != null) {
-			UserEntity userSessionRef = new UserEntity();
-			userSessionRef.setId(userId);
-			log.setUser(userSessionRef);
+			existingLog = (SearchLogEntity) getSession()
+					.createQuery("FROM SearchLogEntity WHERE keyword = :kw AND user.id = :uid")
+						.setParameter("kw", keyword)
+						.setParameter("uid", userId)
+						.uniqueResult();
 		} else {
-			log.setUser(null); // Anonymous persistent log row
+			existingLog = (SearchLogEntity) getSession()
+					.createQuery("FROM SearchLogEntity WHERE keyword = :kw AND user IS NULL")
+						.setParameter("kw", keyword)
+						.uniqueResult();
 		}
 
-		getSession().save(log);
+		if (existingLog != null) {
+			// 2. Duplicate found -> Update it!
+			existingLog.setResultCount(resultCount);
+
+			// Optional: If your entity has a timestamp column, update it to the current
+			// time
+			// existingLog.setSearchTime(new java.util.Date());
+
+			getSession().update(existingLog);
+		} else {
+			// 3. No record found -> Create a new row
+			SearchLogEntity log = new SearchLogEntity();
+			log.setKeyword(keyword);
+			log.setResultCount(resultCount);
+
+			if (userId != null) {
+				UserEntity userSessionRef = new UserEntity();
+				userSessionRef.setId(userId);
+				log.setUser(userSessionRef);
+			} else {
+				log.setUser(null);
+			}
+
+			getSession().save(log);
+		}
 	}
 }

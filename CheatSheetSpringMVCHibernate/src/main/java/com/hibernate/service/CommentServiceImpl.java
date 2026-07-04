@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.hibernate.entity.CommentEntity;
+import com.hibernate.entity.ReportEntity;
 import com.hibernate.repository.CommentsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,18 @@ public class CommentServiceImpl implements CommentService {
 	public CommentEntity findByParentId(Long id) {
 
 		return commentRepo.findByParentId(id);
+	}
+
+	@Override
+	public void reportComment(ReportEntity report) {
+		commentRepo.reportComment(report);
+
+	}
+
+	@Override
+	public void deleteTranslationByCommentId(Long commentId) {
+		commentRepo.deleteTranslationByCommentId(commentId);
+
 	}
 
 }

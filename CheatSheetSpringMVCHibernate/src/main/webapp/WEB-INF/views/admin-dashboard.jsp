@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
     <style>
         :root {
@@ -165,18 +166,75 @@
             color: #9ca3af;
         }
     </style>
-</head>
+    
 <body>
 
     <div class="page-container">
-        <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
-            <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
-            <nav style="display:flex; gap:25px;">
-                <a href="${pageContext.request.contextPath}/" style="text-decoration:none; color:#334155; font-weight: 600;">Home</a>
-                <a href="${pageContext.request.contextPath}/admin/cheatsheet/create" style="text-decoration:none; color:#334155; font-weight: 600;">Create Cheatsheet</a>
-                <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
-            </nav>
-        </header>
+<header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
+    <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
+    
+    <nav style="display:flex; align-items:center; gap:25px;">
+        
+<%--         <!-- 🔔 Notification Dropdown Component -->
+        <div class="dropdown" id="notificationDropdownArea">
+            <button class="btn btn-link text-dark p-1 position-relative border-0 shadow-none dropdown-toggle text-decoration-none" 
+                    type="button" 
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="false" 
+                    style="font-size: 1.2rem; line-height: 1;">
+                <i class="bi bi-bell"></i>
+                <!-- Only show the counter badge if there are unread items -->
+                <c:if test="${not empty reportNotifications && reportNotifications.size() > 0}">
+                    <span id="notiBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 0.35em 0.5em;">
+                        ${reportNotifications.size()}
+                    </span>
+                </c:if>
+            </button>
+            
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2" style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
+                <li class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
+                    <span>Admin Alerts</span>
+                    <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-1" style="font-size: 10px;">Pending Review</span>
+                </li>
+                
+                <div id="notiList">
+                    <c:choose>
+                        <c:when test="${not empty reportNotifications}">
+                            <c:forEach var="report" items="${reportNotifications}">
+                                <li class="border-bottom list-unstyled bg-light-subtle">
+                                    <!-- Determine link path based on whether the reported entity is a COMMENT or CHEATSHEET -->
+                                    <c:set var="targetUrl" value="${report.referenceType == 'COMMENT' ? '/admin/moderation/comment/' : '/cheatsheet/'}${report.referenceId}" />
+                                    
+                                    <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                                       href="javascript:void(0);"
+                                       onclick="readNotification(${report.id}, '${pageContext.request.contextPath}${targetUrl}')">
+                                        
+                                        <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                                            <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                            ${report.title}
+                                        </div>
+                                        <div class="text-secondary" style="font-size: 11px; line-height: 1.4;">
+                                            ${report.message}
+                                        </div>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Empty State display when no reports exist -->
+                            <li class="text-center py-4 text-muted small list-unstyled">
+                                <i class="bi bi-shield-check d-block fs-3 text-success mb-2"></i>
+                                No notifications pending
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </ul>
+        </div> --%>
+
+        <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
+    </nav>
+</header>
 
         <div class="page-wrapper">
             
@@ -323,6 +381,8 @@
             </div>
         </footer>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 </html>

@@ -37,18 +37,20 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 	public List<NotificationEntity> findUnreadByUserId(Long userId) {
 
 		return getSession()
-				.createQuery("FROM NotificationEntity n WHERE n.user.id = :userId AND n.isRead = false",
+				.createQuery(
+						"FROM NotificationEntity n WHERE n.user.id = :userId AND n.isRead = false ORDER BY n.createdAt DESC",
 						NotificationEntity.class)
-				.setParameter("userId", userId)
-				.getResultList();
+					.setParameter("userId", userId)
+					.setMaxResults(10)
+					.getResultList();
 	}
 
 	@Override
 	public void markAsRead(Long notificationId) {
 		getSession()
 				.createQuery("UPDATE NotificationEntity n SET n.isRead = true WHERE n.id = :id")
-				.setParameter("id", notificationId)
-				.executeUpdate();
+					.setParameter("id", notificationId)
+					.executeUpdate();
 
 	}
 
@@ -56,8 +58,8 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 	public void markAllAsReadByUserId(Long userId) {
 		getSession()
 				.createQuery("UPDATE NotificationEntity n SET n.isRead = true WHERE n.user.id = :userId")
-				.setParameter("userId", userId)
-				.executeUpdate();
+					.setParameter("userId", userId)
+					.executeUpdate();
 	}
 
 	@Override
@@ -66,9 +68,9 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 				.createQuery(
 						"FROM NotificationEntity n WHERE n.user.id = :userId AND n.isRead=true ORDER BY n.createdAt DESC ",
 						NotificationEntity.class)
-				.setParameter("userId", userId)
-				.setMaxResults(10)
-				.getResultList();
+					.setParameter("userId", userId)
+					.setMaxResults(10)
+					.getResultList();
 
 	}
 

@@ -1,5 +1,8 @@
 package com.hibernate.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -14,8 +17,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.CommentEntity;
+import com.hibernate.entity.ReportEntity;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.entity.enums.ReferenceType;
+import com.hibernate.entity.enums.ReportReason;
+import com.hibernate.entity.enums.ReviewStatus;
+import com.hibernate.entity.enums.TargetType;
+import com.hibernate.repository.UserRepository;
 import com.hibernate.service.CheatsheetService;
 import com.hibernate.service.CommentService;
 import com.hibernate.service.CommentTranslationService;
@@ -32,6 +40,7 @@ public class CommentController {
 	private final CommentTranslationService commentTranslationService;
 	private final NotificationService notiService;
 	private final CheatsheetService cheatsheetService;
+	public final UserRepository userRepo;
 
 	@PostMapping("/post")
 	public String postComment(@RequestParam("cheatsheetId") Long cheatsheetId, @RequestParam("content") String content,
@@ -110,6 +119,7 @@ public class CommentController {
 
 		existingComment.setContent(newContent.trim());
 		commentService.updateComment(existingComment);
+		commentService.deleteTranslationByCommentId(commentId);
 
 		redirectAttributes.addFlashAttribute("message", "Comment updated successfully!");
 		return "redirect:/cheatsheet/" + cheatsheetId;
@@ -117,7 +127,8 @@ public class CommentController {
 	}
 
 	@PostMapping("/delete")
-	public String deleteComment(@RequestParam("commentId") Long commentId, HttpSession session,
+	public String deleteComment(@RequestParam("commentId") Long commentId,
+			@RequestParam("cheatsheetId") Long cheatsheetId, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 		UserEntity user = (UserEntity) session.getAttribute("currentUser");
 
@@ -127,12 +138,12 @@ public class CommentController {
 			redirectAttributes.addFlashAttribute("error", "Comment not found.");
 			return "redirect:/";
 		}
-
-		if (!existingComment.getUser().getId().equals(user.getId())) {
+		Boolean isOwner = existingComment.getCheatsheet().getUser().getId().equals(user.getId());
+		if (!existingComment.getUser().getId().equals(user.getId()) && !isOwner) {
 			redirectAttributes.addFlashAttribute("error", "Unauthorized! You can only delete your own comments.");
 			return "redirect:/";
 		}
-		Long cheatsheetId = existingComment.getCheatsheet().getId();
+		/* Long cheatsheetId = existingComment.getCheatsheet().getId(); */
 
 		commentService.deleteComment(commentId);
 		redirectAttributes.addFlashAttribute("message", "Comment deleted successfully!");
@@ -162,5 +173,48 @@ public class CommentController {
 					.status(HttpStatus.INTERNAL_SERVER_ERROR)
 						.body("Translation processing crashed: " + e.getMessage());
 		}
+	}
+
+	@PostMapping("/report")
+	public String reportComment(@RequestParam("commentId") Long commentId, @RequestParam("reason") ReportReason reason,
+			@RequestParam(value = "description", required = false) String description, HttpSession session,
+			RedirectAttributes redirectAttributes) {
+		UserEntity user = (UserEntity) session.getAttribute("currentUser");
+
+		CommentEntity existingComment = commentService.selectCommentById(commentId);
+
+		if (existingComment == null) {
+			redirectAttributes.addFlashAttribute("error", "Comment not found.");
+			return "redirect:/";
+		}
+		ReportEntity report = new ReportEntity();
+		report.setReporterUser(user);
+		report.setReason(reason);
+		report.setDescription(description);
+		report.setTargetType(TargetType.COMMENT);
+		report.setTargetId(commentId);
+		report.setStatus(ReviewStatus.PENDING);
+		report.setCreatedAt(LocalDateTime.now());
+
+		commentService.reportComment(report);
+
+		List<UserEntity> admins = userRepo.findByRole("ADMIN");
+
+		String adminNotificationMessage = "Comment ID: " + commentId + " has been reported by "
+				+ (user != null ? user.getName() : "Anonymous") + ". Reason: " + reason;
+
+		if (admins != null && !admins.isEmpty()) {
+			for (UserEntity admin : admins) {
+				notiService
+						.createAndSendNotification("New Comment Report Pending", adminNotificationMessage, "REPORT",
+								ReferenceType.COMMENT, // Dynamic Reference Type
+								commentId, admin.getId(), // Target User is the Admin
+								(user != null ? user.getId() : null) // Actor User
+						);
+			}
+		}
+		redirectAttributes.addFlashAttribute("message", "Comment reported successfully!");
+		return "redirect:/cheatsheet/" + existingComment.getCheatsheet().getId();
+
 	}
 }

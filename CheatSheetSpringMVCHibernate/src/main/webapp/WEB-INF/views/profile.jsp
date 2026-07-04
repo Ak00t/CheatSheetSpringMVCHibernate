@@ -229,6 +229,7 @@
         </div>
     </form>
 </div>
+ <jsp:include page="footer.jsp" />
 
 <script>
 function toggleFollow(followingId) {

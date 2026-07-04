@@ -3,6 +3,7 @@ package com.hibernate.repository;
 import java.util.List;
 
 import com.hibernate.entity.CommentEntity;
+import com.hibernate.entity.ReportEntity;
 
 public interface CommentsRepository {
 
@@ -19,5 +20,9 @@ public interface CommentsRepository {
 	public List<CommentEntity> findReplies(Long parentCommentId);
 
 	public CommentEntity findByParentId(Long id);
+
+	public void reportComment(ReportEntity report);
+
+	public void deleteTranslationByCommentId(Long commentId);
 
 }

@@ -6,9 +6,11 @@ import com.hibernate.entity.UserEntity;
 
 public interface UserService {
 
-    long countActiveUsers();
+	long countActiveUsers();
 
-    List<Object[]> findTopContributors(int limit);
+	List<Object[]> findTopContributors(int limit);
 
-    UserEntity findById(Long id);
+	UserEntity findById(Long id);
+
+	List<UserEntity> findByRole(String role);
 }

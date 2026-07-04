@@ -3,6 +3,7 @@ package com.hibernate.service;
 import java.util.List;
 
 import com.hibernate.entity.CommentEntity;
+import com.hibernate.entity.ReportEntity;
 
 public interface CommentService {
 
@@ -19,5 +20,9 @@ public interface CommentService {
 	public List<CommentEntity> findReplies(Long parentCommentId);
 
 	public CommentEntity findByParentId(Long id);
+
+	public void reportComment(ReportEntity report);
+
+	public void deleteTranslationByCommentId(Long commentId);
 
 }

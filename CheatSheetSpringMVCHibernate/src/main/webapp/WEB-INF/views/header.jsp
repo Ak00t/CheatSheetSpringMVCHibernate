@@ -84,84 +84,63 @@
                                             </c:if>
                                         </li>
 
-                                        <div id="notiList">
+<div id="notiList">
 
-                                            <!-- ================= UNREAD ================= -->
-                                            <c:if test="${not empty unreadNotifications}">
+    <!-- ================= UNREAD ================= -->
+    <c:if test="${not empty unreadNotifications}">
+        <c:forEach var="noti" items="${unreadNotifications}">
+            <li class="border-bottom list-unstyled bg-light">
+                <!-- Determine path dynamically based on Reference Type -->
+                <c:set var="targetUrl" value="${noti.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${noti.referenceId}" />
 
-                                                <c:forEach var="noti" items="${unreadNotifications}">
+                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                   href="javascript:void(0);"
+                   onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}${targetUrl}')">
 
-                                                    <li class="border-bottom list-unstyled bg-light">
+                    <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                        <i class="bi ${noti.referenceType == 'USER' ? 'bi-person-plus-fill text-success' : 'bi-bell-fill text-primary'}"></i>
+                        <c:out value="${noti.title}" />
+                    </div>
+                    <div class="text-secondary" style="font-size:12px;line-height:1.4;">
+                        <c:out value="${noti.message}" />
+                    </div>
+                </a>
+            </li>
+        </c:forEach>
+    </c:if>
 
-                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
-                                                            href="javascript:void(0);"
-                                                            onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
+    <!-- Empty State -->
+    <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
+        <li class="text-center py-4 text-muted small list-unstyled">
+            <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+            No notifications
+        </li>
+    </c:if>
 
-                                                            <div
-                                                                class="fw-bold text-dark small d-flex align-items-center gap-2">
-                                                                <i class="bi bi-bell-fill text-primary"></i>
-                                                                ${noti.title}
-                                                            </div>
+    <!-- ================= HISTORY ================= -->
+    <c:if test="${not empty readNotificationsHistory}">
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header fw-bold text-secondary">Notification History</li>
 
-                                                            <div class="text-secondary"
-                                                                style="font-size:12px;line-height:1.4;">
-                                                                ${noti.message}
-                                                            </div>
+        <c:forEach var="history" items="${readNotificationsHistory}">
+            <li class="border-bottom list-unstyled">
+                <c:set var="historyUrl" value="${history.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${history.referenceId}" />
 
-                                                        </a>
+                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
+                   href="${pageContext.request.contextPath}${historyUrl}">
 
-                                                    </li>
-
-                                                </c:forEach>
-
-                                            </c:if>
-
-                                            <!-- Empty -->
-                                            <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
-                                                <li class="text-center py-4 text-muted small list-unstyled">
-                                                    <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
-                                                    No notifications
-                                                </li>
-                                            </c:if>
-
-                                            <!-- ================= HISTORY ================= -->
-
-                                            <c:if test="${not empty readNotificationsHistory}">
-
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-
-                                                <li class="dropdown-header fw-bold text-secondary">
-                                                    Notification History
-                                                </li>
-
-                                                <c:forEach var="history" items="${readNotificationsHistory}">
-
-                                                    <li class="border-bottom list-unstyled">
-
-                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
-                                                            href="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}">
-
-                                                            <div class="small d-flex align-items-center gap-2">
-                                                                <i class="bi bi-check-circle text-success"></i>
-                                                                ${history.title}
-                                                            </div>
-
-                                                            <div style="font-size:12px;">
-                                                                ${history.message}
-                                                            </div>
-
-                                                        </a>
-
-                                                    </li>
-
-                                                </c:forEach>
-
-                                            </c:if>
-
-                                        </div>
-
+                    <div class="small d-flex align-items-center gap-2">
+                        <i class="bi ${history.referenceType == 'USER' ? 'bi-person-check text-secondary' : 'bi-check-circle text-success'}"></i>
+                        <c:out value="${history.title}" />
+                    </div>
+                    <div style="font-size:12px;">
+                        <c:out value="${history.message}" />
+                    </div>
+                </a>
+            </li>
+        </c:forEach>
+    </c:if>
+</div>
                                     </ul>
                                 </div>
 

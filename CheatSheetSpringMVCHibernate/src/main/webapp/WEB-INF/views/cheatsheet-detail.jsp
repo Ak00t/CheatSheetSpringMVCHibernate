@@ -317,6 +317,20 @@
                                                                     </form>
                                                                 </li>
                                                             </c:when>
+                                                            <c:when test="${cheatsheet.user.id == sessionScope.currentUser.id}">
+													            <li>
+													                <form method="post"
+													                    action="${pageContext.request.contextPath}/comment/delete"
+													                    onsubmit="return confirm('Delete this comment from your cheatsheet?')">
+													                    <input type="hidden" name="commentId" value="${comment.id}" />
+													                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+													                    <button type="submit"
+													                        class="dropdown-item d-flex align-items-center gap-2 text-danger py-2">
+													                        <i class="bi bi-trash3-fill"></i> Delete Comment
+													                    </button>
+													                </form>
+													            </li>
+													        </c:when>
                                                             <c:otherwise>
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-2 text-warning py-2"
@@ -413,6 +427,7 @@
                                     <option value="SPAM">Spam Content Matrix</option>
                                     <option value="ABUSE">Harassment or Abuse</option>
                                     <option value="INAPPROPRIATE">Inappropriate Tone/Language</option>
+                                    <option value="COPYRIGHT">Copyright Violation</option>
                                 </select>
                                 <textarea name="description" class="form-control" placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
                             </div>

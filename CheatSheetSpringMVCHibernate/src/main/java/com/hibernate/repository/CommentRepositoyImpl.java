@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.CommentEntity;
+import com.hibernate.entity.ReportEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -96,6 +97,22 @@ public class CommentRepositoyImpl implements CommentsRepository {
 				.createQuery("select c from CommentEntity c where c.parentComment.id = :id", CommentEntity.class)
 					.setParameter("id", id)
 					.uniqueResult();
+	}
+
+	@Override
+	public void reportComment(ReportEntity report) {
+
+		getSession().save(report);
+
+	}
+
+	@Override
+	public void deleteTranslationByCommentId(Long commentId) {
+		getSession()
+				.createQuery("delete from CommentTranslationEntity ct where ct.comment.id = :commentId")
+					.setParameter("commentId", commentId)
+					.executeUpdate();
+
 	}
 
 }

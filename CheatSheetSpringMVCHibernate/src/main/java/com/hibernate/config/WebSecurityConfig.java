@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 							.requestMatchers("/admindashboard/**", "/admin/**")
 								.hasRole("ADMIN")
 								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
-										"/cheatsheet/uploads/**", "/reset-password", "/resources/**")
+										"/cheatsheet/uploads/**", "/uploads/**", "/reset-password", "/resources/**")
 								.permitAll()
 								.anyRequest()
 								.authenticated())

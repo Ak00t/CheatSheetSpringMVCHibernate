@@ -22,6 +22,11 @@ public class GlobalHeaderAdvice {
 
 	@ModelAttribute("unreadNotifications")
 	public List<NotificationEntity> populateUnreadNotifications(HttpSession session) {
+		String uri = request.getServletPath();
+
+		if (uri.startsWith("/admindashboard") || uri.startsWith("/admin")) {
+			return null;
+		}
 		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
 		if (currentUser != null) {
 			return notiService.findUnreadByUserId(currentUser.getId());
@@ -31,7 +36,8 @@ public class GlobalHeaderAdvice {
 
 	@ModelAttribute("readNotificationsHistory")
 	public List<NotificationEntity> populateReadNotifications(HttpSession session) {
-		if (request.getRequestURI().startsWith("/admindashboard")) {
+		String uri = request.getRequestURI();
+		if (uri.startsWith("/admindashboard") || uri.startsWith("/admin")) {
 			return null;
 		}
 		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
@@ -41,4 +47,20 @@ public class GlobalHeaderAdvice {
 		}
 		return null;
 	}
+
+	/*
+	 * @ModelAttribute("reportNotifications") public List<NotificationEntity>
+	 * populateReportNotifications(HttpSession session) { String uri =
+	 * request.getServletPath();
+	 * 
+	 * // Match ONLY paths starting with /admin or /admindashboard if
+	 * (uri.startsWith("/admin") || uri.startsWith("/admindashboard")) { UserEntity
+	 * currentUser = (UserEntity) session.getAttribute("currentUser");
+	 * 
+	 * // Double-check security role context before loading data if (currentUser !=
+	 * null && "ADMIN".equals(currentUser.getRole())) {
+	 * System.err.println("failed to load report notifications for user: "); return
+	 * notiService.findUnreadByUserId(currentUser.getId()); } } return null; }
+	 */
+
 }

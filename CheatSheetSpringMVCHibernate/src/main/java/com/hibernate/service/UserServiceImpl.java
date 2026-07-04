@@ -15,20 +15,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    @Override
-    public long countActiveUsers() {
-        return userRepository.countActiveUsers();
-    }
+	@Override
+	public long countActiveUsers() {
+		return userRepository.countActiveUsers();
+	}
 
-    @Override
-    public List<Object[]> findTopContributors(int limit) {
-        return userRepository.findTopContributors(limit);
-    }
+	@Override
+	public List<Object[]> findTopContributors(int limit) {
+		return userRepository.findTopContributors(limit);
+	}
 
-    @Override
-    public UserEntity findById(Long id) {
-        return userRepository.findById(id);
-    }
+	@Override
+	public UserEntity findById(Long id) {
+		return userRepository.findById(id);
+	}
+
+	@Override
+	public List<UserEntity> findByRole(String role) {
+		return userRepository.findByRole(role);
+	}
 }

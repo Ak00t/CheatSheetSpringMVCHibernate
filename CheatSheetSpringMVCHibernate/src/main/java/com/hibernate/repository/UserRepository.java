@@ -6,12 +6,14 @@ import com.hibernate.entity.UserEntity;
 
 public interface UserRepository {
 
-    // Home page statistics
-    long countActiveUsers();
+	// Home page statistics
+	long countActiveUsers();
 
-    // Top contributors
-    List<Object[]> findTopContributors(int limit);
+	// Top contributors
+	List<Object[]> findTopContributors(int limit);
 
-    // Optional
-    UserEntity findById(Long id);
+	// Optional
+	UserEntity findById(Long id);
+
+	List<UserEntity> findByRole(String role);
 }

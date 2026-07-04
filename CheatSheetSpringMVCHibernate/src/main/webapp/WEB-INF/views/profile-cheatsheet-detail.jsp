@@ -455,6 +455,14 @@
                                                             <i class="bi bi-translate"></i> Translate to Burmese
                                                         </a>
                                                     </li>
+                                                                                                            <!-- See Original Option (Hidden initially) -->
+                                                        <li id="originalOpt-${comment.id}" class="d-none">
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 text-secondary py-2"
+                                                                href="javascript:void(0);"
+                                                                onclick="restoreOriginalComment(${comment.id})">
+                                                                <i class="bi bi-arrow-clockwise"></i> See Original
+                                                            </a>
+                                                        </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -569,6 +577,33 @@
                         </form>
                     </div>
                 </div>
+                                <!-- Comment Dynamic Report Modal -->
+                <div class="modal fade" id="commentReportModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <form action="${pageContext.request.contextPath}/comment/report" method="POST" class="modal-content">
+                            <input type="hidden" name="commentId" id="reportCommentIdTarget" value="" />
+                            <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Report Comment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="small text-muted">Please declare your assessment matrix parameters context category:</p>
+                                <select name="reason" class="form-select mb-3" required>
+                                    <option value="SPAM">Spam Content Matrix</option>
+                                    <option value="ABUSE">Harassment or Abuse</option>
+                                    <option value="INAPPROPRIATE">Inappropriate Tone/Language</option>
+                                    <option value="COPYRIGHT">Copyright Violation</option>
+                                </select>
+                                <textarea name="description" class="form-control" placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light fw-bold border" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger fw-bold">Submit Assessment Report</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <jsp:include page="footer.jsp" />
 
                 <script>
@@ -601,9 +636,13 @@
                         navigator.clipboard.writeText(inputEl.value);
                         alert("Copied configuration pathway link directly to clipboard paste stack!");
                     }
-                    function triggerReportAction(id) {
-                        if (confirm("Submit a content flags violation ticket for thread instance evaluation?")) {
-                            alert("Report captured for safety analysis validation.");
+                    // Handle dynamic injection target parameter metrics payload for reporting comments
+                    function triggerReportAction(commentId) {
+                        const targetInput = document.getElementById("reportCommentIdTarget");
+                        if(targetInput) {
+                            targetInput.value = commentId;
+                            const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
+                            rModal.show();
                         }
                     }
                     function translateComment(commentId, targetLang) {
