@@ -171,38 +171,39 @@
         }
 
         .sheet-card {
-            min-height: 470px;
-            border-radius: 28px;
+            border-radius: 22px;
             overflow: hidden;
             text-decoration: none;
-            color: white !important;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, .14);
+            color: var(--text-color, white) !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .13);
             transition: .3s;
-            padding: 22px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            min-height: 470px;
+            cursor: pointer;
+            position: relative;
         }
 
         .sheet-card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 22px 45px rgba(0, 0, 0, .22);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .22);
         }
 
         .sheet-cover {
             width: 100%;
-            height: 180px;
-            border: 2px dashed rgba(255, 255, 255, .45);
+            height: 170px;
+            border: 2px dashed rgba(255, 255, 255, 0.45);
             border-radius: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            color: var(--text-color, white);
             font-size: 18px;
             font-weight: 800;
             overflow: hidden;
-            background: rgba(0, 0, 0, .06);
+            background: rgba(0, 0, 0, 0.06);
             flex-shrink: 0;
-            margin-bottom: 14px;
         }
 
         .sheet-cover img {
@@ -211,41 +212,66 @@
             object-fit: cover;
         }
 
+        .sheet-body {
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
         .category-badge {
             display: inline-block;
             padding: 6px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, .25);
-            color: white;
+            background: rgba(0, 0, 0, 0.12);
+            color: var(--text-color, white);
             font-size: 12px;
-            font-weight: 900;
+            font-weight: 800;
             margin-bottom: 12px;
             align-self: flex-start;
         }
 
         .sheet-title {
-            font-size: 22px;
-            color: white;
+            font-size: 21px;
+            color: var(--text-color, white);
             margin-bottom: 8px;
             font-weight: 900;
             line-height: 1.35;
         }
 
         .sheet-description {
-            color: rgba(255, 255, 255, .92);
+            color: var(--text-color, white);
+            opacity: 0.9;
             line-height: 1.55;
             max-height: 95px;
             overflow: hidden;
             font-size: 15px;
         }
 
+        .see-btn {
+            display: inline-block;
+            margin-top: 6px;
+            color: var(--text-color, white);
+            text-decoration: underline;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
         .sheet-footer {
             margin-top: auto;
             padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, .25);
-            color: rgba(255, 255, 255, .9);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-color, white);
+            opacity: 0.8;
             font-size: 13px;
             line-height: 1.7;
+        }
+
+        .creator-link {
+            color: var(--text-color, white);
+            text-decoration: none;
+            font-weight: 900;
         }
 
         /* Sidebar */
@@ -497,38 +523,137 @@
                         <c:when test="${not empty popularCheatsheets}">
                             <div class="sheet-grid">
                                 <c:forEach items="${popularCheatsheets}" var="sheet">
-                                    <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                                        class="sheet-card"
-                                        style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};">
+                                    
+                                    <div class="sheet-card auto-text-color"
+                                        data-color="${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'}"
+                                        style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};"
+                                        onclick="location.href='${pageContext.request.contextPath}/cheatsheet/${sheet.id}'">
 
-                                       <div class="sheet-cover">
-                            <c:choose>
-                                <c:when test="${not empty sheet.mediaList}">
-                                    <c:choose>
-                                        <%-- If it contains a slash, it's an old legacy relativePath --%>
-                                        <c:when test="${sheet.mediaList[0].mediaUrl.contains('/')}">
-                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                        </c:when>
-                                        <%-- Otherwise, it's a new clean fileName entry --%>
-                                        <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:when>
-                                <c:otherwise>
-                                    No Cover
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                                        <div class="category-badge">${sheet.category.name}</div>
-                                        <h3 class="sheet-title">${sheet.title}</h3>
-                                        <p class="sheet-description">${sheet.description}</p>
-
-                                        <div class="sheet-footer">
-                                            👤 ${sheet.user.name}<br>
-                                            👁 ${sheet.viewCount} &nbsp; ❤ ${sheet.likeCount} &nbsp; 🔖 ${sheet.bookmarkCount}
+                                                                                <div class="sheet-cover">
+                                            <c:choose>
+                                                <c:when test="${not empty sheet.mediaList}">
+                                                    <c:choose>
+                                                        <c:when test="${fn:contains(sheet.mediaList[0].mediaUrl, '/')}">
+                                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    No Cover
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
-                                    </a>
+
+                                        <div class="sheet-body">
+
+                                            <div class="category-badge">
+                                                ${sheet.category.name}
+                                            </div>
+
+                                            <div style="
+                                                display:flex;
+                                                justify-content:space-between;
+                                                align-items:flex-start;
+                                                margin-bottom:10px;">
+
+                                                <h3 class="sheet-title"
+                                                    style="
+                                                        flex-grow:1;
+                                                        padding-right:10px;
+                                                        margin:0;">
+                                                    ${sheet.title}
+                                                </h3>
+
+                                               <div class="dropdown" onclick="event.stopPropagation();">
+                                                    <button
+                                                        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
+                                                        type="button"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                        style="color: var(--text-color, white) !important; opacity: 0.8;">
+                                                        <i class="bi bi-three-dots-vertical fs-5"></i>
+                                                    </button>
+
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
+                                                        style="border-radius: 10px; font-size: 14px;">
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
+                                                               href="javascript:void(0);"
+                                                               onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                                                                <i class="bi bi-plus-circle-fill text-primary"></i>
+                                                                Save to Playlist
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+
+                                            <p class="sheet-description">
+                                                ${sheet.description}
+                                            </p>
+
+                                            <span class="see-btn">
+                                                See More
+                                            </span>
+
+                                            <div class="sheet-footer"
+                                                 style="
+                                                    display:flex;
+                                                    justify-content:space-between;
+                                                    align-items:center;">
+
+                                                <div>
+                                                    <span style="
+                                                        font-size:11px;
+                                                        opacity:.7;
+                                                        display:block;">
+                                                        Created By:
+                                                    </span>
+
+                                                    <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}"
+                                                       class="creator-link"
+                                                       onclick="event.stopPropagation();">
+                                                        ${sheet.user.name}
+                                                    </a>
+
+                                                    <div style="
+                                                        font-size:11px;
+                                                        opacity:.7;
+                                                        margin-top:4px;">
+
+                                                        <c:set var="datePart"
+                                                               value="${fn:substring(sheet.createdAt, 0, 10)}" />
+
+                                                        <c:set var="timePart"
+                                                               value="${fn:substring(sheet.createdAt, 11, 16)}" />
+
+                                                        🗓 ${datePart} ${timePart}
+                                                    </div>
+                                                </div>
+
+                                                <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}"
+                                                   onclick="event.stopPropagation();"
+                                                   style="flex-shrink:0;">
+                                                    <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty sheet.user.profileImg ? sheet.user.profileImg : 'default.png'}"
+                                                         style="
+                                                            width:40px;
+                                                            height:40px;
+                                                            object-fit:cover;
+                                                            border-radius:50%;
+                                                            border:2px solid white;
+                                                            box-shadow:0 2px 6px rgba(0,0,0,0.15);"
+                                                         alt="creator" />
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
                                 </c:forEach>
                             </div>
                         </c:when>
@@ -547,41 +672,137 @@
                         <c:when test="${not empty recentCheatsheets}">
                             <div class="sheet-grid">
                                 <c:forEach items="${recentCheatsheets}" var="sheet">
-                                    <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}"
-                                        class="sheet-card"
-                                        style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#10b981'};">
+                                    
+                                    <div class="sheet-card auto-text-color"
+                                        data-color="${not empty sheet.themeColor ? sheet.themeColor : '#10b981'}"
+                                        style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#10b981'};"
+                                        onclick="location.href='${pageContext.request.contextPath}/cheatsheet/${sheet.id}'">
 
- <div class="sheet-cover">
-                            <c:choose>
-                                <c:when test="${not empty sheet.mediaList}">
-                                    <c:choose>
-                                        <%-- If it contains a slash, it's an old legacy relativePath --%>
-                                        <c:when test="${sheet.mediaList[0].mediaUrl.contains('/')}">
-                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                        </c:when>
-                                        <%-- Otherwise, it's a new clean fileName entry --%>
-                                        <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:when>
-                                <c:otherwise>
-                                    No Cover
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-
-                                        <div class="category-badge">${sheet.category.name}</div>
-                                        <h3 class="sheet-title">${sheet.title}</h3>
-                                        <p class="sheet-description">${sheet.description}</p>
-
-                                        <div class="sheet-footer">
-                                            👤 ${sheet.user.name}<br>
-                                            🗓
-                                            <fmt:parseDate value="${sheet.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdDate" />
-                                            <fmt:formatDate value="${createdDate}" pattern="dd MMM yyyy" />
+                                                                                <div class="sheet-cover">
+                                            <c:choose>
+                                                <c:when test="${not empty sheet.mediaList}">
+                                                    <c:choose>
+                                                        <c:when test="${fn:contains(sheet.mediaList[0].mediaUrl, '/')}">
+                                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    No Cover
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
-                                    </a>
+
+                                        <div class="sheet-body">
+
+                                            <div class="category-badge">
+                                                ${sheet.category.name}
+                                            </div>
+
+                                            <div style="
+                                                display:flex;
+                                                justify-content:space-between;
+                                                align-items:flex-start;
+                                                margin-bottom:10px;">
+
+                                                <h3 class="sheet-title"
+                                                    style="
+                                                        flex-grow:1;
+                                                        padding-right:10px;
+                                                        margin:0;">
+                                                    ${sheet.title}
+                                                </h3>
+
+                                                <div class="dropdown" onclick="event.stopPropagation();">
+                                                    <button
+                                                        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
+                                                        type="button"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                        style="color: var(--text-color, white) !important; opacity: 0.8;">
+                                                        <i class="bi bi-three-dots-vertical fs-5"></i>
+                                                    </button>
+
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
+                                                        style="border-radius: 10px; font-size: 14px;">
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
+                                                               href="javascript:void(0);"
+                                                               onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                                                                <i class="bi bi-plus-circle-fill text-primary"></i>
+                                                                Save to Playlist
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+
+                                            <p class="sheet-description">
+                                                ${sheet.description}
+                                            </p>
+
+                                            <span class="see-btn">
+                                                See More
+                                            </span>
+
+                                            <div class="sheet-footer"
+                                                 style="
+                                                    display:flex;
+                                                    justify-content:space-between;
+                                                    align-items:center;">
+
+                                                <div>
+                                                    <span style="
+                                                        font-size:11px;
+                                                        opacity:.7;
+                                                        display:block;">
+                                                        Created By:
+                                                    </span>
+
+                                                    <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}"
+                                                       class="creator-link"
+                                                       onclick="event.stopPropagation();">
+                                                        ${sheet.user.name}
+                                                    </a>
+
+                                                    <div style="
+                                                        font-size:11px;
+                                                        opacity:.7;
+                                                        margin-top:4px;">
+
+                                                        <c:set var="datePart"
+                                                               value="${fn:substring(sheet.createdAt, 0, 10)}" />
+
+                                                        <c:set var="timePart"
+                                                               value="${fn:substring(sheet.createdAt, 11, 16)}" />
+
+                                                        🗓 ${datePart} ${timePart}
+                                                    </div>
+                                                </div>
+
+                                                <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}"
+                                                   onclick="event.stopPropagation();"
+                                                   style="flex-shrink:0;">
+                                                    <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty sheet.user.profileImg ? sheet.user.profileImg : 'default.png'}"
+                                                         style="
+                                                            width:40px;
+                                                            height:40px;
+                                                            object-fit:cover;
+                                                            border-radius:50%;
+                                                            border:2px solid white;
+                                                            box-shadow:0 2px 6px rgba(0,0,0,0.15);"
+                                                         alt="creator" />
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
                                 </c:forEach>
                             </div>
                         </c:when>
@@ -653,7 +874,7 @@
                                         <div>
                                             <div class="mini-title">${sheet.title}</div>
                                             <div class="mini-meta">
-                                                👁 ${sheet.viewCount} &nbsp; ❤ ${sheet.likeCount}
+                                               <%--  👁 ${sheet.viewCount} --%> &nbsp; ❤ ${sheet.likeCount}
                                             </div>
                                         </div>
                                     </a>
@@ -718,9 +939,119 @@
         </div>
     </div>
 
+<div class="modal fade"
+     id="bootstrapPlaylistModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered"
+         style="max-width:400px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Save to Playlist</h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <select id="playlistSelect"
+                        class="form-select mb-3">
+                    <option value="">
+                        Select Playlist
+                    </option>
+                </select>
+
+                <button
+                    onclick="saveToSelectedPlaylist()"
+                    class="btn btn-primary w-100 mb-3">
+
+                    Save
+                </button>
+
+                <input
+                    id="newPlaylistName"
+                    class="form-control mb-2"
+                    placeholder="New Playlist">
+
+                <button
+                    onclick="createNewPlaylist()"
+                    class="btn btn-dark w-100">
+
+                    Create Playlist
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
     <jsp:include page="footer.jsp" />
 
     <script>
+
+        function getContrastColor(hexColor) {
+            if (!hexColor || hexColor === "null") {
+                hexColor = "#2563eb";
+            }
+
+            hexColor = hexColor.replace("#", "");
+
+            if (hexColor.length === 3) {
+                hexColor =
+                    hexColor[0] + hexColor[0] +
+                    hexColor[1] + hexColor[1] +
+                    hexColor[2] + hexColor[2];
+            }
+
+            const r = parseInt(hexColor.substr(0, 2), 16);
+            const g = parseInt(hexColor.substr(2, 2), 16);
+            const b = parseInt(hexColor.substr(4, 2), 16);
+
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+            return (yiq >= 128) ? "#1e293b" : "#ffffff";
+        }
+
+        function applyDynamicTextColors() {
+            document.querySelectorAll(".auto-text-color").forEach(function (card) {
+                const bgHex = card.getAttribute("data-color");
+                const idealTextColor = getContrastColor(bgHex);
+                card.style.setProperty("--text-color", idealTextColor);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            applyDynamicTextColors();
+
+            document.querySelectorAll(".see-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const desc = this.previousElementSibling;
+
+                    if (desc.style.maxHeight === "none") {
+                        desc.style.maxHeight = "95px";
+                        this.innerText = "See More";
+                    } else {
+                        desc.style.maxHeight = "none";
+                        this.innerText = "See Less";
+                    }
+                });
+            });
+        });
+
         function scrollBox(id, amount) {
             const box = document.getElementById(id);
             if (box) {
@@ -730,6 +1061,118 @@
                 });
             }
         }
+        
+        let selectedCheatsheetIdForPlaylist = null;
+        let playlistModalObj = null;
+
+        function openPlaylistModal(cheatsheetId) {
+
+            selectedCheatsheetIdForPlaylist = cheatsheetId;
+
+            if (!playlistModalObj) {
+
+                playlistModalObj =
+                    new bootstrap.Modal(
+                        document.getElementById(
+                            'bootstrapPlaylistModal'));
+            }
+
+            playlistModalObj.show();
+
+            loadPlaylists();
+        }
+
+        function loadPlaylists() {
+
+            fetch(
+                '${pageContext.request.contextPath}/collection/list')
+
+                .then(res => res.json())
+
+                .then(data => {
+
+                    const select =
+                        document.getElementById(
+                            'playlistSelect');
+
+                    select.innerHTML =
+                        '<option value="">-- Choose Playlist --</option>';
+
+                    data.forEach(c => {
+
+                        select.innerHTML +=
+                            `<option value="\${c.id}">\${c.name}</option>`;
+                    });
+                });
+        }
+
+        function createNewPlaylist() {
+
+            const name =
+                document
+                    .getElementById(
+                        'newPlaylistName')
+                    .value;
+
+            if (!name) return;
+
+            fetch(
+                '${pageContext.request.contextPath}/collection/create',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':
+                            'application/x-www-form-urlencoded'
+                    },
+                    body:
+                        `name=\${encodeURIComponent(name)}`
+                })
+                .then(() => loadPlaylists());
+        }
+
+        function saveToSelectedPlaylist() {
+
+            const collectionId =
+                document.getElementById(
+                    'playlistSelect').value;
+
+            const cheatsheetId =
+                selectedCheatsheetIdForPlaylist;
+
+            if (!collectionId) {
+                return alert("Please select a playlist first!");
+            }
+
+            if (!cheatsheetId) {
+                return alert("No cheatsheet context captured!");
+            }
+
+            fetch(
+                '${pageContext.request.contextPath}/collection/add-to-playlist',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':
+                            'application/x-www-form-urlencoded'
+                    },
+                    body:
+                        `collectionId=\${collectionId}&cheatsheetId=\${cheatsheetId}`
+                })
+                .then(res => res.text())
+                .then(data => {
+                    if (data === "Item already added!") {
+                        alert("This cheat sheet is already in the selected playlist.");
+                    } else {
+                        alert("Successfully added to your playlist!");
+                        if (playlistModalObj) {
+                            playlistModalObj.hide();
+                        }
+                    }
+                })
+                .catch(() => alert("Error saving to playlist"));
+        }
+        
+        
     </script>
 
 </body>
