@@ -243,6 +243,75 @@
                     </div>
                 </div>
 
+                <!-- 🛑 Pending Reports Management Table section added here -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="info-card" style="padding: 30px;">
+                            <h3 class="info-card-title" style="margin-bottom: 20px;">
+                                <i class="fa-solid fa-gavel"></i> Pending Reports Management
+                            </h3>
+                            
+                            <c:choose>
+                                <c:when test="${not empty pendingReportsList}">
+                                    <div class="table-responsive">
+                                        <table class="table align-middle" style="border-color: #f1f5f9;">
+                                            <thead style="background-color: #f8fafc; color: #64748b; font-weight: 700; font-size: 14px;">
+                                                <tr>
+                                                    <th style="padding: 14px;">ID</th>
+                                                    <th>Reported Target</th>
+                                                    <th>Target ID</th>
+                                                    <th>Reason Category</th>
+                                                    <th>Description Details</th>
+                                                    <th class="text-end" style="padding-right: 14px;">Actions To Take</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="font-size: 15px;">
+                                                <c:forEach var="report" items="${pendingReportsList}">
+                                                    <tr>
+                                                        <td style="padding: 16px; font-weight: 700; color: #64748b;">#<c:out value="${report.id}"/></td>
+                                                        <td>
+                                                            <span class="badge ${report.target_type == 'USER' ? 'bg-primary' : (report.target_type == 'CHEATSHEET' ? 'bg-success' : 'bg-warning')} text-uppercase" style="font-size: 11px; padding: 6px 10px; border-radius: 6px;">
+                                                                <c:out value="${report.target_type}"/>
+                                                            </span>
+                                                        </td>
+                                                        <td style="font-weight: 600;">ID: <c:out value="${report.target_id}"/></td>
+                                                        <td>
+                                                            <span style="color: #dc3545; font-weight: 600;"><c:out value="${report.reason}"/></span>
+                                                        </td>
+                                                        <td style="max-width: 300px; color: #475569;"><c:out value="${report.description}"/></td>
+                                                        <td class="text-end" style="padding-right: 14px;">
+                                                            <!-- Action Form Block -->
+                                                            <form action="${pageContext.request.contextPath}/admindashboard/reports/resolve" method="POST" style="display: inline-flex; gap: 8px;">
+                                                                <input type="hidden" name="reportId" value="${report.id}" />
+                                                                <input type="hidden" name="targetType" value="${report.target_type}" />
+                                                                <input type="hidden" name="targetId" value="${report.target_id}" />
+                                                                
+                                                                <button type="submit" name="actionType" value="WARNING" class="btn btn-sm btn-outline-warning" style="border-radius: 8px; font-weight: 600; padding: 6px 12px;">
+                                                                    <i class="fa-solid fa-triangle-exclamation"></i> Issue Warning
+                                                                </button>
+                                                                
+                                                                <button type="submit" name="actionType" value="BAN" class="btn btn-sm btn-danger" style="border-radius: 8px; font-weight: 600; padding: 6px 12px; background-color: #dc3545;">
+                                                                    <i class="fa-solid fa-ban"></i> Ban User
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="text-align: center; padding: 40px 0; color: #94a3b8;">
+                                        <i class="fa-solid fa-circle-check" style="font-size: 48px; color: #10b981; margin-bottom: 12px;"></i>
+                                        <p style="margin: 0; font-size: 16px; font-weight: 500;">No pending reports at the moment. The community is clean!</p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
