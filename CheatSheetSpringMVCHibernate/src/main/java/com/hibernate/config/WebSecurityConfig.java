@@ -55,12 +55,13 @@ public class WebSecurityConfig {
 								.authenticated())
 
 					// 3. UNAUTHENTICATED REDIRECT HANDLER
-					.exceptionHandling(
-							exception -> exception.authenticationEntryPoint((request, response, authException) -> {
-								// Automatically routes unauthenticated users home and tells your JS to pop open
-								// the modal with an error
-								response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
-							}))
+					.exceptionHandling(exception -> exception
+							.accessDeniedPage("/403")
+								.authenticationEntryPoint((request, response, authException) -> {
+									// Automatically routes unauthenticated users home and tells your JS to pop open
+									// the modal with an error
+									response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
+								}))
 
 					.formLogin()
 					.loginPage("/?login=true")

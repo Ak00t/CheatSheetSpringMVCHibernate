@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/cheatsheet")
+@RequestMapping("/cheatsheet")
 public class CheatsheetController {
 
 	private final CategoryService categoryService;
@@ -203,7 +203,7 @@ public class CheatsheetController {
 			File serverFile = new File(uploadDir + fileName);
 			coverPhoto.transferTo(serverFile);
 
-			String relativePath = request.getContextPath() + "/admin/cheatsheet/uploads/" + fileName;
+			String relativePath = request.getContextPath() + "/cheatsheet/uploads/" + fileName;
 
 			CheatsheetMediaEntity media = new CheatsheetMediaEntity();
 			media.setCheatsheet(cheatsheet);
@@ -216,7 +216,7 @@ public class CheatsheetController {
 			cheatsheetService.saveMedia(media);
 		}
 
-		return "redirect:/admin/cheatsheet/create";
+		return "redirect:/cheatsheet/create";
 	}
 
 	@GetMapping("/uploads/{fileName:.+}")

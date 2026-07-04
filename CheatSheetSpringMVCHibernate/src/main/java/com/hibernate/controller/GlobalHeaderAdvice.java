@@ -18,12 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class GlobalHeaderAdvice {
 
 	private final NotificationService notiService;
+	private final javax.servlet.http.HttpServletRequest request;
 
 	@ModelAttribute("unreadNotifications")
 	public List<NotificationEntity> populateUnreadNotifications(HttpSession session) {
 		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
 		if (currentUser != null) {
-			// Fetch unread items from DB (e.g., status = 'UNREAD' or isRead = false)
 			return notiService.findUnreadByUserId(currentUser.getId());
 		}
 		return null;
@@ -31,17 +31,14 @@ public class GlobalHeaderAdvice {
 
 	@ModelAttribute("readNotificationsHistory")
 	public List<NotificationEntity> populateReadNotifications(HttpSession session) {
+		if (request.getRequestURI().startsWith("/admindashboard")) {
+			return null;
+		}
 		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
 		if (currentUser != null) {
-			// Make sure to add this method to your NotificationService / Repo layers
-			// e.g., return notificationRepository.findReadByUserId(currentUser.getId());
-			System.out
-					.println("Read notifications for user " + currentUser.getId() + ": "
-							+ notiService.findReadByUserId(currentUser.getId()));
 
 			return notiService.findReadByUserId(currentUser.getId());
 		}
-		System.out.println("error: currentUser is null in populateReadNotifications");
 		return null;
 	}
 }

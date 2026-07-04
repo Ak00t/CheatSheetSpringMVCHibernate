@@ -152,7 +152,7 @@
                                     </ul>
                                 </div>
 
-                                <a href="${pageContext.request.contextPath}/admin/cheatsheet/create"
+                                <a href="${pageContext.request.contextPath}/cheatsheet/create"
                                     class="text-decoration-none text-secondary fw-semibold">
                                     Create Cheatsheet
                                 </a>

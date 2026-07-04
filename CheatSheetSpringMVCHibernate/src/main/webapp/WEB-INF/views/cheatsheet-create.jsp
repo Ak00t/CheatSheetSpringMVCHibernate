@@ -378,7 +378,7 @@ input[type="color"]{
         <p>Create cheatsheet with category, tags, color, cover photo and sections.</p>
     </div>
 
-    <form action="${pageContext.request.contextPath}/admin/cheatsheet/save"
+    <form action="${pageContext.request.contextPath}/cheatsheet/save"
           method="post"
           enctype="multipart/form-data">
           
