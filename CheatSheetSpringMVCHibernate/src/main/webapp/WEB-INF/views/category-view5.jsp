@@ -567,28 +567,34 @@
                                                     ${sheet.title}
                                                 </h3>
 
-                                               <div class="dropdown" onclick="event.stopPropagation();">
-                                                    <button
-                                                        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
-                                                        type="button"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-expanded="false"
-                                                        style="color: var(--text-color, white) !important; opacity: 0.8;">
-                                                        <i class="bi bi-three-dots-vertical fs-5"></i>
-                                                    </button>
+                                               <div class="dropdown"
+     onclick="event.preventDefault(); event.stopPropagation();">
 
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
-                                                        style="border-radius: 10px; font-size: 14px;">
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
-                                                               href="javascript:void(0);"
-                                                               onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                                                                <i class="bi bi-plus-circle-fill text-primary"></i>
-                                                                Save to Playlist
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+    <button
+        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        onclick="event.preventDefault(); event.stopPropagation();"
+        style="color: var(--text-color, white) !important; opacity: 0.8;">
+        <i class="bi bi-three-dots-vertical fs-5"></i>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
+        onclick="event.preventDefault(); event.stopPropagation();"
+        style="border-radius: 10px; font-size: 14px;">
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
+               href="javascript:void(0);"
+               onclick="event.preventDefault(); event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i>
+                Save to Playlist
+            </a>
+        </li>
+
+    </ul>
+</div>
 
                                             </div>
 
@@ -716,28 +722,34 @@
                                                     ${sheet.title}
                                                 </h3>
 
-                                                <div class="dropdown" onclick="event.stopPropagation();">
-                                                    <button
-                                                        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
-                                                        type="button"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-expanded="false"
-                                                        style="color: var(--text-color, white) !important; opacity: 0.8;">
-                                                        <i class="bi bi-three-dots-vertical fs-5"></i>
-                                                    </button>
+                                                <div class="dropdown"
+     onclick="event.preventDefault(); event.stopPropagation();">
 
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
-                                                        style="border-radius: 10px; font-size: 14px;">
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
-                                                               href="javascript:void(0);"
-                                                               onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                                                                <i class="bi bi-plus-circle-fill text-primary"></i>
-                                                                Save to Playlist
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+    <button
+        class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        onclick="event.preventDefault(); event.stopPropagation();"
+        style="color: var(--text-color, white) !important; opacity: 0.8;">
+        <i class="bi bi-three-dots-vertical fs-5"></i>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2"
+        onclick="event.preventDefault(); event.stopPropagation();"
+        style="border-radius: 10px; font-size: 14px;">
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold"
+               href="javascript:void(0);"
+               onclick="event.preventDefault(); event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i>
+                Save to Playlist
+            </a>
+        </li>
+
+    </ul>
+</div>
 
                                             </div>
 
@@ -999,6 +1011,26 @@
     <jsp:include page="footer.jsp" />
 
     <script>
+    
+    function openPlaylistModal(cheatsheetId) {
+
+        alert("clicked : " + cheatsheetId);
+
+        selectedCheatsheetIdForPlaylist = cheatsheetId;
+
+        if (!playlistModalObj) {
+            playlistModalObj =
+                new bootstrap.Modal(
+                    document.getElementById(
+                        'bootstrapPlaylistModal'));
+        }
+
+        playlistModalObj.show();
+
+        loadPlaylists();
+    }
+    
+    
 
         function getContrastColor(hexColor) {
             if (!hexColor || hexColor === "null") {
@@ -1101,7 +1133,9 @@
                     data.forEach(c => {
 
                         select.innerHTML +=
-                            `<option value="\${c.id}">\${c.name}</option>`;
+                            `<option value="${c.id}">
+                                ${c.name}
+                             </option>`;
                     });
                 });
         }
@@ -1125,7 +1159,7 @@
                             'application/x-www-form-urlencoded'
                     },
                     body:
-                        `name=\${encodeURIComponent(name)}`
+                        `name=${encodeURIComponent(name)}`
                 })
                 .then(() => loadPlaylists());
         }
@@ -1136,17 +1170,6 @@
                 document.getElementById(
                     'playlistSelect').value;
 
-            const cheatsheetId =
-                selectedCheatsheetIdForPlaylist;
-
-            if (!collectionId) {
-                return alert("Please select a playlist first!");
-            }
-
-            if (!cheatsheetId) {
-                return alert("No cheatsheet context captured!");
-            }
-
             fetch(
                 '${pageContext.request.contextPath}/collection/add-to-playlist',
                 {
@@ -1156,20 +1179,12 @@
                             'application/x-www-form-urlencoded'
                     },
                     body:
-                        `collectionId=\${collectionId}&cheatsheetId=\${cheatsheetId}`
+                        `collectionId=${collectionId}&cheatsheetId=${selectedCheatsheetIdForPlaylist}`
                 })
-                .then(res => res.text())
-                .then(data => {
-                    if (data === "Item already added!") {
-                        alert("This cheat sheet is already in the selected playlist.");
-                    } else {
-                        alert("Successfully added to your playlist!");
-                        if (playlistModalObj) {
-                            playlistModalObj.hide();
-                        }
-                    }
-                })
-                .catch(() => alert("Error saving to playlist"));
+                .then(() => {
+                    alert('Added!');
+                    playlistModalObj.hide();
+                });
         }
         
         
