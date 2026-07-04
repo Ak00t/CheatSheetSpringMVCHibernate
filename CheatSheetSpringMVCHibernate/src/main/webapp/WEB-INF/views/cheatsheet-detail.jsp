@@ -354,6 +354,13 @@
                                             <div class="text-secondary px-1 mb-2 fs-6" id="comment-text-${comment.id}">
                                                 <c:out value="${comment.content}" />
                                             </div>
+											
+											<div class="d-flex gap-2">
+											    <button type="button" class="btn btn-sm btn-link text-decoration-none text-muted p-0 fw-semibold small d-flex align-items-center gap-1" onclick="toggleReplyForm(${comment.id})">
+											        <i class="bi bi-reply-fill"></i> Reply
+											    </button>
+											</div>
+											
 
                                             <!-- Hidden dynamic inline edit element box container wrapper -->
                                             <div id="comment-edit-container-${comment.id}" class="d-none mt-2">
@@ -369,6 +376,19 @@
                                                     </div>
                                                 </form>
                                             </div>
+											<div id="reply-form-${comment.id}" class="mt-3 p-3 bg-white border rounded-3" style="display:none;">
+											    <form method="post" action="${pageContext.request.contextPath}/comment/post">
+											        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+											        <input type="hidden" name="parentCommentId" value="${comment.id}" />
+											        <div class="mb-2">
+											            <textarea class="form-control" placeholder="Write a reply..." name="content" required></textarea>
+											        </div>
+											        <div class="d-flex gap-2 justify-content-end">
+											            <button type="button" class="btn btn-sm btn-light border" onclick="toggleReplyForm(${comment.id})">Cancel</button>
+											            <button type="submit" class="btn btn-sm btn-dark">Post Reply</button>
+											        </div>
+											    </form>
+											</div>
                                         </div>
                                     </c:forEach>
                                 </c:otherwise>
@@ -477,6 +497,11 @@
 
                 <script>
                     let playlistModalObj = null;
+					
+					function toggleReplyForm(id) {
+					    let el = document.getElementById('reply-form-' + id);
+					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+					}
 
                     // Toggle visibility of inline edit forms for comments
                     function toggleEditForm(commentId) {

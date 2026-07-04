@@ -121,7 +121,7 @@ public class WebSecurityConfig {
 					response.sendRedirect(request.getContextPath() + "/");
 				}
 			} else {
-				response.sendRedirect(request.getContextPath() + "/login?error=true");
+				response.sendRedirect(request.getContextPath() + "/?error=true");
 			}
 		};
 	}

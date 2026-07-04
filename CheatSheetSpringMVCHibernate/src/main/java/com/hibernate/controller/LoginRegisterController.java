@@ -68,7 +68,7 @@ public class LoginRegisterController {
 			HttpSession session, HttpServletRequest request) {
 
 		String referer = request.getHeader("Referer");
-		String redirectUrl = (referer != null) ? "redirect:" + referer : "redirect:/home";
+		String redirectUrl = (referer != null) ? "redirect:" + referer : "redirect:/";
 
 		// Clean up previous query flags to prevent endless redirect loops
 		redirectUrl = redirectUrl.replaceAll("[?&]regError=true", "").replaceAll("[?&]regSuccess=true", "");
@@ -116,6 +116,6 @@ public class LoginRegisterController {
 				.log(null, "NOTI", "users", registeredId,
 						"A new user '" + newUser.getName() + "' has successfully registered.");
 
-		return "redirect:/login?success=true";
+		return "redirect:/?success=true";
 	}
 }
