@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.hibernate.entity.enums.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,31 +58,15 @@ public class CheatsheetController {
 		return "cheatsheet-create";
 	}
 
-	private String makeSlug(String text) {
-		if (text == null) {
-			return "";
-		}
-		return text.toLowerCase()
-				.trim()
-				.replaceAll("[^a-z0-9\\s-]", "")
-				.replaceAll("\\s+", "-")
-				.replaceAll("-+", "-");
-	}
-
 	@PostMapping("/save")
-	public String saveCheatsheet(
-			@RequestParam Long categoryId,
-			@RequestParam String title,
-			@RequestParam(required = false) String description,
-			@RequestParam(required = false) String themeColor,
-			@RequestParam String action,
-			@RequestParam(required = false) Long[] tagIds,
+	public String saveCheatsheet(@RequestParam Long categoryId, @RequestParam String title,
+			@RequestParam(required = false) String description, @RequestParam(required = false) String themeColor,
+			@RequestParam String action, @RequestParam(required = false) Long[] tagIds,
 			@RequestParam(required = false) String[] requestedTags,
 			@RequestParam(required = false) Integer[] sectionIndexes,
 			@RequestParam(required = false) String[] sectionTitles,
-			@RequestParam(required = false) MultipartFile coverPhoto,
-			HttpSession session,
-			HttpServletRequest request) throws IOException {
+			@RequestParam(required = false) MultipartFile coverPhoto, HttpSession session, HttpServletRequest request)
+			throws IOException {
 
 		UserEntity user = (UserEntity) session.getAttribute("currentUser");
 
@@ -219,8 +202,9 @@ public class CheatsheetController {
 
 			File serverFile = new File(uploadDir + fileName);
 
-			java.nio.file.Files.copy(coverPhoto.getInputStream(), serverFile.toPath(),
-					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			java.nio.file.Files
+					.copy(coverPhoto.getInputStream(), serverFile.toPath(),
+							java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
 			CheatsheetMediaEntity media = new CheatsheetMediaEntity();
 			media.setCheatsheet(cheatsheet);
@@ -246,9 +230,7 @@ public class CheatsheetController {
 
 			if (file.exists()) {
 				byte[] imageBytes = Files.readAllBytes(file.toPath());
-				return ResponseEntity.ok()
-						.contentType(org.springframework.http.MediaType.IMAGE_JPEG)
-						.body(imageBytes);
+				return ResponseEntity.ok().contentType(org.springframework.http.MediaType.IMAGE_JPEG).body(imageBytes);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
