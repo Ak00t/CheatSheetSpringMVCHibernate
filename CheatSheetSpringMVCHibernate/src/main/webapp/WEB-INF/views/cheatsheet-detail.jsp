@@ -20,37 +20,19 @@
                     }
 
                     .breadcrumb a {
-                        color: $ {
-                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#b51f55'
-                        }
-
-                        ;
+                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#b51f55'};
                         text-decoration: none;
                         font-weight: 600;
                     }
 
                     .title span {
-                        color: $ {
-                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#b51f55'
-                        }
-
-                        ;
+                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#b51f55'};
                     }
 
                     .card-title-bar {
                         cursor: pointer;
-
-                        border-top: 5px solid $ {
-                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#b51f55'
-                        }
-
-                        ;
-
-                        color: $ {
-                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#222'
-                        }
-
-                        ;
+                        border-top: 5px solid ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#b51f55'};
+                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#222'};
                     }
 
                     .row-block {
@@ -89,11 +71,7 @@
                     }
 
                     .action-icon-btn:hover {
-                        color: $ {
-                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#b51f55'
-                        }
-
-                        ;
+                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#b51f55'};
                         transform: scale(1.08);
                     }
 
@@ -249,8 +227,6 @@
                             </div>
 
                             <div class="d-flex gap-2">
-
-
                                 <button
                                     class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 rounded-2 px-3 fw-semibold"
                                     data-bs-toggle="modal" data-bs-target="#shareLinkModal">
@@ -265,6 +241,7 @@
                         </div>
                     </div>
 
+                    <!-- Comment Section Container -->
                     <div class="card border-0 shadow-sm p-4 rounded-4 bg-white mb-5">
                         <h3 class="fw-bold mb-4"><i class="bi bi-chat-left-text-fill me-2 text-muted"></i> Discussion
                             Comments</h3>
@@ -300,7 +277,7 @@
                                                     <div>
                                                         <div class="fw-bold text-dark small">${comment.user.name}</div>
                                                         <div class="text-muted" style="font-size:11px;">
-                                                            ${comment.createdAt}</div>
+                                                            ${comment.relativeTime}</div>
                                                     </div>
                                                 </div>
 
@@ -354,7 +331,7 @@
                                                         <li>
                                                             <hr class="dropdown-divider my-1">
                                                         </li>
-                                                        <li>
+                                                        <li id="translateOpt-${comment.id}">
                                                             <a class="dropdown-item d-flex align-items-center gap-2 text-success py-2"
                                                                 href="javascript:void(0);"
                                                                 onclick="translateComment(${comment.id}, 'my')">
@@ -372,8 +349,25 @@
                                                     </ul>
                                                 </div>
                                             </div>
+
+                                            <!-- Comment text output & AJAX editing area wrapper -->
                                             <div class="text-secondary px-1 mb-2 fs-6" id="comment-text-${comment.id}">
                                                 <c:out value="${comment.content}" />
+                                            </div>
+
+                                            <!-- Hidden dynamic inline edit element box container wrapper -->
+                                            <div id="comment-edit-container-${comment.id}" class="d-none mt-2">
+                                                <form method="post" action="${pageContext.request.contextPath}/comment/edit">
+                                                    <input type="hidden" name="commentId" value="${comment.id}" />
+                                                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                                                    <div class="mb-2">
+                                                        <textarea class="form-control" name="content" rows="2" required><c:out value="${comment.content}" /></textarea>
+                                                    </div>
+                                                    <div class="d-flex gap-2 justify-content-end">
+                                                        <button type="button" class="btn btn-light btn-sm fw-bold border" onclick="toggleEditForm(${comment.id})">Cancel</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm fw-bold">Save Changes</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </c:forEach>
@@ -383,92 +377,83 @@
                     </div>
                 </div>
 
-                <!-- share -->
-                <!-- 🌟 🛑 မင်းရဲ့ စည်းကမ်းချက်သတ်မှတ်ချက်အတိုင်း ကွက်တိပြင်ဆင်ထားသော Dual-Share Modal UI -->
+                <!-- Comment Dynamic Report Modal -->
+                <div class="modal fade" id="commentReportModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <form action="${pageContext.request.contextPath}/comment/report" method="POST" class="modal-content">
+                            <input type="hidden" name="commentId" id="reportCommentIdTarget" value="" />
+                            <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Report Comment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="small text-muted">Please declare your assessment matrix parameters context category:</p>
+                                <select name="reason" class="form-select mb-3" required>
+                                    <option value="SPAM">Spam Content Matrix</option>
+                                    <option value="ABUSE">Harassment or Abuse</option>
+                                    <option value="INAPPROPRIATE">Inappropriate Tone/Language</option>
+                                </select>
+                                <textarea name="description" class="form-control" placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light fw-bold border" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger fw-bold">Submit Assessment Report</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Share Modal Hub -->
                 <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
                             <div class="modal-header bg-light border-0 py-3 px-4">
-                                <h5 class="modal-title fw-bold text-dark"><i
-                                        class="bi bi-share-fill me-2 text-primary"></i> Share Hub</h5>
-                                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-share-fill me-2 text-primary"></i> Share Hub</h5>
+                                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body p-4">
-
-                                <!-- ================== ⬆️ အကန့် ၁: SHARE CHEAT SHEET (ပြင်ပ Social Media သို့ ပို့မည့်နေရာ) ================== -->
                                 <div class="mb-4">
                                     <div class="d-flex align-items-center gap-2 mb-3">
-                                        <span class="badge bg-primary-subtle text-primary rounded-circle p-2"><i
-                                                class="bi bi-file-earmark-code fs-6"></i></span>
-                                        <label class="small fw-extrabold text-dark m-0 tracking-wider">Share This Cheat
-                                            Sheet (Social Media)</label>
+                                        <span class="badge bg-primary-subtle text-primary rounded-circle p-2"><i class="bi bi-file-earmark-code fs-6"></i></span>
+                                        <label class="small fw-extrabold text-dark m-0 tracking-wider">Share This Cheat Sheet (Social Media)</label>
                                     </div>
                                     <div class="row g-2 mb-3">
                                         <div class="col-6">
-                                            <button
-                                                onclick="shareToSocialWeb('FACEBOOK', 'https://www.facebook.com/sharer/sharer.php?u=')"
-                                                class="btn btn-sm btn-outline-primary w-100 py-2 rounded-3 fw-semibold"><i
-                                                    class="bi bi-facebook me-1"></i> Facebook</button>
+                                            <button onclick="shareToSocialWeb('FACEBOOK', 'https://www.facebook.com/sharer/sharer.php?u=')" class="btn btn-sm btn-outline-primary w-100 py-2 rounded-3 fw-semibold"><i class="bi bi-facebook me-1"></i> Facebook</button>
                                         </div>
                                         <div class="col-6">
-                                            <button
-                                                onclick="shareToSocialWeb('MESSENGER', 'fb-messenger://share/?link=')"
-                                                class="btn btn-sm btn-outline-primary w-100 py-2 rounded-3 fw-semibold"
-                                                style="color: #0084FF; border-color: #0084FF;"><i
-                                                    class="bi bi-messenger me-1"></i> Messenger</button>
+                                            <button onclick="shareToSocialWeb('MESSENGER', 'fb-messenger://share/?link=')" class="btn btn-sm btn-outline-primary w-100 py-2 rounded-3 fw-semibold" style="color: #0084FF; border-color: #0084FF;"><i class="bi bi-messenger me-1"></i> Messenger</button>
                                         </div>
                                         <div class="col-6">
-                                            <button
-                                                onclick="shareToSocialWeb('TELEGRAM', 'https://t.me/share/url?url=')"
-                                                class="btn btn-sm btn-outline-info w-100 py-2 rounded-3 fw-semibold text-dark"><i
-                                                    class="bi bi-telegram me-1 text-info"></i> Telegram</button>
+                                            <button onclick="shareToSocialWeb('TELEGRAM', 'https://t.me/share/url?url=')" class="btn btn-sm btn-outline-info w-100 py-2 rounded-3 fw-semibold text-dark"><i class="bi bi-telegram me-1 text-info"></i> Telegram</button>
                                         </div>
                                         <div class="col-6">
-                                            <button onclick="shareToSocialWeb('VIBER', 'viber://forward?text=')"
-                                                class="btn btn-sm btn-outline-purple w-100 py-2 rounded-3 fw-semibold"
-                                                style="color: #7360f2; border-color: #7360f2;"><i
-                                                    class="bi bi-chat-right-text-fill me-1"></i> Viber</button>
+                                            <button onclick="shareToSocialWeb('VIBER', 'viber://forward?text=')" class="btn btn-sm btn-outline-purple w-100 py-2 rounded-3 fw-semibold" style="color: #7360f2; border-color: #7360f2;"><i class="bi bi-chat-right-text-fill me-1"></i> Viber</button>
                                         </div>
                                     </div>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control bg-light border-0 ps-3 font-monospace"
-                                            style="font-size: 0.85rem;" id="sheetLinkInput"
-                                            value="http://localhost:8080${pageContext.request.contextPath}/cheatsheet/${cheatsheet.id}"
-                                            readonly>
-                                        <button class="btn btn-dark fw-bold px-3" type="button"
-                                            onclick="copySheetDirectLink()"><i class="bi bi-clipboard me-1"></i> Copy
-                                            Link</button>
+                                        <input type="text" class="form-control bg-light border-0 ps-3 font-monospace" style="font-size: 0.85rem;" id="sheetLinkInput" value="http://localhost:8080${pageContext.request.contextPath}/cheatsheet/${cheatsheet.id}" readonly>
+                                        <button class="btn btn-dark fw-bold px-3" type="button" onclick="copySheetDirectLink()"><i class="bi bi-clipboard me-1"></i> Copy Link</button>
                                     </div>
                                 </div>
-
                                 <hr class="my-4" style="opacity: 0.1; border-style: dashed;">
-
-                                <!-- ================== ⬇️ အကန့် ၂: SHARE TO PROFILE (ကိုယ်ပိုင် Profile ထဲသို့ ဒေတာလှမ်းသိမ်းမည့်နေရာ) ================== -->
                                 <div>
                                     <div class="d-flex align-items-center gap-2 mb-3">
-                                        <span class="badge bg-success-subtle text-success rounded-circle p-2"><i
-                                                class="bi bi-person-workspace fs-6"></i></span>
-                                        <label class="small fw-extrabold text-dark m-0 tracking-wider">Share To My
-                                            Profile (${sessionScope.currentUser.name})</label>
+                                        <span class="badge bg-success-subtle text-success rounded-circle p-2"><i class="bi bi-person-workspace fs-6"></i></span>
+                                        <label class="small fw-extrabold text-dark m-0 tracking-wider">Share To My Profile (${sessionScope.currentUser.name})</label>
                                     </div>
-
-                                    <!-- 🚀 🛑 ဤခလုတ်ကို နှိပ်လိုက်လျှင် ကိုယ်ပိုင် Profile ထဲက Shared History ဆီသို့ ဒေတာ တိုက်ရိုက်ရောက်သွားပါမည် -->
-                                    <button onclick="saveToMyProfileLogs()"
-                                        class="btn btn-success w-100 py-2.5 rounded-3 fw-bold shadow-sm">
-                                        <i class="bi bi-plus-circle-fill me-1"></i> Share to My Shared History
-                                    </button>
+                                    <button onclick="saveToMyProfileLogs()" class="btn btn-success w-100 py-2.5 rounded-3 fw-bold shadow-sm"><i class="bi bi-plus-circle-fill me-1"></i> Share to My Shared History</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Cheatsheet Content Report Modal -->
                 <div class="modal fade" id="reportModal" tabindex="-1">
                     <div class="modal-dialog">
-                        <form action="${pageContext.request.contextPath}/report/submit" method="POST"
-                            class="modal-content">
+                        <form action="${pageContext.request.contextPath}/report/submit" method="POST" class="modal-content">
                             <input type="hidden" name="targetId" value="${cheatsheet.id}" />
                             <div class="modal-header">
                                 <h5 class="modal-title">Report Content</h5>
@@ -481,8 +466,7 @@
                                     <option value="COPYRIGHT">Copyright Violation</option>
                                     <option value="INAPPROPRIATE">Inappropriate Content</option>
                                 </select>
-                                <textarea name="description" class="form-control"
-                                    placeholder="Optional details..."></textarea>
+                                <textarea name="description" class="form-control" placeholder="Optional details..."></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-danger">Submit Report</button>
@@ -494,102 +478,38 @@
                 <script>
                     let playlistModalObj = null;
 
-                    // Modal Instance ဆောက်ပြီး ဖွင့်လှစ်ခြင်း
-                    function openPlaylistModal() {
-                        if (!playlistModalObj) {
-                            playlistModalObj = new bootstrap.Modal(document.getElementById('bootstrapPlaylistModal'));
+                    // Toggle visibility of inline edit forms for comments
+                    function toggleEditForm(commentId) {
+                        const txtArea = document.getElementById("comment-text-" + commentId);
+                        const editContainer = document.getElementById("comment-edit-container-" + commentId);
+                        if(txtArea && editContainer) {
+                            if(editContainer.classList.contains('d-none')) {
+                                editContainer.classList.remove('d-none');
+                                txtArea.classList.add('d-none');
+                            } else {
+                                editContainer.classList.add('d-none');
+                                txtArea.classList.remove('d-none');
+                            }
                         }
-                        playlistModalObj.show();
-                        loadPlaylists(); // Playlist Data တွေ လှမ်းဆွဲမယ်
                     }
 
-                    // User ရဲ့ လက်ရှိ Playlist တွေကို Controller ကနေ လှမ်းယူပြီး Option ဖြည့်ခြင်း
-                    function loadPlaylists() {
-                        fetch('${pageContext.request.contextPath}/collection/list')
-                            .then(res => res.json())
-                            .then(data => {
-                                const select = document.getElementById('playlistSelect');
-                                select.innerHTML = '<option value="">-- Choose Playlist --</option>';
-                                data.forEach(c => {
-                                    select.innerHTML += `<option value="\${c.id}">\${c.name}</option>`;
-                                });
-                            })
-                            .catch(err => console.error("Error loading playlists:", err));
+                    // Handle dynamic injection target parameter metrics payload for reporting comments
+                    function triggerReportAction(commentId) {
+                        const targetInput = document.getElementById("reportCommentIdTarget");
+                        if(targetInput) {
+                            targetInput.value = commentId;
+                            const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
+                            rModal.show();
+                        }
                     }
 
-                    // Playlist အသစ်ဆောက်ခြင်း
-                    function createNewPlaylist() {
-                        const nameInput = document.getElementById('newPlaylistName');
-                        const name = nameInput.value.trim();
-                        if (!name) return alert("Please enter a playlist name!");
-
-                        fetch('${pageContext.request.contextPath}/collection/create', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'name=' + encodeURIComponent(name)
-                        })
-                            .then(res => res.text())
-                            .then(() => {
-                                alert("Playlist Created!");
-                                nameInput.value = ""; // Input fields ရှင်းမယ်
-                                loadPlaylists(); // Dropdown list ကို update ပြန်လုပ်မယ်
-                            })
-                            .catch(() => alert("Error creating playlist"));
-                    }
-
-                    // ရွေးချယ်ထားတဲ့ Playlist ထဲကို Cheat Sheet သွားသိမ်းခြင်း
-                    function saveToSelectedPlaylist() {
-                        const collectionId = document.getElementById('playlistSelect').value;
-                        const cheatsheetId = '${cheatsheet.id}';
-
-                        if (!collectionId) return alert("Please select a playlist first!");
-
-                        fetch('${pageContext.request.contextPath}/collection/add-to-playlist', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: `collectionId=\${collectionId}&cheatsheetId=\${cheatsheetId}`
-                        })
-                            .then(res => res.text())
-                            .then(data => {
-                                if (data === "Item already added!") {
-                                    alert("This cheat sheet is already in the selected playlist.");
-                                } else {
-                                    alert("Successfully added to your playlist!");
-                                    if (playlistModalObj) playlistModalObj.hide();
-                                }
-                            })
-                            .catch(() => alert("Error saving to playlist"));
-                    }
-
-                    function copyDeploymentLink() {
-                        let inputEl = document.getElementById("deploymentLinkInput");
-                        inputEl.select();
-                        navigator.clipboard.writeText(inputEl.value);
-                        alert("Link copied to clipboard!");
-                    }
-                    //💡 cheatsheet-detail.jsp ၏ အောက်ခြေ <script> ထဲက copyDeploymentLink ကို ဤသို့ ပြောင်းလဲပါ-
-                    function copyDeploymentLink() {
-                        let inputEl = document.getElementById("deploymentLinkInput");
-                        inputEl.select();
-                        navigator.clipboard.writeText(inputEl.value);
-                        alert("Link copied to clipboard!");
-
-                        // 🚀 Database ထဲသို့ Share Log လှမ်းသိမ်းမည့် အပိုင်း
-                        const cheatsheetId = '${cheatsheet.id}';
-                        fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'cheatsheetId=' + cheatsheetId + '&platform=LINK'
-                        }).catch(err => console.error("Error logging share:", err));
-                    }
-                    //Global memory cache to store text snapshots
+                    // Global memory cache to store text snapshots
                     const commentCache = {};
 
                     function translateComment(commentId, targetLang) {
                         let targetSpan = document.getElementById("comment-text-" + commentId);
                         if (!targetSpan) return;
 
-                        // 1. Snapshot and cache the original text right off the screen if not already done
                         if (!commentCache[commentId]) {
                             commentCache[commentId] = targetSpan.innerText;
                         }
@@ -603,8 +523,6 @@
                             .then(res => { if (!res.ok) throw new Error(); return res.text(); })
                             .then(txt => {
                                 targetSpan.innerText = txt;
-
-                                // 2. Translation succeeded! Swap the dropdown options visibility
                                 document.getElementById('translateOpt-' + commentId)?.classList.add('d-none');
                                 document.getElementById('originalOpt-' + commentId)?.classList.remove('d-none');
                             })
@@ -614,55 +532,49 @@
                             });
                     }
 
-                    // 3. New function to restore the text from memory instantly
                     function restoreOriginalComment(commentId) {
                         let targetSpan = document.getElementById("comment-text-" + commentId);
                         let originalText = commentCache[commentId];
 
                         if (targetSpan && originalText) {
                             targetSpan.innerText = originalText;
-
-                            // Swap dropdown options visibility back to default states
                             document.getElementById('originalOpt-' + commentId)?.classList.add('d-none');
                             document.getElementById('translateOpt-' + commentId)?.classList.remove('d-none');
                         }
-                        //၁။ ⬆️ အပေါ်အကန့်အတွက် - ပြင်ပ Social Media Window များ လှမ်းဖွင့်ပေးမည့် Function
-                        function shareToSocialWeb(platformName, webPrefixUrl) {
-                            const sheetUrl = document.getElementById("sheetLinkInput").value;
-                            window.open(webPrefixUrl + encodeURIComponent(sheetUrl), '_blank', 'width=600,height=400');
-                        }
+                    }
 
-                        // ရိုးရိုး Copy Link နှိပ်ရင် အလုပ်လုပ်မည့် Function
-                        function copySheetDirectLink() {
-                            let inputEl = document.getElementById("sheetLinkInput");
-                            inputEl.select();
-                            navigator.clipboard.writeText(inputEl.value);
-                            alert("Cheat Sheet link copied!");
-                        }
+                    function shareToSocialWeb(platformName, webPrefixUrl) {
+                        const sheetUrl = document.getElementById("sheetLinkInput").value;
+                        window.open(webPrefixUrl + encodeURIComponent(sheetUrl), '_blank', 'width=600,height=400');
+                    }
 
-                        // ၂။ ⬇️ အောက်အကန့်အတွက် - မိမိ Profile (Shared History Slider) ထဲသို့ AJAX ဖြင့် တိုက်ရိုက်လှမ်းသိမ်းမည့် Function
-                        function saveToMyProfileLogs() {
-                            const cheatsheetId = '${cheatsheet.id}';
+                    function copySheetDirectLink() {
+                        let inputEl = document.getElementById("sheetLinkInput");
+                        inputEl.select();
+                        navigator.clipboard.writeText(inputEl.value);
+                        alert("Cheat Sheet link copied!");
+                    }
 
-                            fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: 'cheatsheetId=' + cheatsheetId + '&platform=PROFILE' // Platform အား 'PROFILE' ဟု သတ်မှတ်သည်
-                            })
-                                .then(res => res.text())
-                                .then(data => {
-                                    if (data === "Logged Successfully") {
-                                        alert("Successfully shared to your profile history!");
-                                        // မိုဒယ်အား ပိတ်ပေးခြင်း
-                                        const modalEl = document.getElementById('shareLinkModal');
-                                        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                        if (modalInstance) modalInstance.hide();
-                                    } else {
-                                        alert("Please login first!");
-                                    }
-                                })
-                                .catch(err => console.error("Database sync failed:", err));
-                        }
+                    function saveToMyProfileLogs() {
+                        const cheatsheetId = '${cheatsheet.id}';
+                        fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: 'cheatsheetId=' + cheatsheetId + '&platform=PROFILE'
+                        })
+                        .then(res => res.text())
+                        .then(data => {
+                            if (data === "Logged Successfully") {
+                                alert("Successfully shared to your profile history!");
+                                const modalEl = document.getElementById('shareLinkModal');
+                                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                if (modalInstance) modalInstance.hide();
+                            } else {
+                                alert("Please login first!");
+                            }
+                        })
+                        .catch(err => console.error("Database sync failed:", err));
+                    }
                 </script>
             </body>
 

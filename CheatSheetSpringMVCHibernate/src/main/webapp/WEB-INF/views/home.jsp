@@ -587,8 +587,20 @@
                                                 <div class="sheet-cover">
                                                     <c:choose>
                                                         <c:when test="${not empty sheet.mediaList}">
-                                                            <img src="${sheet.mediaList[0].mediaUrl}"
-                                                                alt="${sheet.title}">
+                                                        
+                                                        <c:choose>
+                                        <%-- If it contains a slash, it's an old legacy relativePath --%>
+                                        <c:when test="${sheet.mediaList[0].mediaUrl.contains('/')}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:when>
+                                        <%-- Otherwise, it's a new clean fileName entry --%>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:otherwise>
+                                    </c:choose>
+                                                        
+                                                           <%--  <img src="${sheet.mediaList[0].mediaUrl}"
+                                                                alt="${sheet.title}"> --%>
                                                         </c:when>
                                                         <c:otherwise>
                                                             No Cover
@@ -708,8 +720,21 @@
                                                 <div class="mini-img">
                                                     <c:choose>
                                                         <c:when test="${not empty sheet.mediaList}">
-                                                            <img src="${sheet.mediaList[0].mediaUrl}"
-                                                                alt="${sheet.title}">
+                                                        
+                                                        
+                                                        <c:choose>
+                                        <%-- If it contains a slash, it's an old legacy relativePath --%>
+                                        <c:when test="${sheet.mediaList[0].mediaUrl.contains('/')}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:when>
+                                        <%-- Otherwise, it's a new clean fileName entry --%>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:otherwise>
+                                    </c:choose>
+                                                        
+                                                           <%--  <img src="${sheet.mediaList[0].mediaUrl}"
+                                                                alt="${sheet.title}"> --%>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <div></div>
