@@ -1,10 +1,9 @@
 package com.hibernate.repository;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-
 import com.hibernate.entity.BookmarkEntity;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -14,16 +13,20 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
 
     @Override
     public void save(BookmarkEntity bookmark) {
-        sessionFactory.getCurrentSession().save(bookmark);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(bookmark);
+        session.flush(); // 💡 Database ထဲကို ချက်ချင်း Force သွားရေးခိုင်းခြင်း
     }
 
     @Override
     public void delete(Long userId, Long cheatsheetId) {
+        // b.userId နှင့် b.cheatsheetId (Primitive Fields နာမည်အမှန်အတိုင်း သုံးထားသည်)
         String hql = "DELETE FROM BookmarkEntity b WHERE b.userId = :userId AND b.cheatsheetId = :cheatsheetId";
         sessionFactory.getCurrentSession().createQuery(hql)
                 .setParameter("userId", userId)
                 .setParameter("cheatsheetId", cheatsheetId)
                 .executeUpdate();
+        sessionFactory.getCurrentSession().flush();
     }
 
     @Override

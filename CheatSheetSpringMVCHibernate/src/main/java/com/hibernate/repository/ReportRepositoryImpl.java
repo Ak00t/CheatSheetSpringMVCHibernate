@@ -1,5 +1,6 @@
 package com.hibernate.repository;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,8 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public void save(ReportEntity report) {
-        sessionFactory.getCurrentSession().save(report);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(report);
+        session.flush(); // 💡 🛑 Database ထဲကို ချက်ချင်း အတင်းအကျပ် သွားရေးခိုင်းလိုက်တာ ဖြစ်ပါတယ်
     }
 }

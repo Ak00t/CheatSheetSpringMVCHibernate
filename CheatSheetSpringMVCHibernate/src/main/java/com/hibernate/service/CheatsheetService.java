@@ -114,4 +114,6 @@ public interface CheatsheetService {
 	        Long userId);
 	
 
+	Object findBookmarkedByUserId(Long id);
+
 }
