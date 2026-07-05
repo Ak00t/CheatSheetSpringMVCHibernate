@@ -939,59 +939,62 @@
         </div>
     </div>
 
-<div class="modal fade"
-     id="bootstrapPlaylistModal"
-     tabindex="-1"
-     aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered"
-         style="max-width:400px;">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5>Save to Playlist</h5>
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
+<!-- 🌟 🛑 [image_a15920.jpg အတိုင်း ကွက်တိပုံဖော်ထားသော Premium Playlist Modal] -->
+<div class="modal fade" id="bootstrapPlaylistModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content border-0 p-2" style="border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);">
+            <div class="modal-header border-0 pb-0 pt-3 px-4">
+                <h5 class="modal-title fw-bold text-dark" style="font-size: 22px;">Save to playlist</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body px-4 pb-4 pt-3">
+                
+                <!-- Choose Playlist Section -->
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Choose Playlist</label>
+                    <select id="playlistSelect" class="form-select py-2 rounded-3 text-secondary" style="border-color: #cbd5e1; font-size: 14px;">
+                        <option value="">-- Choose Playlist --</option>
+                    </select>
+                </div>
 
-            <div class="modal-body">
-
-                <select id="playlistSelect"
-                        class="form-select mb-3">
-                    <option value="">
-                        Select Playlist
-                    </option>
-                </select>
-
-                <button
-                    onclick="saveToSelectedPlaylist()"
-                    class="btn btn-primary w-100 mb-3">
-
-                    Save
+                <!-- Save Button -->
+                <button onclick="saveToSelectedPlaylist()" class="btn btn-primary w-100 py-2 fw-bold mb-4 rounded-3 shadow-sm" style="background-color: #2563eb; border: none; font-size: 15px;">
+                    Save to Selected
                 </button>
 
-                <input
-                    id="newPlaylistName"
-                    class="form-control mb-2"
-                    placeholder="New Playlist">
+                <hr class="my-3" style="opacity: 0.1;">
 
-                <button
-                    onclick="createNewPlaylist()"
-                    class="btn btn-dark w-100">
+                <!-- Create New Playlist Section -->
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Create New Playlist</label>
+                    <input id="newPlaylistName" class="form-control py-2 rounded-3" style="border-color: #cbd5e1; font-size: 14px;" placeholder="Choose a title">
+                </div>
 
-                    Create Playlist
+                <!-- Visibility Section -->
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Visibility</label>
+                    <select id="newPlaylistVisibility" class="form-select py-2 rounded-3 text-dark" style="border-color: #cbd5e1; font-size: 14px;">
+                        <option value="PRIVATE">Private</option>
+                        <option value="PUBLIC">Public</option>
+                    </select>
+                </div>
+
+                <!-- Collaborate Section (Toggle Switch) -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <label class="form-label text-dark fw-semibold small m-0" style="font-size: 14px;">Collaborate</label>
+                    <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
+                        <input class="form-check-input m-0" type="checkbox" role="switch" id="collaborateToggle" style="width: 2.5em; height: 1.25em; cursor: pointer;">
+                    </div>
+                </div>
+
+                <!-- Create Button -->
+                <button onclick="createNewPlaylist()" class="btn btn-dark w-100 py-2 fw-bold rounded-3" style="background-color: #1e293b; border: none; font-size: 15px;">
+                    Create
                 </button>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 
@@ -1000,177 +1003,152 @@
 
     <script>
 
-        function getContrastColor(hexColor) {
-            if (!hexColor || hexColor === "null") {
-                hexColor = "#2563eb";
-            }
+ // 💡 🛑 [မင်းရဲ့ category-view JSP အောက်ခြေက <script> နေရာတစ်ခုလုံးကို ဤကုဒ်ဖြင့် အစားထိုးပါဦးဗျာ]
 
-            hexColor = hexColor.replace("#", "");
-
-            if (hexColor.length === 3) {
-                hexColor =
-                    hexColor[0] + hexColor[0] +
-                    hexColor[1] + hexColor[1] +
-                    hexColor[2] + hexColor[2];
-            }
-
-            const r = parseInt(hexColor.substr(0, 2), 16);
-            const g = parseInt(hexColor.substr(2, 2), 16);
-            const b = parseInt(hexColor.substr(4, 2), 16);
-
-            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-
-            return (yiq >= 128) ? "#1e293b" : "#ffffff";
+    function getContrastColor(hexColor) {
+        if (!hexColor || hexColor === "null") {
+            hexColor = "#2563eb";
         }
-
-        function applyDynamicTextColors() {
-            document.querySelectorAll(".auto-text-color").forEach(function (card) {
-                const bgHex = card.getAttribute("data-color");
-                const idealTextColor = getContrastColor(bgHex);
-                card.style.setProperty("--text-color", idealTextColor);
-            });
+        hexColor = hexColor.replace("#", "");
+        if (hexColor.length === 3) {
+            hexColor = hexColor[0] + hexColor[0] + hexColor[1] + hexColor[1] + hexColor[2] + hexColor[2];
         }
+        const r = parseInt(hexColor.substr(0, 2), 16);
+        const g = parseInt(hexColor.substr(2, 2), 16);
+        const b = parseInt(hexColor.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? "#1e293b" : "#ffffff";
+    }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            applyDynamicTextColors();
+    function applyDynamicTextColors() {
+        document.querySelectorAll(".auto-text-color").forEach(function (card) {
+            const bgHex = card.getAttribute("data-color");
+            const idealTextColor = getContrastColor(bgHex);
+            card.style.setProperty("--text-color", idealTextColor);
+        });
+    }
 
-            document.querySelectorAll(".see-btn").forEach(function (btn) {
-                btn.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+    document.addEventListener("DOMContentLoaded", function () {
+        applyDynamicTextColors();
 
-                    const desc = this.previousElementSibling;
-
-                    if (desc.style.maxHeight === "none") {
-                        desc.style.maxHeight = "95px";
-                        this.innerText = "See More";
-                    } else {
-                        desc.style.maxHeight = "none";
-                        this.innerText = "See Less";
-                    }
-                });
+        document.querySelectorAll(".see-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const desc = this.previousElementSibling;
+                if (desc.style.maxHeight === "none") {
+                    desc.style.maxHeight = "95px";
+                    this.innerText = "See More";
+                } else {
+                    desc.style.maxHeight = "none";
+                    this.innerText = "See Less";
+                }
             });
         });
+    });
 
-        function scrollBox(id, amount) {
-            const box = document.getElementById(id);
-            if (box) {
-                box.scrollBy({
-                    top: amount,
-                    behavior: "smooth"
-                });
-            }
+    function scrollBox(id, amount) {
+        const box = document.getElementById(id);
+        if (box) {
+            box.scrollBy({ top: amount, behavior: "smooth" });
+        }
+    }
+
+    // =========================================================================
+    // 🚀 PLAYLIST MODAL CORE LOGIC ENGINE (JSP Escaping ပြဿနာ ရှင်းလင်းပြီးသား)
+    // =========================================================================
+    let selectedCheatsheetIdForPlaylist = null;
+    let playlistModalObj = null;
+
+    function openPlaylistModal(cheatsheetId) {
+        selectedCheatsheetIdForPlaylist = cheatsheetId;
+        
+        // Modal Instance အား စနစ်တကျ ခေါ်ယူခြင်း
+        const modalEl = document.getElementById('bootstrapPlaylistModal');
+        if (!playlistModalObj) {
+            playlistModalObj = new bootstrap.Modal(modalEl);
         }
         
-        let selectedCheatsheetIdForPlaylist = null;
-        let playlistModalObj = null;
+        playlistModalObj.show();
+        loadPlaylists(); // ဒေတာများ လှမ်းဆွဲမည်
+    }
 
-        function openPlaylistModal(cheatsheetId) {
+    function loadPlaylists() {
+        fetch('${pageContext.request.contextPath}/collection/list')
+            .then(res => {
+                if (!res.ok) throw new Error("Network issues");
+                return res.json();
+            })
+            .then(data => {
+                const select = document.getElementById('playlistSelect');
+                select.innerHTML = '<option value="">-- Choose Playlist --</option>';
+                
+                if(data.length === 0) {
+                    select.innerHTML = '<option value="">No playlists found. Create one below!</option>';
+                    return;
+                }
 
-            selectedCheatsheetIdForPlaylist = cheatsheetId;
-
-            if (!playlistModalObj) {
-
-                playlistModalObj =
-                    new bootstrap.Modal(
-                        document.getElementById(
-                            'bootstrapPlaylistModal'));
-            }
-
-            playlistModalObj.show();
-
-            loadPlaylists();
-        }
-
-        function loadPlaylists() {
-
-            fetch(
-                '${pageContext.request.contextPath}/collection/list')
-
-                .then(res => res.json())
-
-                .then(data => {
-
-                    const select =
-                        document.getElementById(
-                            'playlistSelect');
-
-                    select.innerHTML =
-                        '<option value="">-- Choose Playlist --</option>';
-
-                    data.forEach(c => {
-
-                        select.innerHTML +=
-                            `<option value="\${c.id}">\${c.name}</option>`;
-                    });
+                // 💡 🛑 Backtick ကင်းလွတ်သော Safe Object Builder ဖြင့် ပြင်ဆင်ခြင်း
+                data.forEach(c => {
+                    let option = document.createElement("option");
+                    option.value = c.id;
+                    option.text = c.name;
+                    select.appendChild(option);
                 });
-        }
+            })
+            .catch(err => {
+                console.error("Error loading playlists:", err);
+            });
+    }
 
-        function createNewPlaylist() {
+ // 💡 🛑 [အသစ်ပြင်ဆင်ထားသော Create Function] - အလွတ်ပုံစံမဟုတ်ဘဲ Dropdown က တန်ဖိုးပါ ယူသွားပါမည်
+    function createNewPlaylist() {
+        const nameInput = document.getElementById('newPlaylistName');
+        const visibilitySelect = document.getElementById('newPlaylistVisibility');
+        
+        const name = nameInput.value.trim();
+        const visibility = visibilitySelect.value; // Dropdown ဆီမှ PRIVATE သို့မဟုတ် PUBLIC အား ယူခြင်း
 
-            const name =
-                document
-                    .getElementById(
-                        'newPlaylistName')
-                    .value;
+        if (!name) return alert("Please type a playlist name!");
 
-            if (!name) return;
+        // Controller ရဲ့ /collection/create API တောင်းဆိုချက်အတိုင်း parameters များကို dynamic တွဲဖက်ပို့ဆောင်ခြင်း
+        fetch('${pageContext.request.contextPath}/collection/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'name=' + encodeURIComponent(name) + '&visibility=' + encodeURIComponent(visibility)
+        })
+        .then(res => res.text())
+        .then(() => {
+            nameInput.value = ""; // စာသားရှင်းလင်းမည်
+            loadPlaylists(); // Playlist နေရာအား Refresh ပြန်လုပ်မည်
+        })
+        .catch(err => alert("Failed to create playlist."));
+    }
 
-            fetch(
-                '${pageContext.request.contextPath}/collection/create',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/x-www-form-urlencoded'
-                    },
-                    body:
-                        `name=\${encodeURIComponent(name)}`
-                })
-                .then(() => loadPlaylists());
-        }
+    function saveToSelectedPlaylist() {
+        const collectionId = document.getElementById('playlistSelect').value;
+        const cheatsheetId = selectedCheatsheetIdForPlaylist;
 
-        function saveToSelectedPlaylist() {
+        if (!collectionId) return alert("Please select a playlist first!");
+        if (!cheatsheetId) return alert("Context error: Cheat sheet data missing!");
 
-            const collectionId =
-                document.getElementById(
-                    'playlistSelect').value;
-
-            const cheatsheetId =
-                selectedCheatsheetIdForPlaylist;
-
-            if (!collectionId) {
-                return alert("Please select a playlist first!");
+        // 💡 🛑 URL Encoded Form Data တန်ဖိုးအား လွဲချော်မှုမရှိအောင် ပေါင်းစပ်ခြင်း
+        fetch('${pageContext.request.contextPath}/collection/add-to-playlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'collectionId=' + encodeURIComponent(collectionId) + '&cheatsheetId=' + encodeURIComponent(cheatsheetId)
+        })
+        .then(res => res.text())
+        .then(data => {
+            if (data === "Item already added!") {
+                alert("This cheat sheet is already inside this playlist.");
+            } else {
+                alert("Successfully added to your playlist!");
+                if (playlistModalObj) playlistModalObj.hide();
             }
-
-            if (!cheatsheetId) {
-                return alert("No cheatsheet context captured!");
-            }
-
-            fetch(
-                '${pageContext.request.contextPath}/collection/add-to-playlist',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/x-www-form-urlencoded'
-                    },
-                    body:
-                        `collectionId=\${collectionId}&cheatsheetId=\${cheatsheetId}`
-                })
-                .then(res => res.text())
-                .then(data => {
-                    if (data === "Item already added!") {
-                        alert("This cheat sheet is already in the selected playlist.");
-                    } else {
-                        alert("Successfully added to your playlist!");
-                        if (playlistModalObj) {
-                            playlistModalObj.hide();
-                        }
-                    }
-                })
-                .catch(() => alert("Error saving to playlist"));
-        }
+        })
+        .catch(() => alert("Error saving to playlist"));
+    }
         
         
     </script>

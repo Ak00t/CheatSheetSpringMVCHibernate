@@ -58,7 +58,7 @@ public class CheatsheetDetailsController {
         }
         return "User not logged in";
     }
-    // 💡 Manage Button နှင့် Header က လှမ်းလာမယ့် စုစုပေါင်း Bookmark ပြသပေးမည့် API
+   
     @GetMapping("/profile/bookmarks")
     public String viewUserBookmarks(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("currentUser");
@@ -95,7 +95,7 @@ public class CheatsheetDetailsController {
         }
         return "redirect:/cheatsheet/" + targetId;
     }
- // 💡 CheatsheetDetailsController.java ၏ အတွင်းထဲတွင် ဤ API လိုင်းသစ်အား ဖြည့်စွက်ပါ
+ 
 
     
 

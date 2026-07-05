@@ -1,36 +1,39 @@
 package com.hibernate.controller;
 
+import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.CollectionEntity;
 import com.hibernate.entity.UserEntity;
-import com.hibernate.service.CollectionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hibernate.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor; // 👈 Lombok သေချာ Import လုပ်ပါ
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/collection")
+@RequiredArgsConstructor 
 public class CollectionController {
 
-    @Autowired
-    private CollectionService collectionService;
-    @Autowired
-    private com.hibernate.service.CommentService commentService;
-    @Autowired
-    private com.hibernate.service.LikeService likeService;
-    @Autowired
-    private com.hibernate.service.BookmarkService bookmarkService;
-    @Autowired
-    private com.hibernate.service.CheatsheetService cheatsheetService;
+   
+    private final CollectionService collectionService;
+    
+    private final CheatsheetService cheatsheetService;
 
     @GetMapping("/list")
     @ResponseBody
     public List<CollectionEntity> getCollectionList(HttpSession session) {
         UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-        Long userId = (currentUser != null) ? currentUser.getId() : 1L;
-        return collectionService.getCollectionsByInterface(userId, 1, 50);
+        
+        if (currentUser == null) {
+            System.out.println("⚠️ Session user is null inside /collection/list!");
+            return new ArrayList<>();
+        }
+        
+      
+        return collectionService.getCollectionsByInterface(currentUser.getId(), 1, 50);
     }
 
     @GetMapping("/manage")
@@ -56,8 +59,10 @@ public class CollectionController {
     @ResponseBody
     public String createCollection(@RequestParam String name, @RequestParam String visibility, HttpSession session) {
         UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-        Long userId = (currentUser != null) ? currentUser.getId() : 1L;
-        collectionService.createCollection(userId, name, visibility);
+        if (currentUser == null) {
+            return "User not logged in";
+        }
+        collectionService.createCollection(currentUser.getId(), name, visibility);
         return "Collection Created Successfully";
     }
 
@@ -68,7 +73,6 @@ public class CollectionController {
         return "Collection Privacy Updated Successfully";
     }
 
-    // 💡 URL မူလအတိုင်းရှိစေပြီး ခေါ်ယူမည့် Service အား ပြောင်းလဲထားပါသည်
     @PostMapping("/add-to-playlist")
     @ResponseBody
     public String addToCollection(@RequestParam Long collectionId, @RequestParam Long cheatsheetId) {
@@ -86,6 +90,7 @@ public class CollectionController {
         UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
         Long currentUserId = (currentUser != null) ? currentUser.getId() : null;
 
+        // Privacy စစ်ဆေးခြင်း
         if ("PRIVATE".equals(collection.getVisibility().toString())) {
             if (currentUserId == null || !collection.getUser().getId().equals(currentUserId)) {
                 model.addAttribute("errorMessage", "Access Denied! This collection is private.");
@@ -93,20 +98,47 @@ public class CollectionController {
             }
         }
 
+       
+        List<CheatsheetEntity> sheetsInCollection = new ArrayList<>();
+        
         if (collection.getItems() != null && !collection.getItems().isEmpty()) {
-            Long cheatsheetId = collection.getItems().get(0).getCheatsheetId();
-            com.hibernate.entity.CheatsheetEntity cheatsheet = cheatsheetService.findDetailsById(cheatsheetId);
-            
-            model.addAttribute("cheatsheet", cheatsheet);
-            model.addAttribute("comments", commentService.selectCommentsByCheatsheetId(cheatsheetId));
-            model.addAttribute("isBookmarked", currentUserId != null && bookmarkService.isBookmarked(currentUserId, cheatsheetId));
-            model.addAttribute("isLiked", currentUserId != null && likeService.isLiked(currentUserId, cheatsheetId));
-            model.addAttribute("likeCount", likeService.countLikes(cheatsheetId));
-            
-            return "cheatsheet-detail"; 
-        } else {
-            model.addAttribute("errorMessage", "This collection is empty! Add some cheat sheets first.");
-            return "error-page";
+            for (com.hibernate.entity.CollectionItemEntity item : collection.getItems()) {
+                com.hibernate.entity.CheatsheetEntity sheet = cheatsheetService.findDetailsById(item.getCheatsheetId());
+                if (sheet != null) {
+                    sheetsInCollection.add(sheet);
+                }
+            }
         }
+
+       
+        model.addAttribute("collection", collection);
+        model.addAttribute("sheetsInCollection", sheetsInCollection);
+        
+     
+        return "collection-sheets-list"; 
+    }
+ 
+    @PostMapping("/delete")
+    @ResponseBody
+    public String deleteCollection(@RequestParam Long collectionId, HttpSession session) {
+        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "Unauthorized";
+        }
+
+        CollectionEntity collection = collectionService.findById(collectionId);
+        if (collection == null) {
+            return "NotFound";
+        }
+
+       
+        if (!collection.getUser().getId().equals(currentUser.getId())) {
+            return "Forbidden";
+        }
+
+        
+        collectionService.deleteCollection(collectionId); 
+        
+        return "Success";
     }
 }

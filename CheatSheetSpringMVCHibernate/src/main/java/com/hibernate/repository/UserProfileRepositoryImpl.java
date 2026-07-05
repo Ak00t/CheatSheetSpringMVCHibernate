@@ -28,10 +28,10 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
 
     @Override
     public UserEntity findByUsername(String username) {
-        // Session ကိုဖွင့်ပြီး Query ထုတ်ခြင်း
+        
         Session session = sessionFactory.getCurrentSession();
         try {
-            // HQL (Hibernate Query Language) ကိုသုံးခြင်း
+            
             String hql = "FROM UserEntity WHERE email = :username";
             return (UserEntity) session.createQuery(hql)
                                        .setParameter("username", username)

@@ -381,24 +381,24 @@ input[type="color"]{
                 </div>
 
                 <div class="row">
-                    <div class="form-group">
-                        <label>Publish Status</label>
-                        <select name="publishStatus">
-                            <option value="DRAFT" ${cheatsheet.publishStatus == 'DRAFT' ? 'selected' : ''}>DRAFT</option>
-                            <option value="PUBLISHED" ${cheatsheet.publishStatus == 'PUBLISHED' ? 'selected' : ''}>PUBLISHED</option>
-                            <option value="ARCHIVED" ${cheatsheet.publishStatus == 'ARCHIVED' ? 'selected' : ''}>ARCHIVED</option>
-                        </select>
-                    </div>
+    <div class="form-group">
+        <label>Publish Status</label>
+        <select name="publishStatus">
+            <option value="DRAFT" ${cheatsheet.publishStatus == 'DRAFT' ? 'selected' : ''}>DRAFT</option>
+            <option value="PUBLISHED" ${cheatsheet.publishStatus == 'PUBLISHED' ? 'selected' : ''}>PUBLISHED</option>
+            <option value="ARCHIVED" ${cheatsheet.publishStatus == 'ARCHIVED' ? 'selected' : ''}>ARCHIVED</option>
+        </select>
+    </div>
 
-                    <div class="form-group">
-                        <label>Visibility</label>
-                        <select name="visibility">
-                            <option value="PUBLIC" ${cheatsheet.visibility == 'PUBLIC' ? 'selected' : ''}>PUBLIC</option>
-                            <option value="PRIVATE" ${cheatsheet.visibility == 'PRIVATE' ? 'selected' : ''}>PRIVATE</option>
-                            <option value="UNLISTED" ${cheatsheet.visibility == 'UNLISTED' ? 'selected' : ''}>UNLISTED</option>
-                        </select>
-                    </div>
-                </div>
+    <div class="form-group">
+        <label>Visibility</label>
+        <select name="visibility">
+            <option value="PUBLIC" ${cheatsheet.visibility == 'PUBLIC' ? 'selected' : ''}>Public</option>
+            <option value="PRIVATE" ${cheatsheet.visibility == 'PRIVATE' ? 'selected' : ''}>Private</option>
+            <option value="UNLISTED" ${cheatsheet.visibility == 'UNLISTED' ? 'selected' : ''}>Followers Only</option>
+        </select>
+    </div>
+</div>
 
                 <div class="form-group">
                     <label>Tags Association Hub</label>

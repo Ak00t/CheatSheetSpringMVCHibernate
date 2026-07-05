@@ -3,6 +3,7 @@ package com.hibernate.repository;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import com.hibernate.entity.CategoryEntity;
 import com.hibernate.entity.UserFollowedCategoryEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -79,4 +80,17 @@ public class UserFollowedCategoryRepositoryImpl
                 .setParameter("categoryId", categoryId)
                 .getSingleResult();
     }
+    @Override
+	public java.util.List<com.hibernate.entity.CategoryEntity> findFollowedCategoriesByUserId(Long userId) {
+		
+		String hql = "select c from CategoryEntity c " +
+		             "where c.id in (" +
+		             "   select f.categoryId from UserFollowedCategoryEntity f where f.userId = :userId" +
+		             ") order by c.name asc";
+		
+		return sessionFactory.getCurrentSession()
+				.createQuery(hql, CategoryEntity.class)
+				.setParameter("userId", userId)
+				.getResultList();
+	}
 }

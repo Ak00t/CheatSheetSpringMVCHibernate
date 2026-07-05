@@ -7,6 +7,7 @@ import com.hibernate.entity.enums.CollectionVisibility;
 import com.hibernate.repository.CollectionRepository;
 
 import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Autowired
     private CollectionRepository collectionRepository;
-
+    @Autowired private SessionFactory sessionFactory;
     @Override
     public CollectionEntity createCollection(Long userId, String name, String visibilityStr) {
         UserEntity user = new UserEntity();
@@ -97,5 +98,23 @@ public class CollectionServiceImpl implements CollectionService {
         }
         
         return collection;
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public void deleteCollection(Long collectionId) {
+        org.hibernate.Session session = sessionFactory.getCurrentSession();
+        
+       
+        String deleteItemsHql = "delete from CollectionItemEntity i where i.collectionId = :collectionId";
+        session.createQuery(deleteItemsHql)
+               .setParameter("collectionId", collectionId)
+               .executeUpdate();
+               
+    
+        CollectionEntity collection = session.get(CollectionEntity.class, collectionId);
+        if (collection != null) {
+            session.delete(collection);
+        }
     }
 }

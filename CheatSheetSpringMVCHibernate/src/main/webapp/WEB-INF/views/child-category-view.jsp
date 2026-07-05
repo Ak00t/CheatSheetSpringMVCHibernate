@@ -799,7 +799,7 @@
                                             style="border-radius: 8px;">
                                             <option value="PRIVATE">Private</option>
                                             <option value="PUBLIC">Public</option>
-                                            <option value="UNLISTED">Unlisted</option>
+                                            
                                         </select>
 
                                         <div class="d-flex justify-content-between align-items-center mb-4">

@@ -33,7 +33,7 @@ public interface CheatsheetService {
  // CheatsheetService.java ထဲတွင် တိုးရန်
     CheatsheetEntity findDetailsById(Long id);
     
- // profile view မှာ userId အလိုက် cheatsheet list ထုတ်ရန်
+ 
     
     List<CheatsheetEntity> findProfileCheatsheetByUserId(Long userId);
 
@@ -43,12 +43,11 @@ public interface CheatsheetService {
 
     void softDeleteCheatsheet(Long id);
     
- // profile view မှာ userId အလိုက် cheatsheet detail view  ထုတ်ရန်
+ 
     CheatsheetEntity findProfileDetailById(Long id);
-    // profile edit အတွက် edit view မှာ မူလ old data များ ပြန်ပေါ်ရန်
+    
 	CheatsheetEntity findDetailsForEdit(Long id);
-	 //profile cheatsheet update အတွက် လိုအပ်သော method( profile cheatsheet controller ရဲ့ update method နဲ့ အတွဲ)
-	// Owner / Public permission စစ်ပြီး detail ပြရန်
+	 
 	CheatsheetEntity findVisibleCheatsheet(
 	        Long cheatsheetId,
 	        Long loginUserId);
@@ -115,5 +114,6 @@ public interface CheatsheetService {
 	
 
 	Object findBookmarkedByUserId(Long id);
-
+	
+	List<CheatsheetEntity> findPublicSheetsOfFollowersByUserId(Long userId);
 }
