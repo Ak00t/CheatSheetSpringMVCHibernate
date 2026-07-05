@@ -49,7 +49,6 @@
                         <th>Title</th>
                         <th>Author</th>
                         <th>Rating</th>
-                        <th>Views</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,13 +62,12 @@
                             <td>
                                 <span class="badge-rating"><i class="fas fa-star text-warning me-1"></i>${item.ratingAvg}</span>
                             </td>
-                            <td class="text-muted"><i class="fa-solid fa-eye me-1"></i>${item.viewCount}</td>
                         </tr>
                     </c:forEach>
                     
                     <c:if test="${empty topRatingList}">
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">No data available at the moment.</td>
+                            <td colspan="4" class="text-center py-5 text-muted">No data available at the moment.</td>
                         </tr>
                     </c:if>
                 </tbody>
