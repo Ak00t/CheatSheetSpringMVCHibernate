@@ -205,23 +205,23 @@ public class CheatsheetServiceImpl implements CheatsheetService {
                         categoryId);
     }
 
-    // 💡 CheatsheetServiceImpl.java ရဲ့ အတွင်းထဲတွင် ဤကုဒ်ကို ထည့်သွင်းပါ
+ 
     @Override
     @Transactional(readOnly = true)
     public List<CheatsheetEntity> findBookmarkedByUserId(Long userId) {
-        // 💡 🛑 အဓိကပြင်ဆင်ချက်: b.cheatsheet ရဲ့ နောက်မှာ category နဲ့ user ကို JOIN
-        // FETCH ခံပြီး တစ်ခါတည်း ဆွဲထုတ်ခိုင်းလိုက်ပါတယ်
+        
         String hql = "SELECT c FROM BookmarkEntity b "
                 + "JOIN b.cheatsheet c "
                 + "JOIN FETCH c.category "
                 + "JOIN FETCH c.user "
+                + "LEFT JOIN FETCH c.mediaList " 
                 + "WHERE b.userId = :userId";
+                
         return sessionFactory.getCurrentSession()
                 .createQuery(hql, CheatsheetEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
-
     // pagination
     @Override
     public List<CheatsheetEntity> findPublishedCheatsheetsByCategoryIdWithPagination(
