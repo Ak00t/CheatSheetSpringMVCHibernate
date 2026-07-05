@@ -584,7 +584,7 @@
                                                                href="javascript:void(0);"
                                                                onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
                                                                 <i class="bi bi-plus-circle-fill text-primary"></i>
-                                                                Save to Playlist
+                                                                Save to Collections
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -733,7 +733,7 @@
                                                                href="javascript:void(0);"
                                                                onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
                                                                 <i class="bi bi-plus-circle-fill text-primary"></i>
-                                                                Save to Playlist
+                                                                Save to Collections
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -944,16 +944,16 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
         <div class="modal-content border-0 p-2" style="border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);">
             <div class="modal-header border-0 pb-0 pt-3 px-4">
-                <h5 class="modal-title fw-bold text-dark" style="font-size: 22px;">Save to playlist</h5>
+                <h5 class="modal-title fw-bold text-dark" style="font-size: 22px;">Save to Collections</h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 pb-4 pt-3">
                 
                 <!-- Choose Playlist Section -->
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Choose Playlist</label>
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Choose Collections</label>
                     <select id="playlistSelect" class="form-select py-2 rounded-3 text-secondary" style="border-color: #cbd5e1; font-size: 14px;">
-                        <option value="">-- Choose Playlist --</option>
+                        <option value="">-- --</option>
                     </select>
                 </div>
 
@@ -966,7 +966,7 @@
 
                 <!-- Create New Playlist Section -->
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Create New Playlist</label>
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Create New Collections</label>
                     <input id="newPlaylistName" class="form-control py-2 rounded-3" style="border-color: #cbd5e1; font-size: 14px;" placeholder="Choose a title">
                 </div>
 
@@ -980,12 +980,12 @@
                 </div>
 
                 <!-- Collaborate Section (Toggle Switch) -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- <div class="d-flex justify-content-between align-items-center mb-4">
                     <label class="form-label text-dark fw-semibold small m-0" style="font-size: 14px;">Collaborate</label>
                     <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
                         <input class="form-check-input m-0" type="checkbox" role="switch" id="collaborateToggle" style="width: 2.5em; height: 1.25em; cursor: pointer;">
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Create Button -->
                 <button onclick="createNewPlaylist()" class="btn btn-dark w-100 py-2 fw-bold rounded-3" style="background-color: #1e293b; border: none; font-size: 15px;">
@@ -1003,7 +1003,7 @@
 
     <script>
 
- // 💡 🛑 [မင်းရဲ့ category-view JSP အောက်ခြေက <script> နေရာတစ်ခုလုံးကို ဤကုဒ်ဖြင့် အစားထိုးပါဦးဗျာ]
+ 
 
     function getContrastColor(hexColor) {
         if (!hexColor || hexColor === "null") {

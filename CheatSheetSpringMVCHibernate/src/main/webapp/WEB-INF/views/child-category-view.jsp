@@ -675,7 +675,7 @@
                                                                             onclick="openPlaylistModal('${sheet.id}')">
                                                                             <i
                                                                                 class="bi bi-plus-circle-fill text-primary"></i>
-                                                                            Save to Playlist
+                                                                            Save to Collections
                                                                         </a>
                                                                     </li>
                                                                 </ul>
@@ -770,27 +770,27 @@
                         <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
                             <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; color: #1e293b;">
                                 <div class="modal-header border-0 pb-0 pt-4 px-4">
-                                    <h5 class="modal-title fw-bold text-dark fs-4">Save to playlist</h5>
+                                    <h5 class="modal-title fw-bold text-dark fs-4">Save to Collections</h5>
                                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body p-4">
-                                    <label class="small fw-semibold text-muted mb-2">Choose Playlist</label>
+                                    <label class="small fw-semibold text-muted mb-2">Choose Collections</label>
                                     <select id="playlistSelect" class="form-select form-select-lg mb-4"
                                         style="border-radius: 8px; font-size: 0.95rem;">
-                                        <option value="">-- Select a playlist --</option>
+                                        <option value="">-- Select a Collections --</option>
                                     </select>
 
                                     <button onclick="saveToSelectedPlaylist()"
                                         class="btn btn-primary btn-lg w-100 fw-bold mb-3"
                                         style="border-radius: 8px; font-size: 1rem;">
-                                        Save to Selected
+                                        Save to Collections
                                     </button>
 
                                     <hr class="text-muted my-3">
 
                                     <div id="createSection">
-                                        <label class="small fw-semibold text-muted mb-2">Create New Playlist</label>
+                                        <label class="small fw-semibold text-muted mb-2">Create Collections</label>
                                         <input type="text" id="newPlaylistName" class="form-control mb-2"
                                             placeholder="Choose a title" style="border-radius: 8px;">
 
@@ -802,7 +802,7 @@
                                             
                                         </select>
 
-                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <!-- <div class="d-flex justify-content-between align-items-center mb-4">
                                             <label class="form-check-label fw-semibold text-dark"
                                                 for="newPlaylistCollaborate">Collaborate</label>
                                             <div class="form-check form-switch">
@@ -810,7 +810,7 @@
                                                     id="newPlaylistCollaborate"
                                                     style="width: 2.5em; height: 1.3em; cursor:pointer;">
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <button onclick="createNewPlaylist()" class="btn btn-dark fw-bold w-100"
                                             type="button" style="border-radius: 8px;">Create</button>
