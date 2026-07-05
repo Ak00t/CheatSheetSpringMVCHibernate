@@ -132,62 +132,6 @@
                         <label>Biography</label>
                         <textarea name="bio" class="form-control" rows="3" ${!isOwner ? 'readonly' : ''} placeholder="Tell us about yourself...">${user.bio}</textarea>
                     </div>
-
-                    <h4 class="section-title"><i class="bi bi-bookmark-heart-fill text-warning me-2"></i> Bookmarks Collection</h4>
-                    <div class="slider-wrapper">
-                        <button type="button" class="slider-arrow arrow-left" onclick="moveSlider('bookmarkSlider', -1)"><i class="bi bi-chevron-left"></i></button>
-                        
-                        <div class="horizontal-slider" id="bookmarkSlider">
-                            <c:choose>
-                                <c:when test="${not empty bookmarkedSheets}">
-                                    <c:forEach items="${bookmarkedSheets}" var="sheet">
-                                        <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}" class="slider-item-card">
-                                            <div class="item-badge">${sheet.category.name}</div>
-                                            <h6 class="fw-bold text-truncate mb-1">${sheet.title}</h6>
-                                            <p class="text-muted small text-truncate mb-3" style="font-size: 12px;">${sheet.description}</p>
-                                            <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-2 mt-auto" style="font-size: 11px;">
-                                                <span>👤 ${sheet.user.name}</span>
-                                                <span>👁 ${sheet.viewCount}</span>
-                                            </div>
-                                        </a>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="text-muted small py-4 ps-2"><i class="bi bi-inbox me-1"></i> No bookmarks saved yet.</div>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                        
-                        <button type="button" class="slider-arrow arrow-right" onclick="moveSlider('bookmarkSlider', 1)"><i class="bi bi-chevron-right"></i></button>
-                    </div>
-
-                    <h4 class="section-title"><i class="bi bi-folder-fill text-primary me-2"></i> Custom Collections</h4>
-                    <div class="slider-wrapper">
-                        <button type="button" class="slider-arrow arrow-left" onclick="moveSlider('collectionSlider', -1)"><i class="bi bi-chevron-left"></i></button>
-                        
-                        <div class="horizontal-slider" id="collectionSlider">
-                            <c:choose>
-                                <c:when test="${not empty collections}">
-                                    <c:forEach items="${collections}" var="col">
-                                        <a href="${pageContext.request.contextPath}/collection/view/${col.id}" class="slider-item-card">
-                                            <div class="item-badge bg-info-subtle text-info"><i class="bi bi-shield-lock-fill me-1"></i> ${col.visibility}</div>
-                                            <h6 class="fw-bold text-truncate mb-2">${col.name}</h6>
-                                            <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-2 mt-auto" style="font-size: 11px;">
-                                                <span>📁 Folder</span>
-                                                <span class="fw-bold text-primary">${col.getItems().size()} Sheets</span>
-                                            </div>
-                                        </a>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="text-muted small py-4 ps-2"><i class="bi bi-folder-dash me-1"></i> No public collections available.</div>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                        
-                        <button type="button" class="slider-arrow arrow-right" onclick="moveSlider('collectionSlider', 1)"><i class="bi bi-chevron-right"></i></button>
-                    </div>
-
                     <h4 class="section-title"><i class="bi bi-share-fill text-success me-2"></i> Shared History</h4>
                     <div class="slider-wrapper">
                         <button type="button" class="slider-arrow arrow-left" onclick="moveSlider('shareSlider', -1)"><i class="bi bi-chevron-left"></i></button>

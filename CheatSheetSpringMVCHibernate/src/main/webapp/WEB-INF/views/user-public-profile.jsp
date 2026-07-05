@@ -169,7 +169,7 @@
             <c:otherwise>
                 <div class="empty-box text-center py-4 mb-5">
                     <i class="bi bi-lock-fill fs-2 d-block mb-2 text-muted"></i>
-                    ရရှိနိုင်သော Followers Only စာရွက်စာတမ်းများ မရှိသေးပါ။ (သို့မဟုတ်) သင်သည် ဤအသုံးပြုသူ၏ Follower မဟုတ်သေးပါ။
+                    "No 'Followers Only' content available. Please follow this user to view these documents"!
                 </div>
             </c:otherwise>
         </c:choose>

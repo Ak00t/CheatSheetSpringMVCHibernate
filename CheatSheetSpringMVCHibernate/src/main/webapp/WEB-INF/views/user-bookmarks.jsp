@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,73 +8,68 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { background-color: #f8fafc; font-family: 'Segoe UI', sans-serif; color: #1e293b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; }
         .page-header { margin-top: 40px; margin-bottom: 30px; }
         
         /* 🌟 Modern Clean Grid Layout */
         .sheet-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
             margin-bottom: 35px;
         }
         
-        /* 🌟 အဖြူရောင် Card ပုံစံအသစ် (Clean White Card) */
+        /* 🌟 child-category-view.jsp အတိုင်း Dynamic Theme Color သုံး Full-Body Layout ပုံစံသစ် */
         .sheet-card {
-            background-color: #ffffff;
-            border-radius: 24px;
+            border-radius: 22px;
             overflow: hidden;
             text-decoration: none;
-            color: #1e293b !important;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03);
-            border: 1px solid #e2e8f0;
-            padding: 26px;
+            color: var(--text-color, white) !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .13);
+            transition: .3s;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            min-height: 280px;
-            position: relative;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            min-height: 470px;
             cursor: pointer;
+            position: relative;
         }
         
         .sheet-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .22);
         }
 
-        /* 🌟 Card ကို Hover/ဖိလိုက်ရင် ပေါ်လာမည့် Overlay အမှောင်ချစနစ် */
-        .card-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.4); /* ညင်သာစွာ မှောင်သွားစေရန် */
-            backdrop-filter: blur(4px);
+        /* 🌟 Cover Photo ပြသမည့် အကွက်လေး တိုးမြှင့်လိုက်သည် */
+        .sheet-cover {
+            width: 100%;
+            height: 170px;
+            border: 2px dashed rgba(255, 255, 255, 0.45);
+            border-radius: 18px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 15px;
-            opacity: 0; /* သာမန်အချိန်မှာ ဖျောက်ထားမည် */
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none; /* သာမန်အချိန်မှာ နှိပ်လို့မရအောင် ပိတ်ထားမည် */
+            align-items: center;
+            color: var(--text-color, white);
+            font-size: 18px;
+            font-weight: 800;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.06);
+            flex-shrink: 0;
         }
 
-        /* 🚀 Card ပေါ်ကို Mouse တင်လိုက်ရင် သို့မဟုတ် ဖိလိုက်ရင် Action Buttons များ လင်းပြီး ပေါ်လာစေရန် */
-        .sheet-card:hover .card-overlay,
-        .sheet-card:active .card-overlay {
-            opacity: 1;
-            pointer-events: auto; /* ပေါ်လာမှ ခလုတ်တွေကို နှိပ်ခွင့်ပြုမည် */
+        .sheet-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        /* Overlay ထဲက ခလုတ်များ Animation */
-        .overlay-btn {
-            transform: scale(0.8);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border-radius: 12px;
-            font-weight: 600;
-            padding: 10px 18px;
-        }
-        .sheet-card:hover .overlay-btn {
-            transform: scale(1);
+        .sheet-body {
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
         }
 
         /* Category Badge Stylings */
@@ -81,20 +77,58 @@
             display: inline-block;
             padding: 6px 14px;
             border-radius: 999px;
-            background: #f1f5f9;
-            color: #2563eb;
-            font-size: 11px;
+            background: rgba(0, 0, 0, 0.12);
+            color: var(--text-color, white);
+            font-size: 12px;
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             align-self: flex-start;
             text-transform: uppercase;
         }
         
-        .sheet-title { font-size: 23px; font-weight: 900; margin-bottom: 10px; line-height: 1.35; color: #0f172a; }
-        .sheet-desc { font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .sheet-footer { margin-top: auto; padding-top: 14px; border-top: 1px solid #f1f5f9; font-size: 13px; color: #64748b; font-weight: 500; }
+        .sheet-title {
+            font-size: 21px;
+            color: var(--text-color, white);
+            margin-bottom: 8px;
+            font-weight: 900;
+            line-height: 1.35;
+        }
         
-        /* Pagination Styling Customizations */
+        .sheet-description {
+            color: var(--text-color, white);
+            opacity: 0.9;
+            line-height: 1.55;
+            max-height: 95px;
+            overflow: hidden;
+            font-size: 15px;
+        }
+
+        .see-btn {
+            display: inline-block;
+            margin-top: 6px;
+            color: var(--text-color, white);
+            text-decoration: underline;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        
+        .sheet-footer {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-color, white);
+            opacity: 0.8;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .creator-link {
+            color: var(--text-color, white);
+            text-decoration: none;
+            font-weight: 900;
+        }
+        
+        /* Pagination Styling */
         .pagination .page-link {
             color: #475569;
             border-radius: 10px;
@@ -108,10 +142,6 @@
             border-color: #2563eb;
             color: white;
         }
-        .pagination .page-link:hover {
-            background-color: #f1f5f9;
-            color: #2563eb;
-        }
     </style>
 </head>
 <body>
@@ -123,9 +153,9 @@
     <div class="d-flex justify-content-between align-items-center page-header">
         <div>
             <h2 class="fw-bold m-0 text-dark">
-                <i class="bi bi-bookmark-heart-fill text-warning me-2 animate-bounce"></i> Cheatsheet Bookmarks
+                <i class="bi bi-bookmark-heart-fill text-warning me-2"></i> Cheatsheet Bookmarks
             </h2>
-            <p class="text-muted m-0 mt-1">Your personal white-card collection</p>
+            <p class="text-muted m-0 mt-1">Your favorited custom library</p>
         </div>
         <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}" class="btn btn-outline-secondary btn-sm rounded-3 px-3 fw-semibold shadow-sm">
             <i class="bi bi-arrow-left"></i> Profile
@@ -137,28 +167,79 @@
             <div class="sheet-grid">
                 <c:forEach items="${bookmarkedSheets}" var="sheet">
                     
-                    <div class="sheet-card">
+                    <div class="sheet-card auto-text-color"
+                         data-color="${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'}"
+                         style="background-color:${not empty sheet.themeColor ? sheet.themeColor : '#2563eb'};"
+                         onclick="location.href='${pageContext.request.contextPath}/cheatsheet/${sheet.id}'">
                         
-                        <div class="category-badge">${sheet.category.name}</div>
-                        <h3 class="sheet-title">${sheet.title}</h3>
-                        <p class="sheet-desc">${sheet.description}</p>
-                        
-                        <div class="sheet-footer d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-person-fill me-1"></i> ${sheet.user.name}</span>
-                            <span><i class="bi bi-eye-fill me-1"></i> ${sheet.viewCount} &nbsp;<i class="bi bi-heart-fill me-1"></i> ${sheet.likeCount}</span>
+                        <div class="sheet-cover">
+                            <c:choose>
+                                <c:when test="${not empty sheet.mediaList}">
+                                    <c:choose>
+                                        <c:when test="${fn:contains(sheet.mediaList[0].mediaUrl, '/')}">
+                                            <img src="${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/cheatsheet/uploads/${sheet.mediaList[0].mediaUrl}" alt="${sheet.title}">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:when>
+                                <c:otherwise>
+                                    No Cover
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
-                        <div class="card-overlay">
-                            <a href="${pageContext.request.contextPath}/cheatsheet/${sheet.id}" class="btn btn-light overlay-btn shadow-sm text-primary">
-                                <i class="bi bi-eye-fill me-1"></i> View
-                            </a>
+                        <div class="sheet-body">
+                            <div class="category-badge">${sheet.category.name}</div>
                             
-                            <form action="${pageContext.request.contextPath}/cheatsheet/bookmark" method="POST" onsubmit="return confirm('Remove this from your bookmarks?');" class="d-inline">
-                                <input type="hidden" name="cheatsheetId" value="${sheet.id}" />
-                                <button type="submit" class="btn btn-danger overlay-btn shadow-sm">
-                                    <i class="bi bi-trash3-fill me-1"></i> Remove
-                                </button>
-                            </form>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 class="sheet-title mb-0" style="flex-grow: 1; padding-right: 10px;">
+                                    ${sheet.title}
+                                </h3>
+                                
+                                <div class="dropdown" onclick="event.stopPropagation();">
+                                    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="color: var(--text-color, white) !important; opacity: 0.8;">
+                                        <i class="bi bi-three-dots-vertical fs-5"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px;">
+                                        <li>
+                                            <form action="${pageContext.request.contextPath}/cheatsheet/bookmark" method="POST" onsubmit="return confirm('Remove this from your bookmarks?');" class="m-0">
+                                                <input type="hidden" name="cheatsheetId" value="${sheet.id}" />
+                                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold text-danger">
+                                                    <i class="bi bi-trash3-fill"></i> Remove Bookmark
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <p class="sheet-description">${sheet.description}</p>
+                            <span class="see-btn">See More</span>
+                            
+                            <div class="sheet-footer d-flex align-items-center justify-content-between mt-auto pt-2">
+                                <div>
+                                    <span style="font-size: 11px; opacity: 0.7; display:block;">Created By:</span>
+                                    <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}" class="creator-link" onclick="event.stopPropagation();">
+                                        ${sheet.user.name}
+                                    </a>
+                                    <div style="font-size: 11px; opacity: 0.7; margin-top: 4px;">
+                                        🗓
+                                        <c:set var="datePart" value="${fn:substring(sheet.createdAt, 0, 10)}" />
+                                        <c:set var="timePart" value="${fn:substring(sheet.createdAt, 11, 16)}" />
+                                        <span style="font-size: 12px; opacity: 0.9;">${datePart} ${timePart}</span>
+                                    </div>
+                                </div>
+
+                                <a href="${pageContext.request.contextPath}/profile/${sheet.user.id}" onclick="event.stopPropagation();" style="flex-shrink:0;">
+                                    <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty sheet.user.profileImg ? sheet.user.profileImg : 'default.png'}"
+                                         style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);"
+                                         alt="creator" />
+                                </a>
+                            </div>
                         </div>
                         
                     </div>
@@ -173,11 +254,9 @@
                             <i class="bi bi-chevron-left"></i> Previous
                         </a>
                     </li>
-                    
                     <li class="page-item active">
                         <span class="page-link py-2 px-3">${not empty currentPage ? currentPage : 1}</span>
                     </li>
-                    
                     <li class="page-item ${hasMorePages == false ? 'disabled' : ''}">
                         <a class="page-link py-2 px-3 d-flex align-items-center gap-1" href="?page=${currentPage + 1}">
                             Next <i class="bi bi-chevron-right"></i>
@@ -199,5 +278,48 @@
     </c:choose>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // --- High-Contrast Text Dynamic Color Sync ---
+    function getContrastColor(hexColor) {
+        if (!hexColor || hexColor === "null") hexColor = "#2563eb";
+        hexColor = hexColor.replace("#", "");
+        if (hexColor.length === 3) {
+            hexColor = hexColor[0] + hexColor[0] + hexColor[1] + hexColor[1] + hexColor[2] + hexColor[2];
+        }
+        const r = parseInt(hexColor.substr(0, 2), 16);
+        const g = parseInt(hexColor.substr(2, 2), 16);
+        const b = parseInt(hexColor.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? "#1e293b" : "#ffffff";
+    }
+
+    function applyDynamicTextColors() {
+        document.querySelectorAll(".auto-text-color").forEach(function (card) {
+            const bgHex = card.getAttribute("data-color");
+            const idealTextColor = getContrastColor(bgHex);
+            card.style.setProperty("--text-color", idealTextColor);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", applyDynamicTextColors);
+
+    // See More / See Less Context Sync
+    document.querySelectorAll(".see-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const desc = this.previousElementSibling;
+            if (desc.style.maxHeight === "none") {
+                desc.style.maxHeight = "95px";
+                this.innerText = "See More";
+            } else {
+                desc.style.maxHeight = "none";
+                this.innerText = "See Less";
+            }
+        });
+    });
+</script>
 </body>
 </html>
