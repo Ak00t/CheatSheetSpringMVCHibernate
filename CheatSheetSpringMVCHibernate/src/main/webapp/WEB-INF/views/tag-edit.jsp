@@ -166,6 +166,16 @@ input:focus{
     font-size:14px;
     margin-top:8px;
 }
+
+.error-box{
+background:#fee2e2;
+border:2px solid #fecaca;
+color:#b91c1c;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+font-weight:700;
+}
 </style>
 </head>
 <body>

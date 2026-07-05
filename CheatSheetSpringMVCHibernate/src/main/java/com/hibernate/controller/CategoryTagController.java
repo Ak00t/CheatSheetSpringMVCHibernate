@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hibernate.entity.CategoryEntity;
 import com.hibernate.entity.TagEntity;
@@ -26,15 +25,14 @@ public class CategoryTagController {
 
     @GetMapping({"/category-tags", "/taxonomy"})
     public String categoryTagPage(Model model) {
-        List<CategoryEntity> categories = categoryService.findAll();
-        List<TagEntity> tags = tagService.findAll();
 
-        model.addAttribute("categories", categories);
-        model.addAttribute("tags", tags);
-        
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("tags", tagService.findAll());
+
         if (!model.containsAttribute("category")) {
             model.addAttribute("category", new CategoryEntity());
         }
+
         if (!model.containsAttribute("tag")) {
             model.addAttribute("tag", new TagEntity());
         }
@@ -43,43 +41,65 @@ public class CategoryTagController {
     }
 
     @PostMapping("/category/save")
-    public String saveCategory(@ModelAttribute("category") CategoryEntity category,
-                               RedirectAttributes redirectAttributes) {
+    public String saveCategory(
+            @ModelAttribute("category") CategoryEntity category,
+            Model model) {
+
         try {
-            // Slug ရှိမရှိ စစ်ဆေးခြင်း
-            boolean isSlugExist = categoryService.existsBySlug(category.getSlug());
-            if (isSlugExist) {
-                redirectAttributes.addFlashAttribute("errorMessage", "🚨 Error: URL Slug Identifier already exists in Database!");
-                redirectAttributes.addFlashAttribute("category", category);
-                return "redirect:/admin/category-tags";
+            if (categoryService.existsBySlug(category.getSlug())) {
+                model.addAttribute(
+                        "errorMessage",
+                        "🚨 Category slug already exists. Please use another slug.");
+
+                model.addAttribute("categories", categoryService.findAll());
+                model.addAttribute("tags", tagService.findAll());
+                model.addAttribute("category", category);
+                model.addAttribute("tag", new TagEntity());
+
+                return "category-tag-form";
             }
 
-            // HTML Form က 'parent.id' ကို auto-bind လုပ်ပေးထားလို့ အောက်ပါအတိုင်း တိုက်ရိုက်စစ်ရပါမယ်
-            if (category.getParent() != null && category.getParent().getId() != null && category.getParent().getId() != 0) {
-                CategoryEntity parent = categoryService.findById(category.getParent().getId());
+            if (category.getParent() != null
+                    && category.getParent().getId() != null
+                    && category.getParent().getId() != 0) {
+
+                CategoryEntity parent =
+                        categoryService.findById(category.getParent().getId());
+
                 category.setParent(parent);
             } else {
-                category.setParent(null); // Root Node ဖြစ်လျှင် null သတ်မှတ်မယ်
+                category.setParent(null);
             }
 
             category.setCreatedAt(LocalDateTime.now());
             categoryService.save(category);
 
-        } catch (Exception ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", "🚨 Database Constraint Error: Duplicate entry detected!");
-            redirectAttributes.addFlashAttribute("category", category);
             return "redirect:/admin/category-tags";
-        }
 
-        return "redirect:/admin/category-tags";
+        } catch (Exception ex) {
+            model.addAttribute(
+                    "errorMessage",
+                    "🚨 Category already exists or duplicate data detected.");
+
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("tags", tagService.findAll());
+            model.addAttribute("category", category);
+            model.addAttribute("tag", new TagEntity());
+
+            return "category-tag-form";
+        }
     }
 
     @PostMapping("/tag/save")
-    public String saveTag(@RequestParam Long categoryId,
-                          @ModelAttribute("tag") TagEntity tag,
-                          RedirectAttributes redirectAttributes) {
+    public String saveTag(
+            @RequestParam Long categoryId,
+            @ModelAttribute("tag") TagEntity tag,
+            Model model) {
+
         try {
-            CategoryEntity category = categoryService.findById(categoryId);
+            CategoryEntity category =
+                    categoryService.findById(categoryId);
+
             tag.setCategory(category);
 
             UserEntity admin = new UserEntity();
@@ -88,19 +108,31 @@ public class CategoryTagController {
 
             tag.setCreatedAt(LocalDateTime.now());
             tagService.save(tag);
-            
-        } catch (Exception ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", "🚨 Database Constraint Error: Tag entry details conflict!");
-            redirectAttributes.addFlashAttribute("tag", tag);
-            return "redirect:/admin/category-tags";
-        }
 
-        return "redirect:/admin/category-tags";
+            return "redirect:/admin/category-tags";
+
+        } catch (Exception ex) {
+            model.addAttribute(
+                    "errorMessage",
+                    "🚨 Tag already exists or duplicate data detected.");
+
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("tags", tagService.findAll());
+            model.addAttribute("category", new CategoryEntity());
+            model.addAttribute("tag", tag);
+
+            return "category-tag-form";
+        }
     }
 
     @GetMapping("/category/edit/{id}")
-    public String editCategory(@PathVariable Long id, Model model) {
-        CategoryEntity category = categoryService.findById(id);
+    public String editCategory(
+            @PathVariable Long id,
+            Model model) {
+
+        CategoryEntity category =
+                categoryService.findById(id);
+
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("category", category);
 
@@ -108,27 +140,49 @@ public class CategoryTagController {
     }
 
     @PostMapping("/category/update")
-    public String updateCategory(@RequestParam(value = "parentId", required = false) Long parentId,
-                                 @ModelAttribute CategoryEntity category) {
+    public String updateCategory(
+            @RequestParam(value = "parentId", required = false) Long parentId,
+            @ModelAttribute CategoryEntity category,
+            Model model) {
 
-        CategoryEntity oldCategory = categoryService.findById(category.getId());
-        oldCategory.setName(category.getName());
-        oldCategory.setDescription(category.getDescription());
-        oldCategory.setSlug(category.getSlug());
+        CategoryEntity oldCategory =
+                categoryService.findById(category.getId());
 
-        if (parentId != null && parentId != 0) {
-            oldCategory.setParent(categoryService.findById(parentId));
-        } else {
-            oldCategory.setParent(null);
+        try {
+            oldCategory.setName(category.getName());
+            oldCategory.setDescription(category.getDescription());
+            oldCategory.setSlug(category.getSlug());
+
+            if (parentId != null && parentId != 0) {
+                oldCategory.setParent(categoryService.findById(parentId));
+            } else {
+                oldCategory.setParent(null);
+            }
+
+            categoryService.update(oldCategory);
+
+            return "redirect:/admin/category-tags";
+
+        } catch (Exception ex) {
+            model.addAttribute(
+                    "errorMessage",
+                    "🚨 Category update failed. Name or slug already exists.");
+
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("category", oldCategory);
+
+            return "category-edit";
         }
-
-        categoryService.update(oldCategory);
-        return "redirect:/admin/category-tags";
     }
 
     @GetMapping("/tag/edit/{id}")
-    public String editTag(@PathVariable Long id, Model model) {
-        TagEntity tag = tagService.findById(id);
+    public String editTag(
+            @PathVariable Long id,
+            Model model) {
+
+        TagEntity tag =
+                tagService.findById(id);
+
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("tag", tag);
 
@@ -136,15 +190,32 @@ public class CategoryTagController {
     }
 
     @PostMapping("/tag/update")
-    public String updateTag(@RequestParam Long categoryId,
-                            @ModelAttribute TagEntity tag) {
+    public String updateTag(
+            @RequestParam Long categoryId,
+            @ModelAttribute TagEntity tag,
+            Model model) {
 
-        TagEntity oldTag = tagService.findById(tag.getId());
-        oldTag.setName(tag.getName());
-        oldTag.setCategory(categoryService.findById(categoryId));
+        TagEntity oldTag =
+                tagService.findById(tag.getId());
 
-        tagService.update(oldTag);
-        return "redirect:/admin/category-tags";
+        try {
+            oldTag.setName(tag.getName());
+            oldTag.setCategory(categoryService.findById(categoryId));
+
+            tagService.update(oldTag);
+
+            return "redirect:/admin/category-tags";
+
+        } catch (Exception ex) {
+            model.addAttribute(
+                    "errorMessage",
+                    "🚨 Tag update failed. Tag name already exists.");
+
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("tag", oldTag);
+
+            return "tag-edit";
+        }
     }
 
     @GetMapping("/category/delete/{id}")
