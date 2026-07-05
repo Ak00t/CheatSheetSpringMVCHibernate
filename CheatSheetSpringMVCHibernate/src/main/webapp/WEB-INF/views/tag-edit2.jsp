@@ -7,8 +7,6 @@
 </c:if>
 <c:set var="selectedCategoryText" value="Select child category"/>
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -170,31 +168,20 @@ input:focus{
 }
 
 .error-box{
-    background:#fee2e2;
-    border:2px solid #fecaca;
-    color:#b91c1c;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:20px;
-    font-weight:700;
+background:#fee2e2;
+border:2px solid #fecaca;
+color:#b91c1c;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+font-weight:700;
 }
-
-
-
-
-
 </style>
 </head>
 <body>
 
 <div class="card">
     <h2>🏷️ Edit Tag</h2>
-    
-    <c:if test="${not empty errorMessage}">
-    <div class="error-box">
-        ${errorMessage}
-    </div>
-</c:if>
 
     <form id="tagEditForm" action="${pageContext.request.contextPath}/admin/tag/update" method="post">
         <input type="hidden" name="id" value="${tag.id}">

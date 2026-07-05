@@ -238,7 +238,7 @@ textarea{
     </form>
 
     <a class="back"
-       href="${pageContext.request.contextPath}/admin/category-list">
+       href="${pageContext.request.contextPath}/admin/taxonomy">
 
         ← Back To List
 

@@ -189,6 +189,31 @@ public class CategoryTagController {
         return "tag-edit";
     }
 
+	/*
+	 * @PostMapping("/tag/update") public String updateTag(
+	 * 
+	 * @RequestParam Long categoryId,
+	 * 
+	 * @ModelAttribute TagEntity tag, Model model) {
+	 * 
+	 * TagEntity oldTag = tagService.findById(tag.getId());
+	 * 
+	 * try { oldTag.setName(tag.getName());
+	 * oldTag.setCategory(categoryService.findById(categoryId));
+	 * 
+	 * tagService.update(oldTag);
+	 * 
+	 * return "redirect:/admin/category-tags";
+	 * 
+	 * } catch (Exception ex) { model.addAttribute( "errorMessage",
+	 * "🚨 Tag update failed. Tag name already exists.");
+	 * 
+	 * model.addAttribute("categories", categoryService.findAll());
+	 * model.addAttribute("tag", oldTag);
+	 * 
+	 * return "tag-edit"; } }
+	 */
+    
     @PostMapping("/tag/update")
     public String updateTag(
             @RequestParam Long categoryId,
@@ -198,25 +223,40 @@ public class CategoryTagController {
         TagEntity oldTag =
                 tagService.findById(tag.getId());
 
-        try {
+        if (tagService.existsByNameAndCategoryId(
+                tag.getName(),
+                categoryId,
+                tag.getId())) {
+
             oldTag.setName(tag.getName());
-            oldTag.setCategory(categoryService.findById(categoryId));
+            oldTag.setCategory(
+                    categoryService.findById(categoryId));
 
-            tagService.update(oldTag);
-
-            return "redirect:/admin/category-tags";
-
-        } catch (Exception ex) {
             model.addAttribute(
                     "errorMessage",
-                    "🚨 Tag update failed. Tag name already exists.");
+                    "🚨 This tag already exists in this category.");
 
-            model.addAttribute("categories", categoryService.findAll());
-            model.addAttribute("tag", oldTag);
+            model.addAttribute(
+                    "categories",
+                    categoryService.findAll());
+
+            model.addAttribute(
+                    "tag",
+                    oldTag);
 
             return "tag-edit";
         }
+
+        oldTag.setName(tag.getName());
+        oldTag.setCategory(
+                categoryService.findById(categoryId));
+
+        tagService.update(oldTag);
+
+        return "redirect:/admin/category-tags";
     }
+    
+    
 
     @GetMapping("/category/delete/{id}")
     public String deleteCategory(@PathVariable Long id) {

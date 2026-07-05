@@ -104,7 +104,28 @@ public class TagRepositoryImpl implements TagRepository {
 	            .getResultList();
 	}
 	
-	
-	
+	// tag edit unique 
+	@Override
+	public boolean existsByNameAndCategoryId(
+	        String name,
+	        Long categoryId,
+	        Long excludeId) {
+
+	    Long count =
+	            getSession()
+	                    .createQuery(
+	                            "select count(t) " +
+	                            "from TagEntity t " +
+	                            "where lower(t.name)=lower(:name) " +
+	                            "and t.category.id=:categoryId " +
+	                            "and t.id<>:excludeId",
+	                            Long.class)
+	                    .setParameter("name", name)
+	                    .setParameter("categoryId", categoryId)
+	                    .setParameter("excludeId", excludeId)
+	                    .uniqueResult();
+
+	    return count != null && count > 0;
+	}
 	
 }
