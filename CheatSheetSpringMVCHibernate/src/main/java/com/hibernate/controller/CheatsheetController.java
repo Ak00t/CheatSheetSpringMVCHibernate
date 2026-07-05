@@ -230,7 +230,7 @@ public class CheatsheetController {
 			cheatsheetService.saveMedia(media);
 		}
 
-		return "redirect:/cheatsheet/create";
+		return "redirect:/profile-cheatsheets";
 	}
 
 	@GetMapping("/uploads/{fileName:.+}")

@@ -744,6 +744,10 @@
                             let el = document.getElementById('reply-form-' + id);
                             if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
                         }
+						function toggleNestedReplies(id) {
+						    let el = document.getElementById('nested-' + id);
+						    if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+						}
                         function toggleEditForm(id) {
                             let el = document.getElementById('edit-form-' + id);
                             if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';

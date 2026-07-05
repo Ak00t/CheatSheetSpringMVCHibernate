@@ -433,13 +433,140 @@
                                                     <div>
                                                         <div class="fw-bold text-dark small">${comment.user.name}</div>
                                                         <div class="text-muted" style="font-size:11px;">
-                                                            ${comment.createdAt}</div>
+                                                            ${comment.relativeTime}</div>
                                                     </div>
                                                 </div>
+
+                                                <div class="dropdown">
+                                                    <button
+                                                        class="btn btn-link p-1 text-secondary dropdown-toggle shadow-none"
+                                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="bi bi-three-dots-vertical fs-5"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2">
+                                                        <c:choose>
+                                                            <c:when
+                                                                test="${comment.user.id == sessionScope.currentUser.id}">
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-2 text-primary py-2"
+                                                                        href="javascript:void(0);"
+                                                                        onclick="toggleEditForm(${comment.id})">
+                                                                        <i class="bi bi-pencil-square"></i> Edit Comment
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <hr class="dropdown-divider my-1">
+                                                                </li>
+                                                                <li>
+                                                                    <form method="post"
+                                                                        action="${pageContext.request.contextPath}/comment/delete"
+                                                                        onsubmit="return confirm('Delete this comment thread?')">
+                                                                        <input type="hidden" name="commentId"
+                                                                            value="${comment.id}" />
+                                                                        <input type="hidden" name="cheatsheetId"
+                                                                            value="${cheatsheet.id}" />
+                                                                        <button type="submit"
+                                                                            class="dropdown-item d-flex align-items-center gap-2 text-danger py-2">
+                                                                            <i class="bi bi-trash3-fill"></i> Delete
+                                                                            Comment
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </c:when>
+                                                            <c:when test="${cheatsheet.user.id == sessionScope.currentUser.id}">
+													            <li>
+													                <form method="post"
+													                    action="${pageContext.request.contextPath}/comment/delete"
+													                    onsubmit="return confirm('Delete this comment from your cheatsheet?')">
+													                    <input type="hidden" name="commentId" value="${comment.id}" />
+													                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+													                    <button type="submit"
+													                        class="dropdown-item d-flex align-items-center gap-2 text-danger py-2">
+													                        <i class="bi bi-trash3-fill"></i> Delete Comment
+													                    </button>
+													                </form>
+													            </li>
+													        </c:when>
+                                                            <c:otherwise>
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-2 text-warning py-2"
+                                                                        href="javascript:void(0);"
+                                                                        onclick="triggerReportAction(${comment.id})">
+                                                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                                                        Report Spam
+                                                                    </a>
+                                                                </li>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <li>
+                                                            <hr class="dropdown-divider my-1">
+                                                        </li>
+                                                        <li id="translateOpt-${comment.id}">
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 text-success py-2"
+                                                                href="javascript:void(0);"
+                                                                onclick="translateComment(${comment.id}, 'my')">
+                                                                <i class="bi bi-translate"></i> Translate to Burmese
+                                                            </a>
+                                                        </li>
+                                                        <!-- See Original Option (Hidden initially) -->
+                                                        <li id="originalOpt-${comment.id}" class="d-none">
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 text-secondary py-2"
+                                                                href="javascript:void(0);"
+                                                                onclick="restoreOriginalComment(${comment.id})">
+                                                                <i class="bi bi-arrow-clockwise"></i> See Original
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
+
+                                            <!-- Comment text output & AJAX editing area wrapper -->
                                             <div class="text-secondary px-1 mb-2 fs-6" id="comment-text-${comment.id}">
                                                 <c:out value="${comment.content}" />
                                             </div>
+											
+											<div class="d-flex gap-2">
+											    <button type="button" class="btn btn-sm btn-link text-decoration-none text-muted p-0 fw-semibold small d-flex align-items-center gap-1" onclick="toggleReplyForm(${comment.id})">
+											        <i class="bi bi-reply-fill"></i> Reply
+											    </button>
+											</div>
+											
+
+                                            <!-- Hidden dynamic inline edit element box container wrapper -->
+                                            <div id="comment-edit-container-${comment.id}" class="d-none mt-2">
+                                                <form method="post" action="${pageContext.request.contextPath}/comment/edit">
+                                                    <input type="hidden" name="commentId" value="${comment.id}" />
+                                                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                                                    <div class="mb-2">
+                                                        <textarea class="form-control" name="content" rows="2" required><c:out value="${comment.content}" /></textarea>
+                                                    </div>
+                                                    <div class="d-flex gap-2 justify-content-end">
+                                                        <button type="button" class="btn btn-light btn-sm fw-bold border" onclick="toggleEditForm(${comment.id})">Cancel</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm fw-bold">Save Changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+											<div id="reply-form-${comment.id}" class="mt-3 p-3 bg-white border rounded-3" style="display:none;">
+											    <form method="post" action="${pageContext.request.contextPath}/comment/post">
+											        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+											        <input type="hidden" name="parentCommentId" value="${comment.id}" />
+											        <div class="mb-2">
+											            <textarea class="form-control" placeholder="Write a reply..." name="content" required></textarea>
+											        </div>
+											        <div class="d-flex gap-2 justify-content-end">
+											            <button type="button" class="btn btn-sm btn-light border" onclick="toggleReplyForm(${comment.id})">Cancel</button>
+											            <button type="submit" class="btn btn-sm btn-dark">Post Reply</button>
+											        </div>
+											    </form>
+											</div>
+											
+											<div class="mt-2">
+											    <c:forEach items="${comment.replies}" var="reply">
+											        <c:set var="node" value="${reply}" scope="request" />
+											        <jsp:include page="comment-node.jsp" />
+											    </c:forEach>
+											</div>
+											
                                         </div>
                                     </c:forEach>
                                 </c:otherwise>
@@ -448,7 +575,45 @@
                     </div>
                 </div>
 
-                <!-- Share Hub Modal Components -->
+                <!-- Comment Dynamic Report Modal -->
+                <div class="modal fade" id="commentReportModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <form action="${pageContext.request.contextPath}/comment/report" method="POST" class="modal-content">
+                            <input type="hidden" name="commentId" id="reportCommentIdTarget" value="" />
+                            <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Report Comment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="small text-muted">Please declare your assessment matrix parameters context category:</p>
+                                <select name="reason" class="form-select mb-3" required>
+                                    <option value="SPAM">Spam Content Matrix</option>
+                                    <option value="ABUSE">Harassment or Abuse</option>
+                                    <option value="INAPPROPRIATE">Inappropriate Tone/Language</option>
+                                    <option value="COPYRIGHT">Copyright Violation</option>
+                                </select>
+                                <textarea name="description" class="form-control" placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light fw-bold border" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger fw-bold">Submit Assessment Report</button>
+                            </div>
+                        </form>
+                    </div>
+					
+					
+
+					
+					<div class="mt-2">
+					    <c:forEach items="${comment.replies}" var="reply">
+					        <c:set var="node" value="${reply}" scope="request" />
+					        <jsp:include page="comment-node.jsp" />
+					    </c:forEach>
+					</div>
+                </div>
+
+                <!-- Share Modal Hub -->
                 <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
@@ -559,10 +724,81 @@
                 </div>
 
                 <script>
-                    // 💡 Instant Star Click Trigger Function
-                    function submitInstantRating(scoreValue) {
-                        document.getElementById("selectedStarScore").value = scoreValue;
-                        document.getElementById("instantRateForm").submit(); // Form ကို တိုက်ရိုက် Submit လှမ်းလုပ်မည်
+                   
+					
+					function toggleReplyForm(id) {
+					    let el = document.getElementById('reply-form-' + id);
+					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+					}
+
+					function toggleNestedReplies(id) {
+					    let el = document.getElementById('nested-' + id);
+					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+					}
+					
+                    // Toggle visibility of inline edit forms for comments
+                    function toggleEditForm(commentId) {
+                        const txtArea = document.getElementById("comment-text-" + commentId);
+                        const editContainer = document.getElementById("comment-edit-container-" + commentId);
+                        if(txtArea && editContainer) {
+                            if(editContainer.classList.contains('d-none')) {
+                                editContainer.classList.remove('d-none');
+                                txtArea.classList.add('d-none');
+                            } else {
+                                editContainer.classList.add('d-none');
+                                txtArea.classList.remove('d-none');
+                            }
+                        }
+                    }
+
+                    // Handle dynamic injection target parameter metrics payload for reporting comments
+                    function triggerReportAction(commentId) {
+                        const targetInput = document.getElementById("reportCommentIdTarget");
+                        if(targetInput) {
+                            targetInput.value = commentId;
+                            const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
+                            rModal.show();
+                        }
+                    }
+
+                    // Global memory cache to store text snapshots
+                    const commentCache = {};
+
+                    function translateComment(commentId, targetLang) {
+                        let targetSpan = document.getElementById("comment-text-" + commentId);
+                        if (!targetSpan) return;
+
+                        if (!commentCache[commentId]) {
+                            commentCache[commentId] = targetSpan.innerText;
+                        }
+
+                        let originalText = commentCache[commentId];
+                        targetSpan.innerText = "Translating text payload...";
+
+                        let endpoint = '${pageContext.request.contextPath}/comment/translate?commentId=' + commentId + '&lang=' + targetLang;
+
+                        fetch(endpoint)
+                            .then(res => { if (!res.ok) throw new Error(); return res.text(); })
+                            .then(txt => {
+                                targetSpan.innerText = txt;
+                                document.getElementById('translateOpt-' + commentId)?.classList.add('d-none');
+                                document.getElementById('originalOpt-' + commentId)?.classList.remove('d-none');
+                            })
+                            .catch(() => {
+                                targetSpan.innerText = originalText;
+                                alert("Could not fetch translation matrix body.");
+                            });
+                    }
+
+                    function restoreOriginalComment(commentId) {
+                        let targetSpan = document.getElementById("comment-text-" + commentId);
+                        let originalText = commentCache[commentId];
+
+                        if (targetSpan && originalText) {
+                            targetSpan.innerText = originalText;
+                            document.getElementById('originalOpt-' + commentId)?.classList.add('d-none');
+                            document.getElementById('translateOpt-' + commentId)?.classList.remove('d-none');
+                        }
                     }
 
                     function shareToSocialWeb(platformName, webPrefixUrl) {
