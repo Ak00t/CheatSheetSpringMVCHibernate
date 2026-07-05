@@ -403,6 +403,14 @@
 											        </div>
 											    </form>
 											</div>
+											
+											<div class="mt-2">
+											    <c:forEach items="${comment.replies}" var="reply">
+											        <c:set var="node" value="${reply}" scope="request" />
+											        <jsp:include page="comment-node.jsp" />
+											    </c:forEach>
+											</div>
+											
                                         </div>
                                     </c:forEach>
                                 </c:otherwise>
@@ -437,6 +445,16 @@
                             </div>
                         </form>
                     </div>
+					
+					
+
+					
+					<div class="mt-2">
+					    <c:forEach items="${comment.replies}" var="reply">
+					        <c:set var="node" value="${reply}" scope="request" />
+					        <jsp:include page="comment-node.jsp" />
+					    </c:forEach>
+					</div>
                 </div>
 
                 <!-- Share Modal Hub -->
@@ -518,6 +536,11 @@
 					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 					}
 
+					function toggleNestedReplies(id) {
+					    let el = document.getElementById('nested-' + id);
+					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+					}
+					
                     // Toggle visibility of inline edit forms for comments
                     function toggleEditForm(commentId) {
                         const txtArea = document.getElementById("comment-text-" + commentId);

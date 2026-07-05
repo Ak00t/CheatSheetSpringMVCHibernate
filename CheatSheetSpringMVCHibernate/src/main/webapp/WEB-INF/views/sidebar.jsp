@@ -94,6 +94,12 @@
             <i class="fa-regular fa-flag"></i> Reports
         </a>
         
+        <!-- Added: New Monthly Reports Link -->
+        <a href="${pageContext.request.contextPath}/admin/reports/monthly" 
+           class="sidebar-link ${uri.contains('reports/monthly') ? 'active' : ''}">
+            <i class="fa-regular fa-calendar-check"></i> Monthly Reports
+        </a>
+        
         <a href="${pageContext.request.contextPath}/admin/taxonomy" 
            class="sidebar-link ${uri.contains('admin/taxonomy') || uri.contains('category-tags') || uri.contains('category-list') ? 'active' : ''}">
             <i class="fa-solid fa-boxes-stacked"></i> Taxonomy

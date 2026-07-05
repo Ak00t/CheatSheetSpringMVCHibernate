@@ -149,11 +149,53 @@
     <version>1.6.2</version>
 </dependency>
 
+<!-- JasperReports Core Engine -->
+<dependency>
+    <groupId>net.sf.jasperreports</groupId>
+    <artifactId>jasperreports</artifactId>
+    <version>7.0.6</version>
+</dependency>
+
+<!-- Required for compiling JRXML designs at runtime -->
+<dependency>
+    <groupId>org.codehaus.castor</groupId>
+    <artifactId>castor-xml</artifactId>
+    <version>1.4.1</version>
+</dependency>
+
+<!-- Apache Commons Collections for internal data parsing -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-collections4</artifactId>
+    <version>4.4</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+    <version>2.15.2</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.groovy</groupId>
+    <artifactId>groovy</artifactId>
+    <version>4.0.24</version>
+</dependency>
+
+<!-- This provides JRGroovyCompiler to Jasper 7.x -->
+<dependency>
+    <groupId>net.sf.jasperreports</groupId>
+    <artifactId>jasperreports-groovy</artifactId>
+    <version>7.0.6</version>
+</dependency>
+<!-- This provides the PDF exporter extension required by Jasper 7.x -->
+<dependency>
+    <groupId>net.sf.jasperreports</groupId>
+    <artifactId>jasperreports-pdf</artifactId>
+    <version>7.0.6</version>
+</dependency>
+
   </dependencies>
-  
-  
-  
-  
+   
   <build>
     <finalName>CheatsheetSpringMVCHibernate</finalName>
   </build>
