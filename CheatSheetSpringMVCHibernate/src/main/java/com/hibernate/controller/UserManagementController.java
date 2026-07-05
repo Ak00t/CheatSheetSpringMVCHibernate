@@ -1,82 +1,83 @@
 package com.hibernate.controller;
 
-import org.hibernate.SessionFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import com.hibernate.entity.UserEntity;
-import com.hibernate.repository.UserProfileRepository;
-import com.hibernate.entity.CheatsheetEntity;
-import com.hibernate.service.UserManagementService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.hibernate.entity.CheatsheetEntity;
+import com.hibernate.entity.UserEntity;
+import com.hibernate.service.UserManagementService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/usermanagement")
 @RequiredArgsConstructor
 public class UserManagementController {
 
-    private final UserManagementService userManagementService;
-    
-    @GetMapping("/list")
-    public String showUserList(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpSession session, Model model) {
-        
-        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
+	private final UserManagementService userManagementService;
 
-        List<UserEntity> userList = userManagementService.getUsersByPage(page - 1, size);
-        long totalUsers = userManagementService.getTotalUsersCount();
-        int totalPages = (int) Math.ceil((double) totalUsers / size);
+	@GetMapping("/list")
+	public String showUserList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
+			HttpSession session, Model model) {
 
-        model.addAttribute("users", userList);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("pageSize", size);
+		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+		if (currentUser == null) {
+			return "redirect:/?login=true";
+		}
 
-        return "user-management-list"; 
-    }
+		List<UserEntity> userList = userManagementService.getUsersByPage(page - 1, size);
+		long totalUsers = userManagementService.getTotalUsersCount();
+		int totalPages = (int) Math.ceil((double) totalUsers / size);
 
-    @GetMapping("/profile/{id}")
-    public String viewUserProfile(@PathVariable("id") Long userId, HttpSession session, Model model) {
-        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
+		model.addAttribute("users", userList);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("pageSize", size);
 
-        UserEntity targetUser = userManagementService.getUserById(userId);
-        List<CheatsheetEntity> userCheatsheets = userManagementService.getCheatsheetsByUserId(userId);
+		return "user-management-list";
+	}
 
-        model.addAttribute("targetUser", targetUser);
-        model.addAttribute("userCheatsheets", userCheatsheets);
+	@GetMapping("/profile/{id}")
+	public String viewUserProfile(@PathVariable("id") Long userId, HttpSession session, Model model) {
+		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+		if (currentUser == null) {
+			return "redirect:/login";
+		}
 
-        return "user-profile-view"; 
-    }
+		UserEntity targetUser = userManagementService.getUserById(userId);
+		List<CheatsheetEntity> userCheatsheets = userManagementService.getCheatsheetsByUserId(userId);
 
-    @PostMapping("/ban/{id}")
-    public String banUser(@PathVariable("id") Long userId) {
-        userManagementService.banUser(userId);
-        return "redirect:/usermanagement/list";
-    }
+		model.addAttribute("targetUser", targetUser);
+		model.addAttribute("userCheatsheets", userCheatsheets);
 
-    @PostMapping("/unban/{id}")
-    public String unbanUser(@PathVariable("id") Long userId) {
-        userManagementService.unbanUser(userId);
-        return "redirect:/usermanagement/list";
-    }
+		return "user-profile-view";
+	}
 
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long userId) {
-        userManagementService.removeUser(userId);
-        return "redirect:/usermanagement/list";
-    }
-    
+	@PostMapping("/ban/{id}")
+	public String banUser(@PathVariable("id") Long userId) {
+		userManagementService.banUser(userId);
+		return "redirect:/usermanagement/list";
+	}
+
+	@PostMapping("/unban/{id}")
+	public String unbanUser(@PathVariable("id") Long userId) {
+		userManagementService.unbanUser(userId);
+		return "redirect:/usermanagement/list";
+	}
+
+	@PostMapping("/delete/{id}")
+	public String deleteUser(@PathVariable("id") Long userId) {
+		userManagementService.removeUser(userId);
+		return "redirect:/usermanagement/list";
+	}
+
 }

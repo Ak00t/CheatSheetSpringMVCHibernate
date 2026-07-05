@@ -68,4 +68,10 @@ public class CommentServiceImpl implements CommentService {
 
 	}
 
+	@Override
+	public Long getCheatsheetByCommentId(Long commentId) {
+
+		return commentRepo.getCheatsheetIdByCommentId(commentId);
+	}
+
 }

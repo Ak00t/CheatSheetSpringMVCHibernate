@@ -235,7 +235,7 @@
                                 </div>
                                 
                                 <div class="d-flex align-items-center justify-content-end gap-3 pt-4 border-top mt-4">
-                                    <a href="${pageContext.request.contextPath}/" class="btn btn-cancel px-4">Back to Dashboard</a>
+                                    <a href="${pageContext.request.contextPath}/admindashboard" class="btn btn-cancel px-4">Back to Dashboard</a>
                                     <button type="submit" class="btn btn-premium px-4">Update Password</button>
                                 </div>
                             </form>

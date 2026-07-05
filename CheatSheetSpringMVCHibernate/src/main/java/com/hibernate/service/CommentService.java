@@ -25,4 +25,6 @@ public interface CommentService {
 
 	public void deleteTranslationByCommentId(Long commentId);
 
+	public Long getCheatsheetByCommentId(Long commentId);
+
 }

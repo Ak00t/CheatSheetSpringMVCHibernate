@@ -25,4 +25,6 @@ public interface CommentsRepository {
 
 	public void deleteTranslationByCommentId(Long commentId);
 
+	public Long getCheatsheetIdByCommentId(Long commentId);
+
 }

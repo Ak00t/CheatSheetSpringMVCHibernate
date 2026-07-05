@@ -52,7 +52,7 @@ public class WebSecurityConfig {
 								.hasRole("ADMIN")
 								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
 										"/reset-password", "/cheatsheet/uploads/**", "/uploads/**", "/category/**",
-										"/resources/**", "/cheatsheet/*")
+										"/resources/**", "/cheatsheet/*", "/profile/*")
 								.permitAll()
 								.anyRequest()
 								.authenticated())
