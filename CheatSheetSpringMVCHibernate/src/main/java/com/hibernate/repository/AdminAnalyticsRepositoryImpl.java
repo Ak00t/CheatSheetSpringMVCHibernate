@@ -29,15 +29,24 @@ public class AdminAnalyticsRepositoryImpl implements AdminAnalyticsRepository {
         analyticsDTO.setFilterType(type != null ? type.toUpperCase() : "MONTH");
         analyticsDTO.setDateRangeString(start.toLocalDate().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) + " - " + end.toLocalDate().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
 
+        // Count queries (ဒါတွေကတော့ အချိန်ကာလ Filter အတိုင်း ဆက်လုပ်ပါမယ်)
         analyticsDTO.setNewUsers(currentSession.createQuery("SELECT COUNT(u) FROM UserEntity u WHERE u.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult());
         analyticsDTO.setNewCheatsheets(currentSession.createQuery("SELECT COUNT(c) FROM CheatsheetEntity c WHERE c.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult());
         analyticsDTO.setNewComments(currentSession.createQuery("SELECT COUNT(cm) FROM CommentEntity cm WHERE cm.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult());
         analyticsDTO.setPendingReports(currentSession.createQuery("SELECT COUNT(r) FROM ReportEntity r WHERE r.status = com.hibernate.entity.enums.ReviewStatus.PENDING AND r.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult());
         
-        Long sumViews = currentSession.createQuery("SELECT SUM(c.viewCount) FROM CheatsheetEntity c WHERE c.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult();
-        Long sumLikes = currentSession.createQuery("SELECT SUM(c.likeCount) FROM CheatsheetEntity c WHERE c.createdAt BETWEEN :start AND :end", Long.class).setParameter("start", start).setParameter("end", end).uniqueResult();
+        // **ပြင်ဆင်ချက်:** Filter မပါဘဲ Database တစ်ခုလုံးအတွက် View ပေါင်းကို တွက်ချက်ခြင်း
+        Long sumViews = currentSession.createQuery("SELECT SUM(c.viewCount) FROM CheatsheetEntity c", Long.class)
+                .uniqueResult();
+                
+        // **ပြင်ဆင်ချက်:** Filter မပါဘဲ Database တစ်ခုလုံးအတွက် Like ပေါင်းကို တွက်ချက်ခြင်း
+        Long sumLikes = currentSession.createQuery("SELECT SUM(c.likeCount) FROM CheatsheetEntity c", Long.class)
+                .uniqueResult();
+
         analyticsDTO.setTotalViews(sumViews != null ? sumViews : 0L);
         analyticsDTO.setTotalLikes(sumLikes != null ? sumLikes : 0L);
+        
+        // Max Views အတွက် logic (ဒါကတော့ Filter အရ အများဆုံး Views ကို ပြမှာပါ)
         analyticsDTO.setMaxViews(findMaxViewsByCriteria(type, year, month, week, day));
 
         return analyticsDTO;

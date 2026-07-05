@@ -20,5 +20,10 @@ public interface TagService {
 	 //child category နှိပ်ရင်ပေါ်လာမယ့် view -- cheatcheatcard list / tag list 
 	List<TagEntity> findActiveTagsByCategoryId(Long categoryId);
 	
+	// tag edit unique 
+	boolean existsByNameAndCategoryId(
+	        String name,
+	        Long categoryId,
+	        Long excludeId);
 
 }

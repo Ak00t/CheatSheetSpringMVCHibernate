@@ -61,7 +61,21 @@ public class TagServiceImpl implements TagService {
 	public List<TagEntity> findActiveTagsByCategoryId(Long categoryId) {
 	    return tagRepository.findActiveTagsByCategoryId(categoryId);
 	}
+	// tag edit unique 
 	
+	@Override
+	@Transactional
+	public boolean existsByNameAndCategoryId(
+	        String name,
+	        Long categoryId,
+	        Long excludeId) {
+
+	    return tagRepository
+	            .existsByNameAndCategoryId(
+	                    name,
+	                    categoryId,
+	                    excludeId);
+	}
 	
 	
 	

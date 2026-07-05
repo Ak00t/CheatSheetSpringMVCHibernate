@@ -23,6 +23,11 @@ public interface TagRepository {
 	List<TagEntity> findActiveTagsByCategoryId(Long categoryId);
 	
 	
+	// tag edit unique 
+	boolean existsByNameAndCategoryId(
+	        String name,
+	        Long categoryId,
+	        Long excludeId);
 	
 	
 

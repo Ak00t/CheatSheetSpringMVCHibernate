@@ -145,16 +145,43 @@
         .popover-child-option { width: 100%; border: none; background: transparent; color: #cbd5e1; padding: 8px; border-radius: 6px; text-align: left; font-size: 13px; cursor: pointer; }
         .popover-child-option:hover, .popover-child-option.active { background: rgba(34, 197, 94, 0.2); color: #ffffff; }
         .popover-empty-notice { color: #94a3b8; font-size: 12px; padding: 6px 8px; }
+
+        .server-error-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            border-left: 6px solid #ef4444;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            box-shadow: 0 10px 24px rgba(239, 68, 68, 0.08);
+        }
+
+        .server-error-alert i {
+            font-size: 22px;
+            margin-top: 1px;
+            color: #dc2626;
+        }
+
+        .server-error-alert strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .server-error-alert span {
+            display: block;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
     </style>
 </head>
 <body>
-    <c:if test="${not empty errorMessage}">
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                alert("${errorMessage}");
-            });
-        </script>
-    </c:if>
 
     <div class="page-container">
         <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -169,6 +196,16 @@
                         <p class="banner-subtitle">Configure enterprise application schemas, structured hierarchical categories, and specialized developer tags.</p>
                     </div>
                 </div>
+
+                <c:if test="${not empty errorMessage}">
+                    <div class="server-error-alert">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <strong>Action failed</strong>
+                            <span>${errorMessage}</span>
+                        </div>
+                    </div>
+                </c:if>
 
                 <ul class="nav taxonomy-tabs-nav" id="taxonomyPanelTab">
                     <li class="nav-item" style="flex: 1;">
@@ -197,7 +234,7 @@
                                                 <option value="0">No Parent Category (Root Node)</option>
                                                 <c:forEach items="${categories}" var="categoryUnit">
                                                     <c:if test="${categoryUnit.parent == null}">
-                                                        <option value="${categoryUnit.id}">${categoryUnit.name}</option>
+                                                        <option value="${categoryUnit.id}" ${not empty category.parent && category.parent.id == categoryUnit.id ? 'selected' : ''}>${categoryUnit.name}</option>
                                                     </c:if>
                                                 </c:forEach>
                                             </select>
@@ -253,7 +290,7 @@
                                                                         <c:when test="${hasChild}">
                                                                             <c:forEach items="${categories}" var="child">
                                                                                 <c:if test="${child.parent != null && child.parent.id == parent.id}">
-                                                                                    <button type="button" class="popover-child-option ${tag.category.id == child.id ? 'active' : ''}" onclick="bindSelectedCategory('${child.id}','${parent.name} / ${child.name}', this); event.stopPropagation();">
+                                                                                    <button type="button" class="popover-child-option ${not empty tag.category && tag.category.id == child.id ? 'active' : ''}" onclick="bindSelectedCategory('${child.id}','${parent.name} / ${child.name}', this); event.stopPropagation();">
                                                                                         ↳ ${child.name}
                                                                                     </button>
                                                                                 </c:if>
@@ -269,7 +306,7 @@
                                                     </c:forEach>
                                                 </div>
                                             </div>
-                                            <input type="hidden" id="tagCategoryId" name="categoryId" value="${tag.category.id}" required>
+                                            <input type="hidden" id="tagCategoryId" name="categoryId" value="${not empty tag.category ? tag.category.id : ''}" required>
                                         </div>
                                         <div class="field-wrapper">
                                             <label>Tag Name</label>

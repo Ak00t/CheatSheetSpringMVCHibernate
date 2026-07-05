@@ -123,33 +123,28 @@ const liveDatabaseMetrics = {
     "newCheatsheets": "${analytics.newCheatsheets != null ? analytics.newCheatsheets : '0'}",
     "newComments": "${analytics.newComments != null ? analytics.newComments : '0'}",
     "pendingReports": "${analytics.pendingReports != null ? analytics.pendingReports : '0'}",
-    "pendingTagRequests": "${pendingTagRequests != null ? pendingTagRequests : '0'}",
-    "totalViews": "${analytics.totalViews != null ? analytics.totalViews : '0'}",
-    "totalLikes": "${analytics.totalLikes != null ? analytics.totalLikes : '0'}",
-    "maxViews": "${analytics.maxViews != null ? analytics.maxViews : '0'}"
+    "pendingTagRequests": "${pendingTagRequests != null ? pendingTagRequests : '0'}"
 };
 
+// "views" ကဒ်ကို ဤစာရင်းထဲမှ ဖယ်ရှားလိုက်ပါပြီ
 const systemDefaultCards = [
     { id: "users", title: "New Users Joined", dataSourceKey: "newUsers", iconClass: "fa-user-plus", themeClass: "bg-primary-subtle text-primary", baseUrl: "${pageContext.request.contextPath}/admin/users/list" },
     { id: "cheatsheets", title: "Cheatsheets Linked", dataSourceKey: "newCheatsheets", iconClass: "fa-file-code", themeClass: "bg-success-subtle text-success", baseUrl: "${pageContext.request.contextPath}/admin/cheatsheets/top-views" },
-    { id: "reports", title: "Pending Requests", dataSourceKey: "pendingTagRequests", iconClass: "fa-triangle-exclamation", themeClass: "bg-danger-subtle text-danger", baseUrl: "${pageContext.request.contextPath}/admin/tag-request-process" },
-    { id: "views", title: "Views Summary", dataSourceKey: "totalViews", iconClass: "fa-eye", themeClass: "bg-warning-subtle text-warning", linkUrl: "#" }
+    { id: "reports", title: "Pending Requests", dataSourceKey: "pendingTagRequests", iconClass: "fa-triangle-exclamation", themeClass: "bg-danger-subtle text-danger", baseUrl: "${pageContext.request.contextPath}/admin/tag-request-process" }
 ];
 
 function initializeDashboardCardsEngine() {
     let savedCards = localStorage.getItem("platform_analytics_cards_v5");
-    let activeCards = !savedCards ? systemDefaultCards : JSON.parse(savedCards);
+    
+    // LocalStorage မှာ အရင်က သိမ်းထားတာရှိရင် "views" ကဒ်ကို စစ်ထုတ်ပြီး ဖယ်ထုတ်လိုက်ပါသည်
+    let activeCards = !savedCards ? systemDefaultCards : JSON.parse(savedCards).filter(card => card.id !== 'views');
     
     let updatedCards = activeCards.map(card => {
         let sysCard = systemDefaultCards.find(c => c.id === card.id);
         
         let finalLink = "#";
         if (sysCard && sysCard.baseUrl) {
-            if (sysCard.baseUrl.includes('?')) {
-                finalLink = sysCard.baseUrl + targetScopeParams.replace('?', '&');
-            } else {
-                finalLink = sysCard.baseUrl + targetScopeParams;
-            }
+            finalLink = sysCard.baseUrl.includes('?') ? sysCard.baseUrl + targetScopeParams.replace('?', '&') : sysCard.baseUrl + targetScopeParams;
         } else if (card.linkUrl) {
             finalLink = card.linkUrl;
         }
@@ -181,7 +176,7 @@ function renderMetricsSliderLayout(cardsArray) {
 function handleDeleteCardModule(event, cardId) {
     event.preventDefault();
     event.stopPropagation();
-    let currentCards = JSON.parse(localStorage.getItem("platform_analytics_cards_v5"));
+    let currentCards = JSON.parse(localStorage.getItem("platform_analytics_cards_v5") || "[]");
     localStorage.setItem("platform_analytics_cards_v5", JSON.stringify(currentCards.filter(card => card.id !== cardId)));
     initializeDashboardCardsEngine();
 }

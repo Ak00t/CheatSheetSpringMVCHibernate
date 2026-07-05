@@ -98,6 +98,17 @@ textarea{
     color:#2563eb;
     font-weight:bold;
 }
+
+.error-box{
+    background:#fee2e2;
+    border:2px solid #fecaca;
+    color:#b91c1c;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-weight:700;
+}
+
 </style>
 
 </head>
@@ -105,7 +116,15 @@ textarea{
 
 <div class="card">
 
+    
     <h2>✏️ Edit Category</h2>
+
+    <c:if test="${not empty errorMessage}">
+        <div class="error-box">
+            ${errorMessage}
+        </div>
+    </c:if>
+
 
     <form action="${pageContext.request.contextPath}/admin/category/update"
           method="post">
@@ -219,7 +238,7 @@ textarea{
     </form>
 
     <a class="back"
-       href="${pageContext.request.contextPath}/admin/category-list">
+       href="${pageContext.request.contextPath}/admin/taxonomy">
 
         ← Back To List
 
