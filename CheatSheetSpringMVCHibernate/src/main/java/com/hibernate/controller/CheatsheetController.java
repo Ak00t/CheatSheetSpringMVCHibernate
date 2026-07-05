@@ -211,7 +211,18 @@ public class CheatsheetController {
 			CheatsheetMediaEntity media = new CheatsheetMediaEntity();
 			media.setCheatsheet(cheatsheet);
 			media.setMediaType(MediaType.IMAGE);
-			media.setMediaUrl(fileName);
+			
+			/* media.setMediaUrl(fileName); */
+			
+			String dbMediaUrl =
+			        request.getContextPath()
+			        + "/cheatsheet/uploads/"
+			        + fileName;
+
+			media.setMediaUrl(dbMediaUrl);
+			
+			
+			
 			media.setCaption(title);
 			media.setSortOrder(0);
 			media.setCreatedAt(LocalDateTime.now());
