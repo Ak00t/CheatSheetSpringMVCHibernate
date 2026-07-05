@@ -117,7 +117,7 @@ public class UserProfileController {
     public String updateProfile(@RequestParam("id") Long id,
             @RequestParam("name") String name,
             @RequestParam("bio") String bio,
-            @RequestParam("profileImg") MultipartFile profileImg, Principal principal) {
+            @RequestParam("profileImg") MultipartFile profileImg, Principal principal,HttpSession session) {
         UserEntity user = userRepository.findById(id);
 
         String currentUsername = principal.getName();
@@ -156,6 +156,12 @@ public class UserProfileController {
         user.setName(name);
         user.setBio(bio);
         userRepository.updateProfile(user);
+        
+        //final header pic 
+        session.setAttribute("currentUser", user);
+        
+        
+        
                 return "redirect:/profile/" + id;
        
 
