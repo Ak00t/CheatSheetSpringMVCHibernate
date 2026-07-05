@@ -46,10 +46,13 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/admindashboard/**", "/admin/**")
+							.requestMatchers("/cheatsheet/create")
+								.authenticated()
+								.requestMatchers("/admindashboard/**", "/admin/**")
 								.hasRole("ADMIN")
 								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
-										"/cheatsheet/uploads/**", "/uploads/**", "/reset-password", "/resources/**")
+										"/reset-password", "/cheatsheet/uploads/**", "/uploads/**", "/category/**",
+										"/resources/**", "/cheatsheet/*")
 								.permitAll()
 								.anyRequest()
 								.authenticated())

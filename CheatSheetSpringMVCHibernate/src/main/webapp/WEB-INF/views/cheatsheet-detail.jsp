@@ -750,6 +750,11 @@
                             }
                         }
                     }
+                    
+                    function submitInstantRating(scoreValue) {
+                        document.getElementById("selectedStarScore").value = scoreValue;
+                        document.getElementById("instantRateForm").submit(); // Form ကို တိုက်ရိုက် Submit လှမ်းလုပ်မည်
+                    }
 
                     // Handle dynamic injection target parameter metrics payload for reporting comments
                     function triggerReportAction(commentId) {
