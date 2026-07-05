@@ -68,16 +68,63 @@
         .sheet-title { font-size: 20px; font-weight: 900; margin-bottom: 8px; }
         .sheet-description { opacity: 0.9; line-height: 1.55; max-height: 85px; overflow: hidden; font-size: 14px; }
         
-        /* Playlist (Collection) Card Layout */
+        /* 🌟 [ဒီဇိုင်းဆန်းသစ်မှုအပိုင်း] Premium Glass-Folder Collection Card Layout */
         .playlist-card { 
-            background-color: #ffffff; border-radius: 24px; text-decoration: none; 
-            color: #1e293b !important; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03); 
-            border: 1px solid #e2e8f0; padding: 26px; display: flex; flex-direction: column; 
-            min-height: 200px; cursor: pointer; transition: transform 0.3s;
+            background: linear-gradient(145deg, #ffffff, #f1f5f9);
+            border-radius: 24px; 
+            text-decoration: none; 
+            color: #1e293b !important; 
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); 
+            border: 1px solid rgba(226, 232, 240, 0.8); 
+            padding: 28px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 220px; 
+            cursor: pointer; 
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .playlist-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08); }
-        .playlist-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; color: #0f172a; }
-        .playlist-footer { margin-top: auto; padding-top: 14px; border-top: 1px solid #f1f5f9; font-size: 13px; color: #64748b; font-weight: 500; }
+        /* နောက်ခံ Folder မျဉ်းကွေးရိပ်လှလှလေး ထည့်သွင်းခြင်း */
+        .playlist-card::before {
+            content: '';
+            position: absolute;
+            top: -20px; right: -20px;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.06), transparent 70%);
+            border-radius: 50%;
+            transition: transform 0.5s;
+        }
+        .playlist-card:hover { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.09);
+            border-color: rgba(37, 99, 235, 0.25);
+        }
+        .playlist-card:hover::before {
+            transform: scale(1.5);
+        }
+        .playlist-icon-box {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .playlist-card:hover .playlist-icon-box {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .playlist-title { font-size: 24px; font-weight: 900; margin-bottom: 8px; color: #0f172a; line-height: 1.3; }
+        .playlist-footer { 
+            margin-top: auto; 
+            padding-top: 14px; 
+            border-top: 1px dashed #e2e8f0; 
+            font-size: 13px; 
+            color: #64748b; 
+            font-weight: 600; 
+        }
         
         .empty-box { background: white; border: 2px dashed #cbd5e1; color: #64748b; padding: 40px; border-radius: 20px; text-align: center; }
     </style>
@@ -88,6 +135,7 @@
 
     <div class="container my-5">
         
+        <!-- Profile Header Block -->
         <div class="profile-header-card mb-5 d-flex flex-column flex-md-row align-items-center gap-4">
             <img src="${pageContext.request.contextPath}/uploads/profiles/${not empty publicUser.profileImg ? publicUser.profileImg : 'default.png'}" 
                  style="width: 110px; height: 110px; object-fit: cover; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2);" alt="avatar">
@@ -126,6 +174,7 @@
             </div>
         </div>
 
+        <!-- Section 1: Followers Only Cheatsheets -->
         <h2 class="fw-black mb-4" style="font-weight: 900; font-size: 28px;">👥 Followers Only Cheatsheets</h2>
         
         <c:choose>
@@ -176,6 +225,7 @@
 
         <hr class="my-5" style="opacity: 0.1;">
 
+        <!-- Section 2: Public Cheatsheets -->
         <h2 class="fw-black mb-4" style="font-weight: 900; font-size: 28px;">📑 Public Cheatsheets</h2>
 
         <c:choose>
@@ -219,6 +269,7 @@
 
         <hr class="my-5" style="opacity: 0.1;">
 
+        <!-- 🌟 Section 3: Public Collections (Folders အသွင်ဆန်းသစ်ထားသော Slider ပုံစံ) -->
         <h2 class="fw-black mb-4" style="font-weight: 900; font-size: 28px;">📂 Public Collections (Folders)</h2>
 
         <c:choose>
@@ -234,13 +285,17 @@
 
                             <div class="col-md-4">
                                 <div class="playlist-card" onclick="location.href='${pageContext.request.contextPath}/collection/view/${playlist.id}'">
-                                    <div class="badge bg-primary-subtle text-primary border-0 fw-bold px-3 py-1.5 align-self-flex-start rounded-pill small text-uppercase mb-3" style="font-size: 11px;">
-                                        <i class="bi bi-globe me-1"></i> ${playlist.visibility}
+                                    
+                                    <!-- Dynamic Icon Box -->
+                                    <div class="playlist-icon-box shadow-sm">
+                                        <i class="bi bi-folder2-open"></i>
                                     </div>
+                                    
                                     <h3 class="playlist-title text-truncate">${playlist.name}</h3>
+                                    
                                     <div class="playlist-footer d-flex justify-content-between align-items-center">
-                                        <span><i class="bi bi-folder-symlink-fill me-1 text-secondary"></i> Custom Group</span>
-                                        <span><i class="bi bi-file-earmark-code-fill text-primary"></i> ${playlist.items.size()} Sheets</span>
+                                        <span class="small fw-bold text-primary"><i class="bi bi-globe me-1"></i> ${playlist.visibility}</span>
+                                        <span class="badge bg-light text-dark border fw-bold px-2.5 py-1.5 rounded-pill"><i class="bi bi-file-earmark-code-fill text-secondary me-1"></i> ${playlist.items.size()} Sheets</span>
                                     </div>
                                 </div>
                             </div>
