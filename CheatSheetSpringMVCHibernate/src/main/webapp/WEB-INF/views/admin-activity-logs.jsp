@@ -52,15 +52,18 @@
         <div class="content-area">
             <div class="gmail-container">
                 <!-- Progress Bar Section -->
-                <div class="progress-header">
-                    <div class="d-flex justify-content-between">
-                        <span class="fw-bold text-primary">System Activity Status</span>
-                        <span class="text-muted fw-bold">85% Processed</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-primary" style="width: 85%"></div>
-                    </div>
-                </div>
+        <div class="progress-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <span class="fw-bold text-dark">System Activity</span>
+            <span class="badge bg-success-subtle text-success ms-2 rounded-pill">Active</span>
+        </div>
+        <span class="text-muted fw-bold small">Latest update: Just now</span>
+    </div>
+    <div class="progress mt-2">
+        <div class="progress-bar bg-primary" style="width: 85%"></div>
+    </div>
+</div>
 
                 <!-- Scrollable Content -->
                 <div class="log-scroll-area">

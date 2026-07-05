@@ -14,11 +14,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .workspace-wrapper { display: flex; gap: 35px; padding: 35px 45px 35px 15px; width: 100%; margin: 0; align-items: flex-start; }
         .analytics-content-area { flex-grow: 1; min-width: 0; }
-        
-        /* Premium Card Style */
         .premium-card { background: #ffffff; border: 1px solid #f1f5f9; border-radius: 18px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02); }
-        
-        /* Table Styling */
         .table thead th { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; padding: 16px; border-bottom: 2px solid #f1f5f9; }
         .table tbody td { padding: 20px 16px; font-weight: 500; color: #334155; }
         .badge { font-weight: 600; padding: 6px 12px; border-radius: 8px; }
@@ -28,14 +24,11 @@
 </head>
 <body>
 
-<!-- Header -->
 <jsp:include page="header.jsp" />
 
 <div class="workspace-wrapper">
-    <!-- Sidebar -->
     <jsp:include page="/WEB-INF/views/sidebar.jsp" />
     
-    <!-- Main Content -->
     <div class="analytics-content-area">
         <div class="mb-4">
             <h2 class="fw-bold text-dark m-0" style="letter-spacing: -0.5px;">Tag Requests</h2>
@@ -62,7 +55,7 @@
                                         <td>${req.category.name}</td>
                                         <td><span class="text-dark fw-bold">${req.requestedBy.name}</span></td>
                                         <td class="text-end">
-                                            <form action="${pageContext.request.contextPath}/admin/tag-request-process/action" method="POST" class="d-inline">
+                                            <form onsubmit="event.preventDefault(); processTagRequest(this);" action="${pageContext.request.contextPath}/admin/tag-request-process/action" method="POST" class="d-inline">
                                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                                 <input type="hidden" name="id" value="${req.id}" />
                                                 
@@ -95,9 +88,61 @@
     </div>
 </div>
 
-<!-- Footer -->
+<!-- Custom Alert Modal (Premium Styled) -->
+<div id="customAlert" style="display:none; position:fixed; top:30px; right:30px; background:#ffffff; border-left: 6px solid #10b981; padding:25px; border-radius:12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); z-index:9999; max-width:450px; border: 1px solid #e5e7eb; border-left: 6px solid #10b981;">
+    <div style="display:flex; align-items:flex-start;">
+        <div style="color:#10b981; font-size:28px; margin-right:18px; margin-top: -3px;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+        <div>
+            <div style="color:#064e3b; font-weight:800; font-size:18px; margin-bottom:8px;">Tag Request Alert</div>
+            <p style="margin:0; color:#4b5563; font-size:14px; line-height:1.6;">
+                The tag you are trying to process already exists in our database or an error occurred. 
+                Our system has handled the situation to maintain data integrity.
+            </p>
+        </div>
+    </div>
+    <div style="margin-top:22px; text-align:right;">
+        <button onclick="document.getElementById('customAlert').style.display='none'" 
+                style="background:#10b981; color:#ffffff; border:none; padding:8px 24px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; transition:0.2s;">
+            Dismiss
+        </button>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp" />
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    async function processTagRequest(formElement) {
+        const formData = new FormData(formElement);
+        
+        try {
+            const response = await fetch(formElement.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                const errorText = await response.text();
+                
+                // Duplicate သို့မဟုတ် အခြား Error များအတွက် Custom Alert ကို ပြမယ်
+                document.getElementById('customAlert').style.display = 'block';
+                
+                if (errorText.includes("Duplicate") || response.status === 500) {
+                    formData.set('action', 'REJECT');
+                    await fetch(formElement.action, { method: 'POST', body: formData });
+                    setTimeout(() => { location.reload(); }, 3500);
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('customAlert').style.display = 'block';
+        }
+    }
+</script>
 </body>
 </html>
