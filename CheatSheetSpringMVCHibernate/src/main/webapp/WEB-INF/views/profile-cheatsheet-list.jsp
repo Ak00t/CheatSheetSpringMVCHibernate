@@ -765,22 +765,12 @@ h1{
                                             ${sheet.title}
                                         </h3>
 
-                                       <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
-    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
-            type="button" 
-            data-bs-toggle="dropdown" 
-            aria-expanded="false" 
-            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
-        ⋮
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
-        <li>
-            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
-            </a>
-        </li>
-    </ul>
-</div>
+                                        <div style="
+                                            font-size:24px;
+                                            opacity:.8;
+                                            font-weight:bold;">
+                                            ⋮
+                                        </div>
 
                                     </div>
 
@@ -912,22 +902,12 @@ h1{
                                             ${sheet.title}
                                         </h3>
 
-                                        <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
-    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
-            type="button" 
-            data-bs-toggle="dropdown" 
-            aria-expanded="false" 
-            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
-        ⋮
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
-        <li>
-            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
-            </a>
-        </li>
-    </ul>
-</div>
+                                        <div style="
+                                            font-size:24px;
+                                            opacity:.8;
+                                            font-weight:bold;">
+                                            ⋮
+                                        </div>
 
                                     </div>
 
@@ -1059,22 +1039,12 @@ h1{
                                             ${sheet.title}
                                         </h3>
 
-                                        <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
-    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
-            type="button" 
-            data-bs-toggle="dropdown" 
-            aria-expanded="false" 
-            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
-        ⋮
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
-        <li>
-            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
-            </a>
-        </li>
-    </ul>
-</div>
+                                        <div style="
+                                            font-size:24px;
+                                            opacity:.8;
+                                            font-weight:bold;">
+                                            ⋮
+                                        </div>
 
                                     </div>
 
@@ -1210,18 +1180,12 @@ h1{
                                             ${sheet.title}
                                         </h3>
 
-                                        <div class="dropdown" onclick="event.stopPropagation(); event.preventDefault();">
-    <button class="btn p-0 text-reset border-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
-        ⋮
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px;">
-        <li>
-            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
-                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
-            </a>
-        </li>
-    </ul>
-</div>
+                                        <div style="
+                                            font-size:24px;
+                                            opacity:.8;
+                                            font-weight:bold;">
+                                            ⋮
+                                        </div>
 
                                     </div>
 
