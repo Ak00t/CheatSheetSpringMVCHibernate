@@ -480,6 +480,31 @@
     <div class="container">
 
         <section class="hero">
+        
+      
+
+    <a href="${pageContext.request.contextPath}/"
+       style="
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:20px;
+            padding:12px 18px;
+            background:rgba(255,255,255,.18);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,.25);
+            border-radius:14px;
+            color:white;
+            text-decoration:none;
+            font-weight:800;
+            box-shadow:0 8px 20px rgba(0,0,0,.12);
+            transition:.2s;">
+        ← Back to Home
+    </a>
+
+        
+        
+        
             <h1>${parentCategory.name}</h1>
 
             <p>
