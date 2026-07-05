@@ -961,7 +961,7 @@
                                     
                                 </select>
 
-                                <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
                                     <label class="form-check-label fw-semibold text-dark"
                                         for="newPlaylistCollaborate">Collaborate</label>
 
@@ -970,7 +970,7 @@
                                             id="newPlaylistCollaborate"
                                             style="width: 2.5em; height: 1.3em; cursor:pointer;">
                                     </div>
-                                </div> -->
+                                </div>
 
                                 <button onclick="createNewPlaylist()" class="btn btn-dark fw-bold w-100"
                                     type="button" style="border-radius: 8px;">

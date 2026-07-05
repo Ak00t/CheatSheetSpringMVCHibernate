@@ -1004,13 +1004,13 @@
                     </select>
                 </div>
 
-                <!-- Collaborate Section (Toggle Switch) -->
-                <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                Collaborate Section (Toggle Switch)
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <label class="form-label text-dark fw-semibold small m-0" style="font-size: 14px;">Collaborate</label>
                     <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
                         <input class="form-check-input m-0" type="checkbox" role="switch" id="collaborateToggle" style="width: 2.5em; height: 1.25em; cursor: pointer;">
                     </div>
-                </div> -->
+                </div>
 
                 <!-- Create Button -->
                 <button onclick="createNewPlaylist()" class="btn btn-dark w-100 py-2 fw-bold rounded-3" style="background-color: #1e293b; border: none; font-size: 15px;">
