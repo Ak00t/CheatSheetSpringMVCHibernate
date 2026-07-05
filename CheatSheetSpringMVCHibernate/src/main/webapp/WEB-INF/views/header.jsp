@@ -6,17 +6,80 @@
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
                     rel="stylesheet">
+
                 <style>
                     @media (min-width: 768px) {
+
+                        /* 🌟 Hover လုပ်ထားစဉ် ပွင့်နေစေရန်နှင့် Gap ကြောင့် ပိတ်မသွားစေရန် Bridge Layer တည်ဆောက်ခြင်း */
                         .profile-hover-dropdown:hover .dropdown-menu {
                             display: block;
                             margin-top: 0;
                         }
+
+                        /* 🌟 ဤအချက်က အဓိကပါ: Button နှင့် Menu ကြားက ကွက်လပ်ကို Invisible Layer ဖြင့် ပိတ်ဆို့ပေးထားသဖြင့် မောက်စ်ရွှေ့လျှင် လုံးဝမပျောက်တော့ပါ */
+                        .profile-hover-dropdown .dropdown-menu::before {
+                            content: "";
+                            position: absolute;
+                            top: -20px;
+                            /* အပေါ်ဘက် ကွက်လပ်နေရာအလိုက် layer အား လှမ်းဆွဲဆန့်ထားခြင်း */
+                            left: 0;
+                            width: 100%;
+                            height: 20px;
+                            background: transparent;
+                        }
                     }
 
-                    .dropdown-item:hover {
-                        background-color: #f1f5f9;
+                    /* 🌟 2-Column Grid Dropdown Layout စတိုင်လ် - ညာဘက်အစွန်းကို စနစ်တကျ ကပ်ပေးထားခြင်း */
+                    .custom-grid-menu {
+                        border-radius: 20px !important;
+                        padding: 24px !important;
+                        min-width: 480px !important;
+                        border: 1px solid #e2e8f0 !important;
+                        background: #ffffff !important;
+
+                        /* 🌟 Menu ကြီး ညာဘက်အစွန်းကို ပုံစံကျကျ ကပ်နေစေရန် Positioning */
+                        left: auto !important;
+                        right: 0 !important;
+                        transform: translateX(10px);
+                        /* Screen အပြင်မထွက်အောင် ဘယ်ဘက်ကို နည်းနည်းပြန်တွန်းထားသည် */
+                    }
+
+                    .grid-menu-container {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 20px;
+                    }
+
+                    .grid-column-side {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;
+                    }
+
+                    .grid-column-divider {
+                        border-right: 1px dashed #e2e8f0;
+                        padding-right: 10px;
+                    }
+
+                    .custom-grid-menu .dropdown-item {
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 12px !important;
+                        padding: 10px 14px !important;
+                        border-radius: 12px !important;
+                        font-weight: 600 !important;
+                        color: #475569 !important;
+                        transition: all 0.2s ease !important;
+                        font-size: 14px !important;
+                    }
+
+                    .custom-grid-menu .dropdown-item:hover {
+                        background-color: #f1f5f9 !important;
                         color: #2563eb !important;
+                    }
+
+                    .custom-grid-menu .dropdown-item i {
+                        font-size: 16px;
                     }
                 </style>
 
@@ -70,7 +133,6 @@
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2"
                                         style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
 
-                                        <!-- Header -->
                                         <li
                                             class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
                                             <span>Notifications</span>
@@ -84,63 +146,54 @@
                                             </c:if>
                                         </li>
 
-<div id="notiList">
+                                        <div id="notiList">
+                                            <c:if test="${not empty unreadNotifications}">
+                                                <c:forEach var="noti" items="${unreadNotifications}">
+                                                    <li class="border-bottom list-unstyled bg-light">
+                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                                                            href="javascript:void(0);"
+                                                            onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
+                                                            <div
+                                                                class="fw-bold text-dark small d-flex align-items-center gap-2">
+                                                                <i class="bi bi-bell-fill text-primary"></i>
+                                                                ${noti.title}
+                                                            </div>
+                                                            <div class="text-secondary"
+                                                                style="font-size:12px;line-height:1.4;">
+                                                                ${noti.message}
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </c:forEach>
+                                            </c:if>
 
-    <!-- ================= UNREAD ================= -->
-    <c:if test="${not empty unreadNotifications}">
-        <c:forEach var="noti" items="${unreadNotifications}">
-            <li class="border-bottom list-unstyled bg-light">
-                <!-- Determine path dynamically based on Reference Type -->
-                <c:set var="targetUrl" value="${noti.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${noti.referenceId}" />
+                                            <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
+                                                <li class="text-center py-4 text-muted small list-unstyled">
+                                                    <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+                                                    No notifications
+                                                </li>
+                                            </c:if>
 
-                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
-                   href="javascript:void(0);"
-                   onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}${targetUrl}')">
-
-                    <div class="fw-bold text-dark small d-flex align-items-center gap-2">
-                        <i class="bi ${noti.referenceType == 'USER' ? 'bi-person-plus-fill text-success' : 'bi-bell-fill text-primary'}"></i>
-                        <c:out value="${noti.title}" />
-                    </div>
-                    <div class="text-secondary" style="font-size:12px;line-height:1.4;">
-                        <c:out value="${noti.message}" />
-                    </div>
-                </a>
-            </li>
-        </c:forEach>
-    </c:if>
-
-    <!-- Empty State -->
-    <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
-        <li class="text-center py-4 text-muted small list-unstyled">
-            <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
-            No notifications
-        </li>
-    </c:if>
-
-    <!-- ================= HISTORY ================= -->
-    <c:if test="${not empty readNotificationsHistory}">
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header fw-bold text-secondary">Notification History</li>
-
-        <c:forEach var="history" items="${readNotificationsHistory}">
-            <li class="border-bottom list-unstyled">
-                <c:set var="historyUrl" value="${history.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${history.referenceId}" />
-
-                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
-                   href="${pageContext.request.contextPath}${historyUrl}">
-
-                    <div class="small d-flex align-items-center gap-2">
-                        <i class="bi ${history.referenceType == 'USER' ? 'bi-person-check text-secondary' : 'bi-check-circle text-success'}"></i>
-                        <c:out value="${history.title}" />
-                    </div>
-                    <div style="font-size:12px;">
-                        <c:out value="${history.message}" />
-                    </div>
-                </a>
-            </li>
-        </c:forEach>
-    </c:if>
-</div>
+                                            <c:if test="${not empty readNotificationsHistory}">
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li class="dropdown-header fw-bold text-secondary">Notification History
+                                                </li>
+                                                <c:forEach var="history" items="${readNotificationsHistory}">
+                                                    <li class="border-bottom list-unstyled">
+                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
+                                                            href="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}">
+                                                            <div class="small d-flex align-items-center gap-2">
+                                                                <i class="bi bi-check-circle text-success"></i>
+                                                                ${history.title}
+                                                            </div>
+                                                            <div style="font-size:12px;">${history.message}</div>
+                                                        </a>
+                                                    </li>
+                                                </c:forEach>
+                                            </c:if>
+                                        </div>
                                     </ul>
                                 </div>
 
@@ -149,57 +202,248 @@
                                     Create Cheatsheet
                                 </a>
 
-
-                                <!-- 💡 header.jsp ထဲက Profile Button နေရာအား ဤကုဒ်ဖြင့် အစားထိုးပါ -->
                                 <div class="dropdown d-inline-block profile-hover-dropdown">
                                     <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}"
                                         class="text-decoration-none text-secondary fw-semibold dropdown-toggle d-flex align-items-center gap-2"
                                         id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                        👤 Profile
+
+                                        <c:choose>
+                                            <c:when test="${not empty sessionScope.currentUser}">
+                                                <div class="dropdown" id="notificationDropdownArea">
+                                                    <button
+                                                        class="btn btn-link text-dark p-1 position-relative border-0 shadow-none dropdown-toggle text-decoration-none no-caret"
+                                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="bi bi-bell fs-5"></i>
+                                                        <c:if
+                                                            test="${not empty unreadNotifications && fn:length(unreadNotifications) > 0}">
+                                                            <span id="notiBadge"
+                                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                                style="font-size: 9px; padding: 0.35em 0.5em;">
+                                                                ${fn:length(unreadNotifications)}
+                                                            </span>
+                                                        </c:if>
+                                                    </button>
+
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2"
+                                                        style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
+
+                                                        <!-- Header -->
+                                                        <li
+                                                            class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
+                                                            <span>Notifications</span>
+
+                                                            <c:if test="${not empty unreadNotifications}">
+                                                                <button onclick="markAllAsRead()"
+                                                                    class="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
+                                                                    style="font-size:11px;">
+                                                                    Mark all read
+                                                                </button>
+                                                            </c:if>
+                                                        </li>
+
+                                                        <div id="notiList">
+
+                                                            <!-- ================= UNREAD ================= -->
+                                                            <c:if test="${not empty unreadNotifications}">
+                                                                <c:forEach var="noti" items="${unreadNotifications}">
+                                                                    <li class="border-bottom list-unstyled bg-light">
+                                                                        <!-- Determine path dynamically based on Reference Type -->
+                                                                        <c:set var="targetUrl"
+                                                                            value="${noti.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${noti.referenceId}" />
+
+                                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                                                                            href="javascript:void(0);"
+                                                                            onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}${targetUrl}')">
+
+                                                                            <div
+                                                                                class="fw-bold text-dark small d-flex align-items-center gap-2">
+                                                                                <i
+                                                                                    class="bi ${noti.referenceType == 'USER' ? 'bi-person-plus-fill text-success' : 'bi-bell-fill text-primary'}"></i>
+                                                                                <c:out value="${noti.title}" />
+                                                                            </div>
+                                                                            <div class="text-secondary"
+                                                                                style="font-size:12px;line-height:1.4;">
+                                                                                <c:out value="${noti.message}" />
+                                                                            </div>
+                                                                        </a>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </c:if>
+
+                                                            <!-- Empty State -->
+                                                            <c:if
+                                                                test="${empty unreadNotifications && empty readNotificationsHistory}">
+                                                                <li
+                                                                    class="text-center py-4 text-muted small list-unstyled">
+                                                                    <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+                                                                    No notifications
+                                                                </li>
+                                                            </c:if>
+
+                                                            <!-- ================= HISTORY ================= -->
+                                                            <c:if test="${not empty readNotificationsHistory}">
+                                                                <li>
+                                                                    <hr class="dropdown-divider">
+                                                                </li>
+                                                                <li class="dropdown-header fw-bold text-secondary">
+                                                                    Notification History</li>
+
+                                                                <c:forEach var="history"
+                                                                    items="${readNotificationsHistory}">
+                                                                    <li class="border-bottom list-unstyled">
+                                                                        <c:set var="historyUrl"
+                                                                            value="${history.referenceType == 'USER' ? '/profile/' : '/cheatsheet/'}${history.referenceId}" />
+
+                                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
+                                                                            href="${pageContext.request.contextPath}${historyUrl}">
+
+                                                                            <div
+                                                                                class="small d-flex align-items-center gap-2">
+                                                                                <i
+                                                                                    class="bi ${history.referenceType == 'USER' ? 'bi-person-check text-secondary' : 'bi-check-circle text-success'}"></i>
+                                                                                <c:out value="${history.title}" />
+                                                                            </div>
+                                                                            <div style="font-size:12px;">
+                                                                                <c:out value="${history.message}" />
+                                                                            </div>
+                                                                        </a>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </c:if>
+                                                        </div>
+                                                    </ul>
+                                                </div>
+
+                                                <a href="${pageContext.request.contextPath}/cheatsheet/create"
+                                                    class="text-decoration-none text-secondary fw-semibold">
+                                                    Create Cheatsheet
+                                                </a>
+
+
+                                                <!-- 💡 header.jsp ထဲက Profile Button နေရာအား ဤကုဒ်ဖြင့် အစားထိုးပါ -->
+                                                <div class="dropdown d-inline-block profile-hover-dropdown">
+                                                    <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}"
+                                                        class="text-decoration-none text-secondary fw-semibold dropdown-toggle d-flex align-items-center gap-2"
+                                                        id="profileDropdown" data-bs-toggle="dropdown"
+                                                        aria-expanded="false">
+                                                        👤 Profile
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-0"
+                                                        style="border-radius: 12px; font-size: 14px; min-width: 180px;">
+                                                        <li>
+                                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
+                                                                href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
+                                                                <i class="bi bi-person-circle text-primary"></i> My
+                                                                Profile
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
+                                                                href="${pageContext.request.contextPath}/profile/bookmarks">
+                                                                <i class="bi bi-bookmark-heart-fill text-warning"></i>
+                                                                Cheatsheet
+                                                                Bookmarks
+                                                            </a>
+                                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
+                                                                href="${pageContext.request.contextPath}/collection/manage">
+                                                                <i class="bi bi-folder-fill text-primary"></i> My
+                                                                Collection
+                                                            </a>
+
+
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- 💡 CSS လေးကိုလည်း header ရဲ့ <style> အောက်ထဲ ထည့်ပေးပါဦးဗျာ -->
+                                                <style>
+                                                    @media (min-width: 768px) {
+                                                        .profile-hover-dropdown:hover .dropdown-menu {
+                                                            display: block;
+                                                            margin-top: 0;
+                                                        }
+                                                    }
+
+                                                    .dropdown-item:hover {
+                                                        background-color: #f1f5f9;
+                                                        color: #2563eb !important;
+                                                    }
+                                                </style>
+
+                                                <a href="${pageContext.request.contextPath}/logout"
+                                                    class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
+                                                    Logout
+                                                </a>
+                                                <c:when test="${not empty sessionScope.currentUser.profileImg}">
+                                                    <img src="${pageContext.request.contextPath}/uploads/profiles/${sessionScope.currentUser.profileImg}"
+                                                        alt="User Profile"
+                                                        style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #2563eb;" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/uploads/profiles/default.png"
+                                                        alt="Default Profile"
+                                                        style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #64748b;" />
+                                                </c:otherwise>
+                                        </c:choose>
+
+                                        <span
+                                            class="ms-1 text-dark small fw-bold">${sessionScope.currentUser.name}</span>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-0"
-                                        style="border-radius: 12px; font-size: 14px; min-width: 180px;">
-                                        <li>
-                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
-                                                href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
-                                                <i class="bi bi-person-circle text-primary"></i> My Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
-                                                href="${pageContext.request.contextPath}/profile/bookmarks">
-                                                <i class="bi bi-bookmark-heart-fill text-warning"></i> Cheatsheet
-                                                Bookmarks
-                                            </a>
-                                            <a class="dropdown-item py-2 fw-semibold d-flex align-items-center gap-2"
-                                                href="${pageContext.request.contextPath}/collection/manage">
-                                                <i class="bi bi-folder-fill text-primary"></i> My Collection
-                                            </a>
 
+                                    <!-- 💡 ဤနေရာတွင် dropdown-menu-end အစား dropdown-menu-start သို့ပြောင်းလဲပြီး style positioning ကို ညှိလိုက်ပါသည် -->
+                                    <div class="dropdown-menu dropdown-menu-start shadow border-0 custom-grid-menu mt-2"
+                                        style="left: auto !important; right: 0 !important; transform: translateX(10px);">
+                                        <div class="grid-menu-container">
 
-                                        </li>
-                                    </ul>
+                                            <!-- ဘယ်ဘက်ခြမ်း Column (Profile & Socials) -->
+                                            <div class="grid-column-side grid-column-divider">
+                                                <h6 class="dropdown-header px-2 fw-bold text-primary mb-1"></h6>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
+                                                    <i class="bi bi-person-circle text-primary"></i> My Profile
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/follow/followers-view">
+                                                    <i class="bi bi-people-fill text-info"></i> My Followers
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/follow/following-view">
+                                                    <i class="bi bi-person-heart text-danger"></i> Following Users
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/category/followed-list">
+                                                    <i class="bi bi-grid-fill text-warning"></i> Followed Categories
+                                                </a>
+                                                <div class="mt-auto pt-2 border-top border-light">
+                                                    <a class="dropdown-item text-danger fw-bold"
+                                                        href="${pageContext.request.contextPath}/logout">
+                                                        <i class="bi bi-box-arrow-right text-danger"></i> Log out
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- ညာဘက်ခြမ်း Column (Collections & Hubs) -->
+                                            <div class="grid-column-side">
+                                                <h6 class="dropdown-header px-2 fw-bold text-success mb-1"></h6>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/profile/bookmarks">
+                                                    <i class="bi bi-bookmark-heart-fill text-warning"></i> Bookmarks
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/collection/manage">
+                                                    <i class="bi bi-folder-fill text-success"></i> My Collection
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/profile-cheatsheets">
+                                                    <i class="bi bi-file-earmark-spreadsheet-fill text-primary"></i> My
+                                                    Cheatsheets
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <!-- 💡 CSS လေးကိုလည်း header ရဲ့ <style> အောက်ထဲ ထည့်ပေးပါဦးဗျာ -->
-                                <style>
-                                    @media (min-width: 768px) {
-                                        .profile-hover-dropdown:hover .dropdown-menu {
-                                            display: block;
-                                            margin-top: 0;
-                                        }
-                                    }
-
-                                    .dropdown-item:hover {
-                                        background-color: #f1f5f9;
-                                        color: #2563eb !important;
-                                    }
-                                </style>
-
-                                <a href="${pageContext.request.contextPath}/logout"
-                                    class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-2">
-                                    Logout
-                                </a>
                             </c:when>
                             <c:otherwise>
                                 <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2"
@@ -220,17 +464,14 @@
                         display: none !important;
                     }
 
-                    /* Reduce placeholder visibility by making it 40% opaque */
                     .custom-placeholder::placeholder {
                         opacity: 0.4;
                     }
 
-                    /* For older webkit browsers */
                     .custom-placeholder::-webkit-input-placeholder {
                         opacity: 0.4;
                     }
 
-                    /* Ensure focus highlights look clean even with a split border-group */
                     .input-group:focus-within .form-control,
                     .input-group:focus-within .input-group-text {
                         border-color: #86b7fe;
@@ -238,7 +479,6 @@
                     }
                 </style>
 
-                <!-- Login Modal -->
                 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -268,12 +508,9 @@
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary">Password</label>
                                         <div class="input-group">
-                                            <!-- Added a custom class 'custom-placeholder' here -->
                                             <input type="password" id="loginPasswordInput" name="password"
                                                 class="form-control border-end-0 custom-placeholder" required="required"
                                                 placeholder="••••••••" />
-
-                                            <!-- Toggle Icon Button -->
                                             <button class="input-group-text bg-white border-start-0 text-muted"
                                                 type="button" id="togglePasswordBtn" style="cursor: pointer;">
                                                 <i class="bi bi-eye" id="togglePasswordIcon"></i>
@@ -306,7 +543,6 @@
                     </div>
                 </div>
 
-                <!-- Register Modal -->
                 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -377,35 +613,70 @@
                     </div>
                 </div>
 
-                <!-- STEP 0 FIX: External Script Dependencies Added Here -->
                 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
                 <script>
-                    document.addEventListener("DOMContentLoaded", function () {
+                    function loadFollowSystemFeed(type) {
+                        const ctx = "${pageContext.request.contextPath}";
+                        const container = document.getElementById('followersContainer') || document.getElementById('followContainer');
+                        const feedArea = document.getElementById('followersFeedArea') || document.getElementById('followFeedArea');
+                        const heading = feedArea ? feedArea.querySelector('.section-heading') : null;
 
-                        // --- SHOW/HIDE PASSWORD TOGGLE ---
+                        if (!container) return;
+                        if (heading) heading.innerText = (type === 'followers') ? "👥 My Followers" : "🤝 Following Users";
+
+                        const endpoint = (type === 'followers') ? '/follow/my-followers' : '/follow/my-following';
+
+                        fetch(ctx + endpoint)
+                            .then(res => res.json())
+                            .then(users => {
+                                container.innerHTML = "";
+                                if (feedArea) feedArea.classList.remove('d-none');
+
+                                if (users.length === 0) {
+                                    container.innerHTML = `<div class="empty-box text-center w-100 py-5">No \${type} found yet.</div>`;
+                                    return;
+                                }
+
+                                users.forEach(user => {
+                                    const uId = user.id;
+                                    const uName = user.name;
+                                    const uEmail = user.email;
+                                    const profileImg = user.profileImg ? user.profileImg : 'default.png';
+
+                                    const userCard = `
+                    <div class="card p-4 border-0 shadow-sm text-center align-items-center" style="border-radius: 24px; background: white; min-height: 220px;">
+                        <img src="\${ctx}/uploads/profiles/\${profileImg}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.06);" alt="user">
+                        <h4 class="mt-3 fw-bold text-dark mb-1" style="font-size: 18px;">\${uName}</h4>
+                        <p class="text-secondary small mb-3">\${uEmail}</p>
+                        <a href="\${ctx}/profile/\${uId}" class="btn btn-primary btn-sm fw-bold px-4 rounded-pill" style="background-color: #2563eb; border:none; font-size: 13px;">View Profile</a>
+                    </div>`;
+                                    container.insertAdjacentHTML('beforeend', userCard);
+                                });
+                            })
+                            .catch(err => console.error("Error loading feed:", err));
+                    }
+
+                    document.addEventListener("DOMContentLoaded", function () {
                         const passwordInput = document.getElementById("loginPasswordInput");
                         const togglePasswordBtn = document.getElementById("togglePasswordBtn");
                         const togglePasswordIcon = document.getElementById("togglePasswordIcon");
 
                         if (togglePasswordBtn && passwordInput) {
                             togglePasswordBtn.addEventListener("click", function () {
-                                // Check current type and flip it
                                 if (passwordInput.type === "password") {
                                     passwordInput.type = "text";
-                                    // Swap icon to 'eye-slash'
                                     togglePasswordIcon.classList.remove("bi-eye");
                                     togglePasswordIcon.classList.add("bi-eye-slash");
                                 } else {
                                     passwordInput.type = "password";
-                                    // Swap icon back to normal 'eye'
                                     togglePasswordIcon.classList.remove("bi-eye-slash");
                                     togglePasswordIcon.classList.add("bi-eye");
                                 }
                             });
                         }
-                        // --- REGISTRATION PASSWORD TOGGLES ---
+
                         function setupPasswordToggle(buttonId, inputId, iconId) {
                             const btn = document.getElementById(buttonId);
                             const input = document.getElementById(inputId);
@@ -424,7 +695,6 @@
                             }
                         }
 
-                        // Initialize toggles for both registration fields
                         setupPasswordToggle("toggleRegPasswordBtn", "registerPasswordInput", "toggleRegPasswordIcon");
                         setupPasswordToggle("toggleRegConfirmPasswordBtn", "registerConfirmPasswordInput", "toggleRegConfirmPasswordIcon");
 
@@ -432,47 +702,32 @@
                         const ctx = "${pageContext.request.contextPath}";
 
                         function clearUrlParams() {
-                            // window.location.origin gives you exactly "http://localhost:8080" cleanly without string hacking
                             const cleanUrl = window.location.origin + window.location.pathname;
                             window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
                         }
 
-                        // --- STABLE MODAL ROUTING MECHANICS ---
                         if (urlParams.get('error') === 'true') {
                             const loginEl = document.getElementById('loginModal');
-                            if (loginEl) {
-                                bootstrap.Modal.getOrCreateInstance(loginEl).show();
-                                clearUrlParams();
-                            }
+                            if (loginEl) { bootstrap.Modal.getOrCreateInstance(loginEl).show(); clearUrlParams(); }
                         }
-
                         if (urlParams.get('regError') === 'true') {
                             const regEl = document.getElementById('registerModal');
-                            if (regEl) {
-                                bootstrap.Modal.getOrCreateInstance(regEl).show();
-                                clearUrlParams();
-                            }
+                            if (regEl) { bootstrap.Modal.getOrCreateInstance(regEl).show(); clearUrlParams(); }
                         }
                         if (urlParams.get('login') === 'true') {
                             const loginEl = document.getElementById('loginModal');
-                            if (loginEl) {
-                                bootstrap.Modal.getOrCreateInstance(loginEl).show();
-                                clearUrlParams();
-                            }
+                            if (loginEl) { bootstrap.Modal.getOrCreateInstance(loginEl).show(); clearUrlParams(); }
                         }
-
                         if (urlParams.get('unauthorized') === 'true') {
                             const loginEl = document.getElementById('loginModal');
                             if (loginEl) {
                                 bootstrap.Modal.getOrCreateInstance(loginEl).show();
                                 const modalBody = loginEl.querySelector('.modal-body');
-
                                 if (modalBody && !document.getElementById('authErrorAlert')) {
                                     const alertDiv = document.createElement('div');
                                     alertDiv.id = 'authErrorAlert';
                                     alertDiv.className = 'alert alert-danger alert-dismissible fade show py-2 small';
-                                    alertDiv.innerHTML = '🔒 Please sign in first to access that area.' +
-                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
+                                    alertDiv.innerHTML = '🔒 Please sign in first to access that area.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
                                     modalBody.insertBefore(alertDiv, modalBody.firstChild);
                                 }
                                 clearUrlParams();
@@ -488,24 +743,19 @@
                                     const alertDiv = document.createElement('div');
                                     alertDiv.id = 'regSuccessAlert';
                                     alertDiv.className = 'alert alert-success alert-dismissible fade show py-2 small';
-                                    alertDiv.innerHTML = '🎉 Account created successfully! Please sign in below.' +
-                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
+                                    alertDiv.innerHTML = '🎉 Account created successfully! Please sign in below.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>';
                                     modalBody.insertBefore(alertDiv, modalBody.firstChild);
                                 }
                                 clearUrlParams();
                             }
                         }
 
-                        // --- AUTOMATIC ALERTS TIMEOUT FADE ---
                         setTimeout(function () {
-                            const activeAlerts = document.querySelectorAll('.alert-dismissible');
-                            activeAlerts.forEach(function (alert) {
-                                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                                bsAlert.close();
+                            document.querySelectorAll('.alert-dismissible').forEach(function (alert) {
+                                bootstrap.Alert.getOrCreateInstance(alert).close();
                             });
                         }, 4000);
 
-                        // --- SEARCH INFRASTRUCTURE ---
                         const searchInput = document.getElementById("headerSearchInput");
                         const suggestBox = document.getElementById("searchSuggestBox");
                         const suggestContent = document.getElementById("suggestContent");
@@ -515,173 +765,96 @@
                                 fetch(ctx + '/search/history')
                                     .then(res => res.json())
                                     .then(data => {
-                                        if (!data || data.length === 0) {
-                                            suggestBox.classList.add("d-none");
-                                            return;
-                                        }
-
+                                        if (!data || data.length === 0) { suggestBox.classList.add("d-none"); return; }
                                         let html = `<div class="p-2 small fw-bold text-muted border-bottom mb-1"><i class="bi bi-clock-history me-1"></i> Recent Searches</div>`;
                                         let hasItems = false;
-
                                         data.forEach(item => {
-                                            let keyword = "";
-                                            if (typeof item === 'object' && item !== null) {
-                                                keyword = item.keyword || "";
-                                            } else {
-                                                keyword = item;
-                                            }
-
+                                            let keyword = (typeof item === 'object' && item !== null) ? item.keyword : item;
                                             if (keyword && keyword.trim() !== "") {
                                                 hasItems = true;
                                                 html += `<a href="` + ctx + `/search?query=` + encodeURIComponent(keyword.trim()) + `" class="dropdown-item py-2 text-truncate rounded px-3"><i class="bi bi-arrow-left-right me-2 text-muted small"></i>` + keyword.trim() + `</a>`;
                                             }
                                         });
-
-                                        if (hasItems) {
-                                            suggestContent.innerHTML = html;
-                                            suggestBox.classList.remove("d-none");
-                                        } else {
-                                            suggestBox.classList.add("d-none");
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error("Failed to fetch search history:", err);
-                                        suggestBox.classList.add("d-none");
-                                    });
+                                        if (hasItems) { suggestContent.innerHTML = html; suggestBox.classList.remove("d-none"); }
+                                        else { suggestBox.classList.add("d-none"); }
+                                    }).catch(err => suggestBox.classList.add("d-none"));
                             }
                         });
 
                         searchInput.addEventListener("input", function () {
                             const query = searchInput.value.trim();
-                            if (query === "") {
-                                searchInput.dispatchEvent(new Event("focus"));
-                                return;
-                            }
+                            if (query === "") { searchInput.dispatchEvent(new Event("focus")); return; }
 
                             fetch(ctx + '/search/live?query=' + encodeURIComponent(query))
                                 .then(res => res.json())
                                 .then(data => {
                                     let html = "";
-                                    let hasCheatsheets = false;
-                                    let hasCategories = false;
-                                    let hasUsers = false;
-
+                                    let hasCheatsheets = false, hasCategories = false, hasUsers = false;
                                     let cheatsheetHtml = `<div class="p-2 small fw-bold text-primary"><i class="bi bi-file-earmark-text me-1"></i> Cheatsheets</div>`;
                                     let categoryHtml = `<div class="p-2 small fw-bold text-success mt-2"><i class="bi bi-folder me-1"></i> Categories</div>`;
                                     let userHtml = `<div class="p-2 small fw-bold text-warning mt-2"><i class="bi bi-person me-1"></i> Users</div>`;
 
                                     data.forEach(item => {
-                                        if (item.type === 'cheatsheet') {
-                                            hasCheatsheets = true;
-                                            cheatsheetHtml += `<a href="` + ctx + `/cheatsheet/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
-                                        } else if (item.type === 'category') {
-                                            hasCategories = true;
-                                            categoryHtml += `<a href="` + ctx + `/category/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
-                                        } else if (item.type === 'user') {
-                                            hasUsers = true;
-                                            userHtml += `<a href="` + ctx + `/user/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
-                                        }
+                                        if (item.type === 'cheatsheet') { hasCheatsheets = true; cheatsheetHtml += `<a href="` + ctx + `/cheatsheet/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
+                                        else if (item.type === 'category') { hasCategories = true; categoryHtml += `<a href="` + ctx + `/category/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
+                                        else if (item.type === 'user') { hasUsers = true; userHtml += `<a href="` + ctx + `/user/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
                                     });
 
                                     if (hasCheatsheets) html += cheatsheetHtml;
                                     if (hasCategories) html += categoryHtml;
                                     if (hasUsers) html += userHtml;
+                                    if (!hasCheatsheets && !hasCategories && !hasUsers) html = `<div class="p-3 text-center text-muted small">No immediate results match "` + query + `"</div>`;
 
-                                    if (!hasCheatsheets && !hasCategories && !hasUsers) {
-                                        html = `<div class="p-3 text-center text-muted small">No immediate results match "` + query + `"</div>`;
-                                    }
-
-                                    suggestContent.innerHTML = html;
-                                    suggestBox.classList.remove("d-none");
-                                })
-                                .catch(err => {
-                                    console.error("Live Search Error Details:", err);
+                                    suggestContent.innerHTML = html; suggestBox.classList.remove("d-none");
                                 });
                         });
 
                         document.addEventListener("click", function (e) {
-                            if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) {
-                                suggestBox.classList.add("d-none");
-                            }
+                            if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) { suggestBox.classList.add("d-none"); }
                         });
 
-                        // --- REAL-TIME WEBSOCKET LISTENER ---
                         const socket = new SockJS(ctx + '/ws-notifications');
                         const stompClient = Stomp.over(socket);
-
                         stompClient.connect({}, function (frame) {
-                            console.log('Connected to WebSocket server successfully!');
-
-                            // Dynamically append the logged-in user's ID to match your backend destination precisely
                             stompClient.subscribe('/topic/notifications-' + '${sessionScope.currentUser.id}', function (response) {
-                                const notiData = JSON.parse(response.body);
-                                appendNewLiveNotification(notiData);
+                                appendNewLiveNotification(JSON.parse(response.body));
                             });
-                        }, function (error) {
-                            console.error('WebSocket broker connection failure:', error);
+                        });
+
+                        document.querySelectorAll('button[data-bs-toggle="dropdown"], a.dropdown-toggle').forEach(function (element) {
+                            element.addEventListener('click', function (e) {
+                                e.stopPropagation();
+                            });
                         });
                     });
-
-                    // --- INDEPENDENT GLOBAL SCOPE FUNCTIONS ---
 
                     function appendNewLiveNotification(data) {
                         const badge = document.getElementById('notiBadge');
                         const notiList = document.getElementById('notiList');
-
-                        if (badge) {
-                            let currentCount = parseInt(badge.innerText.trim()) || 0;
-                            badge.innerText = currentCount + 1;
-                        } else {
+                        if (badge) { badge.innerText = (parseInt(badge.innerText.trim()) || 0) + 1; }
+                        else {
                             const dropdownBtn = document.querySelector("#notificationDropdownArea button");
-                            if (dropdownBtn) {
-                                dropdownBtn.insertAdjacentHTML('beforeend',
-                                    `<span id="notiBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 0.35em 0.5em;">1</span>`
-                                );
-                            }
+                            if (dropdownBtn) dropdownBtn.insertAdjacentHTML('beforeend', `<span id="notiBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 0.35em 0.5em;">1</span>`);
                         }
-
                         if (notiList) {
-                            const emptyPlaceholder = notiList.querySelector('.text-center');
-                            if (emptyPlaceholder) {
-                                notiList.innerHTML = '';
-                            }
-
-                            const newNotiHtml = `
-            <li class="border-bottom list-unstyled">
-                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1" href="javascript:void(0);">
-                    <div class="fw-bold text-dark small d-flex align-items-center gap-1">
-                        <i class="bi bi-chat-left-text-fill text-primary small"></i> \${data.title}
-                    </div>
-                    <div class="text-secondary tracking-normal line-clamp-2" style="font-size: 12px; line-height:1.4;">
-                        \${data.message}
-                    </div>
-                </a>
-            </li>`;
-
-                            notiList.insertAdjacentHTML('afterbegin', newNotiHtml);
+                            if (notiList.querySelector('.text-center')) notiList.innerHTML = '';
+                            notiList.insertAdjacentHTML('afterbegin', `<li class="border-bottom list-unstyled"><a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1" href="javascript:void(0);"><div class="fw-bold text-dark small d-flex align-items-center gap-1"><i class="bi bi-chat-left-text-fill text-primary small"></i> \${data.title}</div><div class="text-secondary" style="font-size: 12px; line-height:1.4;">\${data.message}</div></a></li>`);
                         }
                     }
 
-                    function readNotification(notificationId, redirectUrl) {
-                        fetch('${pageContext.request.contextPath}/notification/read?id=' + notificationId, {
-                            method: 'POST'
-                        }).then(response => {
-                            if (response.ok) {
-                                window.location.href = redirectUrl;
-                            }
-                        }).catch(err => console.error("Notification clearance failed:", err));
+                    function readNotification(id, url) {
+                        fetch('${pageContext.request.contextPath}/notification/read?id=' + id, { method: 'POST' }).then(res => { if (res.ok) window.location.href = url; });
                     }
 
                     function markAllAsRead() {
-                        fetch('${pageContext.request.contextPath}/notification/read-all', { method: 'POST' })
-                            .then(res => {
-                                if (res.ok) {
-                                    document.getElementById('notiBadge')?.remove();
-                                    const notiList = document.getElementById('notiList');
-                                    if (notiList) {
-                                        notiList.innerHTML = `<li class="text-center py-4 text-muted small list-unstyled"><i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>No new notifications</li>`;
-                                    }
-                                }
-                            });
+                        fetch('${pageContext.request.contextPath}/notification/read-all', { method: 'POST' }).then(res => {
+                            if (res.ok) {
+                                if (document.getElementById('notiBadge')) document.getElementById('notiBadge').remove();
+                                if (document.getElementById('notiList')) document.getElementById('notiList').innerHTML = `<li class="text-center py-4 text-muted small list-unstyled"><i class="bi bi-bell-slash d-block fs-3 mb-1 text-secondary"></i>No new notifications</li>`;
+                            }
+                        });
                     }
                 </script>
+                </body>
+
+                </html>

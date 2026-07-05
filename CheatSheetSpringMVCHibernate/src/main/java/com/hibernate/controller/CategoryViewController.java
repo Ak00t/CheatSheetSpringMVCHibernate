@@ -30,38 +30,29 @@ public class CategoryViewController {
 
 	
     // final
+ // 💡 CategoryViewController.java ထဲက parentCategoryView Method အား ဤကုဒ်ဖြင့် လဲလှယ်ပါ-
+
     @RequestMapping("/category/{id}")
-    public String parentCategoryView(@PathVariable Long id,
-                                     Model model) {
+    public String parentCategoryView(@PathVariable Long id, HttpSession session, Model model) { // 👈 HttpSession ဖြည့်စွက်ထားပါသည်
 
-        CategoryEntity parentCategory =
-                categoryService.findById(id);
+        // 🛡️ [အဓိကပြင်ဆင်ချက်] လက်ရှိ Login ဝင်ထားသော User ကို ဆွဲထုတ်ပြီး JSP မြင်တွေ့နိုင်ရန် Model သို့ ထည့်ပေးခြင်း
+        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+        model.addAttribute("currentUser", currentUser);
 
-        model.addAttribute(
-                "parentCategory",
-                parentCategory);
+        CategoryEntity parentCategory = categoryService.findById(id);
+        model.addAttribute("parentCategory", parentCategory);
 
         // Child Categories
-        model.addAttribute(
-                "childCategories",
-                categoryService.findChildrenByParentId(id));
+        model.addAttribute("childCategories", categoryService.findChildrenByParentId(id));
 
         // Child Count
-        model.addAttribute(
-                "childCount",
-                categoryService.countChildrenByParentId(id));
+        model.addAttribute("childCount", categoryService.countChildrenByParentId(id));
 
         // Popular In Parent
-        model.addAttribute(
-                "popularCheatsheets",
-                cheatsheetService
-                        .findPopularByParentCategoryId(id));
+        model.addAttribute("popularCheatsheets", cheatsheetService.findPopularByParentCategoryId(id));
 
         // Recent In Parent
-        model.addAttribute(
-                "recentCheatsheets",
-                cheatsheetService
-                        .findRecentByParentCategoryId(id));
+        model.addAttribute("recentCheatsheets", cheatsheetService.findRecentByParentCategoryId(id));
 
         return "category-view";
     }

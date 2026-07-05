@@ -15,12 +15,12 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
     public void save(BookmarkEntity bookmark) {
         Session session = sessionFactory.getCurrentSession();
         session.save(bookmark);
-        session.flush(); // 💡 Database ထဲကို ချက်ချင်း Force သွားရေးခိုင်းခြင်း
+        session.flush(); 
     }
 
     @Override
     public void delete(Long userId, Long cheatsheetId) {
-        // b.userId နှင့် b.cheatsheetId (Primitive Fields နာမည်အမှန်အတိုင်း သုံးထားသည်)
+       
         String hql = "DELETE FROM BookmarkEntity b WHERE b.userId = :userId AND b.cheatsheetId = :cheatsheetId";
         sessionFactory.getCurrentSession().createQuery(hql)
                 .setParameter("userId", userId)

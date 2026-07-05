@@ -3,11 +3,13 @@ package com.hibernate.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -202,9 +204,9 @@ public class CheatsheetController {
 
 			File serverFile = new File(uploadDir + fileName);
 
-			java.nio.file.Files
+			Files
 					.copy(coverPhoto.getInputStream(), serverFile.toPath(),
-							java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+							StandardCopyOption.REPLACE_EXISTING);
 
 			CheatsheetMediaEntity media = new CheatsheetMediaEntity();
 			media.setCheatsheet(cheatsheet);

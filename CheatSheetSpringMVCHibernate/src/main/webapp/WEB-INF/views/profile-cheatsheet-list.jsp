@@ -325,97 +325,7 @@ h1{
 }
 </style>
 
-<script>
-function toggleFolder(id, card){
 
-    const content = document.getElementById(id);
-
-    if(!content){
-        return;
-    }
-
-    const isOpen = content.classList.contains("active");
-
-    document.querySelectorAll(".folder-content").forEach(function(item){
-        item.classList.remove("active");
-    });
-
-    document.querySelectorAll(".folder-card").forEach(function(item){
-        item.classList.remove("active");
-        const hint = item.querySelector(".folder-hint");
-        if(hint){
-            hint.innerText = "Click to view cheatsheets";
-        }
-    });
-
-    if(!isOpen){
-        content.classList.add("active");
-        card.classList.add("active");
-
-        const hint = card.querySelector(".folder-hint");
-        if(hint){
-            hint.innerText = "Click to close";
-        }
-
-        content.scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
-    }
-}
-
-function getContrastColor(hexColor) {
-    if (!hexColor || hexColor === "null") {
-        hexColor = "#2563eb";
-    }
-
-    hexColor = hexColor.replace("#", "");
-
-    if (hexColor.length === 3) {
-        hexColor =
-            hexColor[0] + hexColor[0] +
-            hexColor[1] + hexColor[1] +
-            hexColor[2] + hexColor[2];
-    }
-
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-
-    return (yiq >= 128) ? "#1e293b" : "#ffffff";
-}
-
-function applyDynamicTextColors() {
-    document.querySelectorAll(".auto-text-color").forEach(function (card) {
-        const bgHex = card.getAttribute("data-color");
-        const idealTextColor = getContrastColor(bgHex);
-        card.style.setProperty("--text-color", idealTextColor);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-    applyDynamicTextColors();
-
-    document.querySelectorAll(".see-btn").forEach(function (btn) {
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const desc = this.previousElementSibling;
-
-            if (desc.style.maxHeight === "none") {
-                desc.style.maxHeight = "95px";
-                this.innerText = "See More";
-            } else {
-                desc.style.maxHeight = "none";
-                this.innerText = "See Less";
-            }
-        });
-    });
-});
-</script>
 </head>
 
 <body>
@@ -525,20 +435,16 @@ document.addEventListener("DOMContentLoaded", function(){
 
         </div>
 
-        <div class="folder-card unlisted"
-             onclick="toggleFolder('unlistedFolder', this)">
-
-            <div class="folder-top">
-                <div class="folder-title">
-                    🔗 Unlisted
-                </div>
-            </div>
-
-            <div class="folder-count">
-                ${unlistedCheatsheets.size()} Cheatsheets
-            </div>
-
+        <div class="folder-card unlisted" onclick="toggleFolder('unlistedFolder', this)">
+    <div class="folder-top">
+        <div class="folder-title">
+            👥 Followers Only
         </div>
+    </div>
+    <div class="folder-count">
+        ${unlistedCheatsheets.size()} Cheatsheets
+    </div>
+</div>
 
     </div>
 
@@ -594,12 +500,12 @@ document.addEventListener("DOMContentLoaded", function(){
                                     ${sheet.title}
                                 </h3>
 
-                                <div style="
+                                <!-- <div style="
                                     font-size:24px;
                                     opacity:.8;
                                     font-weight:bold;">
                                     ⋮
-                                </div>
+                                </div> -->
 
                             </div>
 
@@ -859,12 +765,22 @@ document.addEventListener("DOMContentLoaded", function(){
                                             ${sheet.title}
                                         </h3>
 
-                                        <div style="
-                                            font-size:24px;
-                                            opacity:.8;
-                                            font-weight:bold;">
-                                            ⋮
-                                        </div>
+                                       <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
+    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" 
+            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
+        ⋮
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
+            </a>
+        </li>
+    </ul>
+</div>
 
                                     </div>
 
@@ -996,12 +912,22 @@ document.addEventListener("DOMContentLoaded", function(){
                                             ${sheet.title}
                                         </h3>
 
-                                        <div style="
-                                            font-size:24px;
-                                            opacity:.8;
-                                            font-weight:bold;">
-                                            ⋮
-                                        </div>
+                                        <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
+    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" 
+            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
+        ⋮
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
+            </a>
+        </li>
+    </ul>
+</div>
 
                                     </div>
 
@@ -1133,12 +1059,22 @@ document.addEventListener("DOMContentLoaded", function(){
                                             ${sheet.title}
                                         </h3>
 
-                                        <div style="
-                                            font-size:24px;
-                                            opacity:.8;
-                                            font-weight:bold;">
-                                            ⋮
-                                        </div>
+                                        <div class="dropdown d-inline-block" onclick="event.stopPropagation(); event.preventDefault();">
+    <button class="btn p-1 text-reset border-0 shadow-none d-flex align-items-center justify-content-center" 
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" 
+            style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
+        ⋮
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px; z-index: 1060;">
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
+            </a>
+        </li>
+    </ul>
+</div>
 
                                     </div>
 
@@ -1217,9 +1153,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     <h2 class="section-heading">
-        🔗 Unlisted
-    </h2>
-
+    👥 Followers Only
+</h2>
     <div id="unlistedFolder"
          class="folder-content">
 
@@ -1275,12 +1210,18 @@ document.addEventListener("DOMContentLoaded", function(){
                                             ${sheet.title}
                                         </h3>
 
-                                        <div style="
-                                            font-size:24px;
-                                            opacity:.8;
-                                            font-weight:bold;">
-                                            ⋮
-                                        </div>
+                                        <div class="dropdown" onclick="event.stopPropagation(); event.preventDefault();">
+    <button class="btn p-0 text-reset border-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--text-color, white) !important; opacity: 0.8; font-size: 24px; line-height: 1;">
+        ⋮
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" style="border-radius: 10px; font-size: 14px;">
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2 fw-semibold" href="javascript:void(0);" onclick="event.stopPropagation(); openPlaylistModal('${sheet.id}');">
+                <i class="bi bi-plus-circle-fill text-primary"></i> Save to Playlist
+            </a>
+        </li>
+    </ul>
+</div>
 
                                     </div>
 
@@ -1363,7 +1304,244 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </div>
 
+<div class="modal fade" id="bootstrapPlaylistModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content border-0 p-2" style="border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);">
+            <div class="modal-header border-0 pb-0 pt-3 px-4">
+                <h5 class="modal-title fw-bold text-dark" style="font-size: 22px;">Save to playlist</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 pb-4 pt-3">
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Choose Playlist</label>
+                    <select id="playlistSelect" class="form-select py-2 rounded-3 text-secondary" style="border-color: #cbd5e1; font-size: 14px;">
+                        <option value="">-- Choose Playlist --</option>
+                    </select>
+                </div>
+                <button onclick="saveToSelectedPlaylist()" class="btn btn-primary w-100 py-2 fw-bold mb-4 rounded-3 shadow-sm" style="background-color: #2563eb; border: none; font-size: 15px;">
+                    Save to Selected
+                </button>
+                <hr class="my-3" style="opacity: 0.1;">
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Create New Playlist</label>
+                    <input id="newPlaylistName" class="form-control py-2 rounded-3" style="border-color: #cbd5e1; font-size: 14px;" placeholder="Choose a title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small mb-1" style="font-size: 13px;">Visibility</label>
+                    <select id="newPlaylistVisibility" class="form-select py-2 rounded-3 text-dark" style="border-color: #cbd5e1; font-size: 14px;">
+                        <option value="PRIVATE">Private</option>
+                        <option value="PUBLIC">Public</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <label class="form-label text-dark fw-semibold small m-0" style="font-size: 14px;">Collaborate</label>
+                    <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
+                        <input class="form-check-input m-0" type="checkbox" role="switch" id="collaborateToggle" style="width: 2.5em; height: 1.25em; cursor: pointer;">
+                    </div>
+                </div>
+                <button onclick="createNewPlaylist()" class="btn btn-dark w-100 py-2 fw-bold rounded-3" style="background-color: #1e293b; border: none; font-size: 15px;">
+                    Create
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <jsp:include page="footer.jsp"/>
 
+
+
+
+<script>
+
+
+let selectedCheatsheetIdForPlaylist = null;
+let playlistModalObj = null;
+
+function openPlaylistModal(cheatsheetId) {
+    selectedCheatsheetIdForPlaylist = cheatsheetId;
+    const modalEl = document.getElementById('bootstrapPlaylistModal');
+    if (!playlistModalObj) {
+        playlistModalObj = new bootstrap.Modal(modalEl);
+    }
+    playlistModalObj.show();
+    loadPlaylists();
+}
+
+function loadPlaylists() {
+    fetch('${pageContext.request.contextPath}/collection/list')
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById('playlistSelect');
+            select.innerHTML = '<option value="">-- Choose Playlist --</option>';
+            data.forEach(c => {
+                let option = document.createElement("option");
+                option.value = c.id;
+                option.text = c.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(err => console.error("Error loading playlists:", err));
+}
+
+function createNewPlaylist() {
+    const nameInput = document.getElementById('newPlaylistName');
+    const visibilitySelect = document.getElementById('newPlaylistVisibility');
+    const name = nameInput.value.trim();
+    const visibility = visibilitySelect.value;
+
+    if (!name) return alert("Please type a playlist name!");
+
+    fetch('${pageContext.request.contextPath}/collection/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'name=' + encodeURIComponent(name) + '&visibility=' + encodeURIComponent(visibility)
+    })
+    .then(res => res.text())
+    .then(() => {
+        nameInput.value = "";
+        loadPlaylists();
+    })
+    .catch(err => alert("Failed to create playlist."));
+}
+
+function saveToSelectedPlaylist() {
+    const collectionId = document.getElementById('playlistSelect').value;
+    const cheatsheetId = selectedCheatsheetIdForPlaylist;
+
+    if (!collectionId) return alert("Please select a playlist first!");
+    if (!cheatsheetId) return alert("Cheat sheet context error!");
+
+    fetch('${pageContext.request.contextPath}/collection/add-to-playlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'collectionId=' + encodeURIComponent(collectionId) + '&cheatsheetId=' + encodeURIComponent(cheatsheetId)
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data === "Item already added!") {
+            alert("This cheat sheet is already inside this playlist.");
+        } else {
+            alert("Successfully added to your playlist!");
+            if (playlistModalObj) playlistModalObj.hide();
+        }
+    })
+    .catch(() => alert("Error saving to playlist"));
+}
+document.addEventListener("DOMContentLoaded", function(){
+    applyDynamicTextColors();
+
+    document.querySelectorAll(".see-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault(); e.stopPropagation();
+            const desc = this.previousElementSibling;
+            if (desc.style.maxHeight === "none") {
+                desc.style.maxHeight = "95px"; this.innerText = "See More";
+            } else {
+                desc.style.maxHeight = "none"; this.innerText = "See Less";
+            }
+        });
+    });
+
+    // 🚀 🛑 [ဤလိုင်းသစ်ကို တိုးမြှင့်ထည့်သွင်းပေးပါဦးဗျာ]
+    // Dropdown Button ကို နှိပ်လိုက်တဲ့အခါ အပေါ်က <a> tag ရဲ့ Detail Page လင့်ခ်ဆီ အလုပ်လှမ်းမလုပ်အောင် လုံးဝ ညှပ်ပိတ်တားဆီးခြင်း
+    document.querySelectorAll('.dropdown, .dropdown button, .dropdown-menu').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+});
+function toggleFolder(id, card){
+
+    const content = document.getElementById(id);
+
+    if(!content){
+        return;
+    }
+
+    const isOpen = content.classList.contains("active");
+
+    document.querySelectorAll(".folder-content").forEach(function(item){
+        item.classList.remove("active");
+    });
+
+    document.querySelectorAll(".folder-card").forEach(function(item){
+        item.classList.remove("active");
+        const hint = item.querySelector(".folder-hint");
+        if(hint){
+            hint.innerText = "Click to view cheatsheets";
+        }
+    });
+
+    if(!isOpen){
+        content.classList.add("active");
+        card.classList.add("active");
+
+        const hint = card.querySelector(".folder-hint");
+        if(hint){
+            hint.innerText = "Click to close";
+        }
+
+        content.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    }
+}
+
+function getContrastColor(hexColor) {
+    if (!hexColor || hexColor === "null") {
+        hexColor = "#2563eb";
+    }
+
+    hexColor = hexColor.replace("#", "");
+
+    if (hexColor.length === 3) {
+        hexColor =
+            hexColor[0] + hexColor[0] +
+            hexColor[1] + hexColor[1] +
+            hexColor[2] + hexColor[2];
+    }
+
+    const r = parseInt(hexColor.substr(0, 2), 16);
+    const g = parseInt(hexColor.substr(2, 2), 16);
+    const b = parseInt(hexColor.substr(4, 2), 16);
+
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+    return (yiq >= 128) ? "#1e293b" : "#ffffff";
+}
+
+function applyDynamicTextColors() {
+    document.querySelectorAll(".auto-text-color").forEach(function (card) {
+        const bgHex = card.getAttribute("data-color");
+        const idealTextColor = getContrastColor(bgHex);
+        card.style.setProperty("--text-color", idealTextColor);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    applyDynamicTextColors();
+
+    document.querySelectorAll(".see-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const desc = this.previousElementSibling;
+
+            if (desc.style.maxHeight === "none") {
+                desc.style.maxHeight = "95px";
+                this.innerText = "See More";
+            } else {
+                desc.style.maxHeight = "none";
+                this.innerText = "See Less";
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

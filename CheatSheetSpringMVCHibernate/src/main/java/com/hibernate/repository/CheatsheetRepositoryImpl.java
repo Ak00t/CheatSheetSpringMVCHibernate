@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.hibernate.entity.CheatsheetEntity;
+import com.hibernate.entity.CheatsheetRowEntity;
+import com.hibernate.entity.CheatsheetSectionEntity;
 import com.hibernate.entity.enums.CheatsheetVisibility;
 import com.hibernate.entity.enums.ContentStatus;
 import com.hibernate.entity.enums.PublishStatus;
@@ -119,14 +121,14 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
                 .getSingleResult();
 
         if (cheatsheet.getSections() != null) {
-            for (com.hibernate.entity.CheatsheetSectionEntity sec : cheatsheet.getSections()) {
+            for (CheatsheetSectionEntity sec : cheatsheet.getSections()) {
 
                 sessionFactory.getCurrentSession()
                         .createQuery(
                                 "select distinct s from CheatsheetSectionEntity s " +
                                 "left join fetch s.rows r " +
                                 "where s.id = :secId",
-                                com.hibernate.entity.CheatsheetSectionEntity.class)
+                                CheatsheetSectionEntity.class)
                         .setParameter("secId", sec.getId())
                         .getSingleResult();
 
@@ -146,7 +148,7 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
                                         "select distinct r from CheatsheetRowEntity r " +
                                         "left join fetch r.cells " +
                                         "where r.id = :rowId",
-                                        com.hibernate.entity.CheatsheetRowEntity.class)
+                                        CheatsheetRowEntity.class)
                                 .setParameter("rowId", row.getId())
                                 .getSingleResult();
                     }
@@ -295,6 +297,7 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
                 .uniqueResult();
     }
 
+    @Override
     public CheatsheetEntity findVisibleCheatsheet(Long cheatsheetId, Long loginUserId) {
 
         CheatsheetEntity cheatsheet = findDetailsById(cheatsheetId);
@@ -303,24 +306,44 @@ public class CheatsheetRepositoryImpl implements CheatsheetRepository {
             return null;
         }
 
+        
         if (loginUserId != null
                 && cheatsheet.getUser() != null
                 && cheatsheet.getUser().getId().equals(loginUserId)
                 && cheatsheet.getStatus() != ContentStatus.DELETED) {
-
             return cheatsheet;
         }
 
+        
         if (cheatsheet.getPublishStatus() == PublishStatus.PUBLISHED
                 && cheatsheet.getVisibility() == CheatsheetVisibility.PUBLIC
                 && cheatsheet.getStatus() == ContentStatus.ACTIVE) {
-
             return cheatsheet;
+        }
+
+       
+        if (cheatsheet.getPublishStatus() == PublishStatus.PUBLISHED
+                && cheatsheet.getVisibility() == CheatsheetVisibility.UNLISTED
+                && cheatsheet.getStatus() == ContentStatus.ACTIVE 
+                && loginUserId != null) {
+
+            
+            String checkFollowHql = "select count(f.id) from UserFollowEntity f " +
+                                    "where f.followerId = :loginUserId and f.followingId = :ownerId";
+            
+            Long followCount = sessionFactory.getCurrentSession()
+                    .createQuery(checkFollowHql, Long.class)
+                    .setParameter("loginUserId", loginUserId)
+                    .setParameter("ownerId", cheatsheet.getUser().getId())
+                    .getSingleResult();
+
+            if (followCount > 0) {
+                return cheatsheet; 
+            }
         }
 
         return null;
     }
-    
     
     
     //fianl
@@ -606,35 +629,50 @@ public long countAllByUserId(Long userId) {
 
 
 @Override
-public List<CheatsheetEntity> findUnlistedByUserId(
-        Long userId) {
+public List<CheatsheetEntity> findUnlistedByUserId(Long userId) {
+    // 🌟 လာကြည့်တဲ့သူ (userId) က follow လုပ်ထားတဲ့သူတွေထဲက Followers Only (UNLISTED) တွေကိုပဲ ဆွဲထုတ်ပေးမည့် Query
+    String hql = "select distinct c from CheatsheetEntity c " +
+                 "left join fetch c.user " +
+                 "left join fetch c.category " +
+                 "left join fetch c.mediaList " +
+                 "where c.user.id = :userId " +
+                 "and c.visibility = :visibility " +
+                 "and c.publishStatus = :publishStatus " +
+                 "and c.status = :status " +
+                 "order by c.updatedAt desc";
 
-    return sessionFactory
-            .getCurrentSession()
-            .createQuery(
-                    "select distinct c " +
-                    "from CheatsheetEntity c " +
-                    "left join fetch c.user " +
-                    "left join fetch c.category " +
-                    "left join fetch c.mediaList " +
-                    "where c.user.id = :userId " +
-                    "and c.visibility = :visibility " +
-                    "and c.status != :deletedStatus " +
-                    "order by c.updatedAt desc",
-                    CheatsheetEntity.class)
-            .setParameter(
-                    "userId",
-                    userId)
-            .setParameter(
-                    "visibility",
-                    CheatsheetVisibility.UNLISTED)
-            .setParameter(
-                    "deletedStatus",
-                    ContentStatus.DELETED)
+    return sessionFactory.getCurrentSession()
+            .createQuery(hql, CheatsheetEntity.class)
+            .setParameter("userId", userId)
+            .setParameter("visibility", CheatsheetVisibility.UNLISTED)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("status", ContentStatus.ACTIVE)
             .getResultList();
 }
 
+@Override
+public List<CheatsheetEntity> findPublicSheetsOfFollowersByUserId(Long userId) {
+    // HQL Subquery logic: Target User ကို Follow လုပ်ထားတဲ့ followerId တွေရဲ့ active public sheets တွေကို ညှပ်ထုတ်ခြင်း
+    String hql = "select distinct c from CheatsheetEntity c " +
+                 "left join fetch c.user " +
+                 "left join fetch c.category " +
+                 "left join fetch c.mediaList " +
+                 "where c.user.id in (" +
+                 "    select f.followerId from UserFollowEntity f where f.followingId = :userId" +
+                 ") " +
+                 "and c.publishStatus = :publishStatus " +
+                 "and c.visibility = :visibility " +
+                 "and c.status = :status " +
+                 "order by c.createdAt desc";
 
+    return sessionFactory.getCurrentSession()
+            .createQuery(hql, CheatsheetEntity.class)
+            .setParameter("userId", userId)
+            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+            .setParameter("visibility", CheatsheetVisibility.PUBLIC)
+            .setParameter("status", ContentStatus.ACTIVE)
+            .getResultList();
+}
 
     
 }

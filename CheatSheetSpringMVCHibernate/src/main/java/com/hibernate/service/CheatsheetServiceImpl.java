@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hibernate.entity.*;
+import com.hibernate.entity.enums.CheatsheetVisibility;
 import com.hibernate.entity.enums.ContentStatus;
+import com.hibernate.entity.enums.PublishStatus;
 import com.hibernate.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -301,11 +303,33 @@ public class CheatsheetServiceImpl implements CheatsheetService {
     }
 
     @Override
-    public List<CheatsheetEntity> findUnlistedByUserId(
-            Long userId) {
-
-        return cheatsheetRepository
-                .findUnlistedByUserId(userId);
+    public List<CheatsheetEntity> findUnlistedByUserId(Long userId) {
+        return cheatsheetRepository.findUnlistedByUserId(userId);
     }
+    @Override
+    public List<CheatsheetEntity> findPublicSheetsOfFollowersByUserId(Long userId) {
+        String hql = "select distinct c from CheatsheetEntity c " +
+                     "left join fetch c.user " +
+                     "left join fetch c.category " +
+                     "left join fetch c.mediaList " +
+                     "where c.user.id in (" +
+                     "    select f.followerId from UserFollowEntity f where f.followingId = :userId" +
+                     ") " +
+                     "and c.publishStatus = :publishStatus " +
+                     // 🌟 ဤနေရာတွင် PUBLIC အပြင် UNLISTED (Followers Only) ကိုပါ OR ခံပြီး တိုးမြှင့်လိုက်သည်
+                     "and (c.visibility = :pubVisibility or c.visibility = :unlistedVisibility) " + 
+                     "and c.status = :status " +
+                     "order by c.createdAt desc";
+
+        return sessionFactory.getCurrentSession()
+                .createQuery(hql, CheatsheetEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("publishStatus", PublishStatus.PUBLISHED)
+                .setParameter("pubVisibility", CheatsheetVisibility.PUBLIC)
+                .setParameter("unlistedVisibility", CheatsheetVisibility.UNLISTED) 
+                .setParameter("status", ContentStatus.ACTIVE)
+                .getResultList();
+    }
+    
 
 }

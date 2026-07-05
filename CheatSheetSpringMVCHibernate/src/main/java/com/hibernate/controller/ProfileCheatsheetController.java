@@ -8,7 +8,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.SessionFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,7 @@ import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.entity.enums.CheatsheetVisibility;
 import com.hibernate.entity.enums.PublishStatus;
+import com.hibernate.repository.UserProfileRepository;
 import com.hibernate.service.CheatsheetService;
 import com.hibernate.service.CommentService;
 
@@ -34,23 +38,9 @@ public class ProfileCheatsheetController {
 
 	private final CommentService commentService;
 	private final CheatsheetService cheatsheetService;
-
-	/*
-	 * @RequestMapping public String list(HttpSession session, Model model) {
-	 * 
-	 * UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
-	 * 
-	 * if (currentUser == null) { return "redirect:/"; }
-	 * 
-	 * Long userId = currentUser.getId();
-	 * 
-	 * model.addAttribute("userId", userId);
-	 * 
-	 * model.addAttribute( "cheatsheets",
-	 * cheatsheetService.findProfileCheatsheetByUserId(userId));
-	 * 
-	 * return "profile-cheatsheet-list"; }
-	 */
+	private final SessionFactory sessionFactory;
+    private final UserProfileRepository userRepo;
+	
 
 	@RequestMapping
 	public String list(HttpSession session, Model model) {
@@ -322,5 +312,5 @@ public class ProfileCheatsheetController {
 
 		return "redirect:/profile-cheatsheets";
 	}
-
+	
 }

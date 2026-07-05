@@ -3,6 +3,8 @@ package com.hibernate.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -59,4 +61,18 @@ public class CategoryFollowController {
         return "redirect:/child-category/"
                 + categoryId;
     }
+ 
+ 	@GetMapping("/category/followed-list")
+ 	public String viewFollowedCategories(HttpSession session, Model model) {
+ 		UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+ 		if (currentUser == null) {
+ 			return "redirect:/?unauthorized=true";
+ 		}
+
+ 		java.util.List<com.hibernate.entity.CategoryEntity> followedCategories = 
+ 				userFollowedCategoryService.findFollowedCategoriesByUserId(currentUser.getId());
+
+ 		model.addAttribute("followedCategories", followedCategories);
+ 		return "followed-categories-list"; 
+ 	}
 }
