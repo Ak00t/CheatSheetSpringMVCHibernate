@@ -6,82 +6,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Admin - Taxonomy Control Panel</title>
+    
+    <!-- Core UI System Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
     <style>
+        /* Exact Synchronization with Admin Dashboard System Variables */
         :root {
-            --bg-canvas: #f8fafc;       
-            --brand-primary: #2563eb;     
-            --brand-gradient: linear-gradient(135deg, #1e40af, #2563eb);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow-card: 0 4px 12px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --bg-canvas: #f4fbfc;       
+            --brand-blue: #2563eb;     
+            --brand-blue-gradient: linear-gradient(135deg, #1e40af, #2563eb);
+            --brand-light: #eff6ff;     
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 10px 20px rgba(37, 99, 235, 0.12);
             --input-border: #cbd5e1;
         }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-canvas);
-            color: var(--text-main);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
+
         .page-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        .content-body-wrapper {
+
+        /* Synchronized Layout Spacing from Dashboard */
+        .page-wrapper {
             display: flex;
-            padding: 32px;
-            gap: 32px;
-            flex: 1;
+            padding: 24px;
+            gap: 24px;
             align-items: flex-start;
+            flex: 1;
         }
+
         .main-workspace {
             flex-grow: 1;
             min-width: 0;
         }
-        .workspace-banner {
-            background: var(--brand-gradient); 
-            border-radius: 20px;
-            padding: 36px 48px; 
+
+        /* Harmonized Dashboard Banner Layout */
+        .dashboard-banner {
+            background: var(--brand-blue-gradient);
+            border-radius: 24px;
+            padding: 45px 60px; 
             color: #ffffff;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.2);
+            margin-bottom: 28px;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         }
+        
         .banner-title {
             font-weight: 800;
-            font-size: 32px; 
-            margin-bottom: 8px;
+            font-size: 50px; 
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
+        
         .banner-subtitle {
-            font-size: 15px; 
-            opacity: 0.9;
+            font-size: 24px; 
+            opacity: 0.95;
             margin: 0;
+            max-width: 800px;
+            line-height: 1.6;
         }
 
-        /* Web Tab Controls Custom Styles */
+        /* Tab Controls Style adapted for Dashboard consistency */
         .taxonomy-tabs-nav {
             display: flex;
-            background-color: #e2e8f0;
+            background-color: var(--border-light);
             padding: 6px;
             border-radius: 14px;
             gap: 6px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             border: none;
             max-width: 600px;
             list-style: none;
         }
+        
         .taxonomy-tabs-nav .nav-link {
             flex: 1;
             border: none !important;
-            padding: 14px 20px;
+            padding: 12px 20px;
             font-size: 14px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--text-gray);
             border-radius: 10px;
             background: transparent;
             transition: all 0.2s ease;
@@ -91,13 +111,13 @@
             gap: 10px;
             width: 100%;
         }
+        
         .taxonomy-tabs-nav .nav-link.active {
             background-color: #ffffff !important;
-            color: var(--brand-primary) !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            color: var(--brand-blue) !important;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Tab Content Custom Toggles */
         .custom-tab-panel {
             display: none;
         }
@@ -105,35 +125,37 @@
             display: block;
         }
 
+        /* Base Card Styling Matching Dashboard Info Card Dimensions exactly */
         .panel-card {
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 36px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--border-color);
-            margin-bottom: 32px;
-            height: auto;
+            padding: 28px;
+            border: none;
+            box-shadow: var(--shadow-sm);
+            height: 100%; /* Sync with info-card to retain proportional sizing */
         }
+        
         .panel-card h2 {
             font-size: 20px;
             margin-bottom: 24px;
-            border-left: 5px solid var(--brand-primary);
+            border-left: 5px solid var(--brand-blue);
             padding-left: 14px;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--text-dark);
         }
+        
         .field-wrapper { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: #334155; }
-        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; font-size: 15px; color: var(--text-main); }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; font-size: 15px; color: var(--text-dark); background-color: #ffffff; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-blue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
         textarea { resize: vertical; min-height: 100px; }
         .action-submit-btn { width: 100%; border: none; padding: 14px; border-radius: 10px; color: white; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
-        .btn-primary-gradient { background: var(--brand-gradient); }
+        .btn-primary-gradient { background: var(--brand-blue-gradient); }
         .btn-emerald-gradient { background: linear-gradient(135deg, #10b981, #059669); }
         
-        /* Dropdown Tree Custom Styles */
+        /* Dropdown Tree Styles */
         .dropdown-tree-container { position: relative; }
-        .dropdown-trigger-field { width: 100%; padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; background: #ffffff; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 48px; font-weight: 500; }
+        .dropdown-trigger-field { width: 100%; padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; background: #ffffff; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 48px; font-weight: 500; color: var(--text-dark); }
         .dropdown-tree-popover { display: none; position: absolute; left: 0; right: 0; top: 54px; z-index: 50; max-height: 260px; overflow-y: auto; padding: 10px; border-radius: 12px; background: #1e293b; border: 1px solid #334155; box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); }
         .dropdown-tree-container.open .dropdown-tree-popover { display: block; }
         .popover-parent-item { margin-bottom: 6px; }
@@ -160,48 +182,60 @@
             font-weight: 700;
             box-shadow: 0 10px 24px rgba(239, 68, 68, 0.08);
         }
+        .server-error-alert i { font-size: 22px; margin-top: 1px; color: #dc2626; }
+        .server-error-alert strong { display: block; font-size: 15px; margin-bottom: 4px; }
+        .server-error-alert span { display: block; font-size: 14px; line-height: 1.5; }
 
-        .server-error-alert i {
-            font-size: 22px;
-            margin-top: 1px;
-            color: #dc2626;
+        /* Exact Synchronization with Dashboard Footer Structure */
+        .site-footer {
+            background: #111827;
+            color: white;
+            margin-top: 60px;
+            padding: 40px 20px;
         }
-
-        .server-error-alert strong {
-            display: block;
-            font-size: 15px;
-            margin-bottom: 4px;
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
         }
-
-        .server-error-alert span {
-            display: block;
+        .footer-container h3 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .footer-container p {
+            color: #d1d5db;
+            margin-bottom: 8px;
+        }
+        .copyright {
+            margin-top: 15px;
             font-size: 14px;
-            line-height: 1.5;
+            color: #9ca3af;
         }
-
     </style>
 </head>
 <body>
+
+    <div class="page-container">
+        
+        <!-- Exact Synchronization: Global Header embedded directly inside page-container -->
         <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
             <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
-            <nav style="display:flex; gap:25px;">
-         
+            <nav style="display:flex; align-items:center; gap:25px;">
                 <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
             </nav>
         </header>
 
-    <div class="page-container">
-      
-        
-        <div class="content-body-wrapper">
+        <!-- Standardized Layout Spacing Container Wrapper -->
+        <div class="page-wrapper">
+            
             <jsp:include page="/WEB-INF/views/sidebar.jsp" />
             
             <div class="main-workspace">
-                <div class="workspace-banner">
-                    <div>
-                        <h1 class="banner-title">Taxonomy Structure Repository</h1>
-                        <p class="banner-subtitle">Configure enterprise application schemas, structured hierarchical categories, and specialized developer tags.</p>
-                    </div>
+                
+                <!-- Harmonized Banner Config Layout -->
+                <div class="dashboard-banner">
+                    <h1 class="banner-title">Taxonomy Structure Repository</h1>
+                    <p class="banner-subtitle">Configure enterprise application schemas, structured hierarchical categories, and specialized developer tags.</p>
                 </div>
 
                 <c:if test="${not empty errorMessage}">
@@ -341,7 +375,15 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="/WEB-INF/views/footer.jsp" />
+        
+        <!-- Standardized Dashboard Footer System Alignment -->
+        <footer class="site-footer">
+            <div class="footer-container">
+                <h3>CheatSheet Hub</h3>
+                <p>Learn Faster. Share Knowledge. Build Better.</p>
+                <p class="copyright">© 2026 CheatSheet Hub. All Rights Reserved.</p>
+            </div>
+        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -353,24 +395,16 @@
             const panelProperties = document.getElementById('panel-properties');
             const panelDirectory = document.getElementById('panel-directory');
 
-            // 1. Manage Properties Button Trigger Listener
             btnProperties.addEventListener('click', function() {
-                // Adjust Active Tab Header State
                 btnProperties.classList.add('active');
                 btnDirectory.classList.remove('active');
-                
-                // Adjust Content Layout Sheet Toggles
                 panelProperties.classList.add('active-panel');
                 panelDirectory.classList.remove('active-panel');
             });
 
-            // 2. Unified Taxonomy Directory Button Trigger Listener
             btnDirectory.addEventListener('click', function() {
-                // Adjust Active Tab Header State
                 btnDirectory.classList.add('active');
                 btnProperties.classList.remove('active');
-                
-                // Adjust Content Layout Sheet Toggles
                 panelDirectory.classList.add('active-panel');
                 panelProperties.classList.remove('active-panel');
             });
