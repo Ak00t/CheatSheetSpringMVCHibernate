@@ -81,239 +81,265 @@
                     .custom-grid-menu .dropdown-item i {
                         font-size: 16px;
                     }
+                    /* 🌟 Scroll ဆွဲချသော်လည်း အပေါ်ဆုံးတွင် အမြဲကပ်နေစေမည့် Sticky Engine */
+.sticky-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1060; /* Dropdown များနှင့် အဆင့်တူညီစွာ အပေါ်ဆုံး၌ လွှမ်းမိုးထားရန် */
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06) !important;
+    background-color: #ffffff !important;
+    box-sizing: border-box;
+}
+
+/* 🌟 Header အောက်ခြေရှိ Content များ အပေါ်သို့ အတင်းတိုးမဝင်စေရန် Padding Space */
+body {
+    padding-top: 85px !important; /* Header ၏ အမြင့်အလိုက် Content များကို အောက်သို့ တန်းစီတွန်းချပေးခြင်း */
+}
+
+/* 🌟 ညာဘက် Navigation အကန့်ရှိ အရာများအားလုံး ဘေးတိုက် တန်းစီနေစေရန် ထိန်းချုပ်မှု */
+.sticky-header nav {
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important; /* ခလုတ်တစ်ခုချင်းစီကြား Gap စနစ် ပုံစံကျစေရန် */
+    flex-shrink: 0 !important;
+    white-space: nowrap !important; /* စာသားများ အောက်လိုင်း ဆင်းမသွားစေရန် */
+}
+
+/* 🌟 Dropdown Menu များ နေရာကွက်တိ ပေါ်နေစေရန် ရွေးချယ်မှု Matrix */
+.custom-grid-menu {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 1070;
+}
                 </style>
 
-                <header class="bg-white px-4 py-3 d-flex justify-content-between align-items-center shadow-sm">
-                    <h2 class="m-0" style="color:#2563eb; font-weight: 700;">
-                        <a href="${pageContext.request.contextPath}/" class="text-decoration-none">
-                            CheatSheet Hub
-                        </a>
-                    </h2>
-                    <form action="${pageContext.request.contextPath}/search" method="GET"
-                        class="d-flex mx-4 position-relative" style="width: 45%; max-width: 600px;">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3 text-muted">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text" id="headerSearchInput" name="query" autocomplete="off"
-                                class="form-control bg-light border-start-0 rounded-end-pill py-2 shadow-none"
-                                placeholder="Search for cheatsheets, tags, or categories or users..."
-                                value="<c:out value='${param.query}' />" required="required" />
-                        </div>
+                <!-- 💡 🔴 HEADER တစ်ခုလုံးကို STICKY-HEADER ဖြစ်အောင် တပ်ဆင်လိုက်ပါပြီ -->
+<header class="bg-white px-4 py-3 d-flex justify-content-between align-items-center shadow-sm sticky-header">
+    
+    <!-- ================= ၁။ LOGO AREA ================= -->
+    <h2 class="m-0" style="color:#2563eb; font-weight: 700; flex-shrink: 0;">
+        <a href="${pageContext.request.contextPath}/" class="text-decoration-none">
+            CheatSheet Hub
+        </a>
+    </h2>
 
-                        <div id="searchSuggestBox" class="card shadow border position-absolute w-100 mt-2 d-none"
-                            style="top: 100%; left: 0; z-index: 1050; max-height: 400px; overflow-y: auto; border-radius: 15px;">
-                            <div id="suggestContent" class="p-2"></div>
-                        </div>
-                    </form>
+    <!-- ================= ၂။ SEARCH BAR AREA ================= -->
+    <form action="${pageContext.request.contextPath}/search" method="GET"
+        class="d-flex mx-4 position-relative" style="width: 45%; max-width: 600px; flex-grow: 1;">
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="text" id="headerSearchInput" name="query" autocomplete="off"
+                class="form-control bg-light border-start-0 rounded-end-pill py-2 shadow-none"
+                placeholder="Search for cheatsheets, tags, or categories or users..."
+                value="<c:out value='${param.query}' />" required="required" />
+        </div>
 
-                    <nav class="d-flex align-items-center gap-4">
-                        <a href="${pageContext.request.contextPath}/"
-                            class="text-decoration-none text-secondary fw-semibold">
-                            Home
-                        </a>
+        <div id="searchSuggestBox" class="card shadow border position-absolute w-100 mt-2 d-none"
+            style="top: 100%; left: 0; z-index: 1050; max-height: 400px; overflow-y: auto; border-radius: 15px;">
+            <div id="suggestContent" class="p-2"></div>
+        </div>
+    </form>
 
-                        <c:choose>
-                            <c:when test="${not empty sessionScope.currentUser}">
-                                <div class="dropdown" id="notificationDropdownArea">
-                                    <button
-                                        class="btn btn-link text-dark p-1 position-relative border-0 shadow-none dropdown-toggle text-decoration-none no-caret"
-                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-bell fs-5"></i>
-                                        <c:if
-                                            test="${not empty unreadNotifications && fn:length(unreadNotifications) > 0}">
-                                            <span id="notiBadge"
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                                style="font-size: 9px; padding: 0.35em 0.5em;">
-                                                ${fn:length(unreadNotifications)}
-                                            </span>
-                                        </c:if>
-                                    </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2"
-                                        style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
-
-                                        <li
-                                            class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
-                                            <span>Notifications</span>
-
-                                            <c:if test="${not empty unreadNotifications}">
-                                                <button onclick="markAllAsRead()"
-                                                    class="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
-                                                    style="font-size:11px;">
-                                                    Mark all read
-                                                </button>
-                                            </c:if>
-                                        </li>
-
-<div id="notiList">
-    <!-- ================= UNREAD NOTIFICATIONS ================= -->
-    <c:if test="${not empty unreadNotifications}">
-        <c:forEach var="noti" items="${unreadNotifications}">
-            <li class="border-bottom list-unstyled bg-light">
-                <!-- 1. Determine target link destination based on type matching -->
-                <c:choose>
-                    <c:when test="${noti.type eq 'FOLLOW'}">
-                        <c:set var="targetLink" value="${pageContext.request.contextPath}/profile/${noti.referenceId}" />
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="targetLink" value="${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}" />
-                    </c:otherwise>
-                </c:choose>
-
-                <!-- 2. Pass dynamic destination directly into JS onclick trigger handler -->
-                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
-                    href="javascript:void(0);"
-                    onclick="readNotification(${noti.id}, '${targetLink}')">
-                    <div class="fw-bold text-dark small d-flex align-items-center gap-2">
-                        <i class="bi bi-bell-fill text-primary"></i>
-                        ${noti.title}
-                    </div>
-                    <div class="text-secondary" style="font-size:12px;line-height:1.4;">
-                        ${noti.message}
-                    </div>
-                </a>
-            </li>
-        </c:forEach>
-    </c:if>
-
-    <!-- ================= EMPTY STATE PROMPT ================= -->
-    <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
-        <li class="text-center py-4 text-muted small list-unstyled">
-            <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
-            No notifications
-        </li>
-    </c:if>
-
-    <!-- ================= HISTORICAL NOTIFICATIONS ================= -->
-    <c:if test="${not empty readNotificationsHistory}">
-        <li>
-            <hr class="dropdown-divider">
-        </li>
-        <li class="dropdown-header fw-bold text-secondary">Notification History</li>
+    <!-- ================= ၃။ RIGHT NAVIGATION AREA (HOME, CREATE, PROFILE) ================= -->
+    <nav class="d-flex align-items-center gap-4">
         
-        <c:forEach var="history" items="${readNotificationsHistory}">
-            <li class="border-bottom list-unstyled">
-                <!-- 3. Handle same type validation checks for historical links -->
-                <c:choose>
-                    <c:when test="${history.type eq 'FOLLOW'}">
-                        <c:set var="historyLink" value="${pageContext.request.contextPath}/profile/${history.referenceId}" />
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="historyLink" value="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}" />
-                    </c:otherwise>
-                </c:choose>
+        <!-- 🏠 HOME LINK -->
+        <a href="${pageContext.request.contextPath}/"
+            class="text-decoration-none text-secondary fw-semibold">
+            Home
+        </a>
 
-                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
-                    href="${historyLink}">
-                    <div class="small d-flex align-items-center gap-2">
-                        <i class="bi bi-check-circle text-success"></i>
-                        ${history.title}
-                    </div>
-                    <div style="font-size:12px;">${history.message}</div>
-                </a>
-            </li>
-        </c:forEach>
-    </c:if>
-</div>
-                                    </ul>
-                                </div>
+        <c:choose>
+            <c:when test="${not empty sessionScope.currentUser}">
+                
+                <!-- 🔔 NOTIFICATION DROPDOWN BUTTON & LIST -->
+                <div class="dropdown" id="notificationDropdownArea">
+                    <button
+                        class="btn btn-link text-dark p-1 position-relative border-0 shadow-none dropdown-toggle text-decoration-none no-caret"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell fs-5"></i>
+                        <c:if test="${not empty unreadNotifications && fn:length(unreadNotifications) > 0}">
+                            <span id="notiBadge"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 9px; padding: 0.35em 0.5em;">
+                                ${fn:length(unreadNotifications)}
+                            </span>
+                        </c:if>
+                    </button>
 
-                                <a href="${pageContext.request.contextPath}/cheatsheet/create"
-                                    class="text-decoration-none text-secondary fw-semibold">
-                                    Create Cheatsheet
-                                </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2"
+                        style="width: 320px; max-height: 400px; overflow-y: auto; z-index: 1100;">
 
-                                <div class="dropdown d-inline-block profile-hover-dropdown">
-                                    <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}"
-                                        class="text-decoration-none text-secondary fw-semibold dropdown-toggle d-flex align-items-center gap-2"
-                                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li class="px-3 py-2 fw-bold text-dark border-bottom small d-flex justify-content-between align-items-center">
+                            <span>Notifications</span>
+                            <c:if test="${not empty unreadNotifications}">
+                                <button onclick="markAllAsRead()"
+                                    class="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
+                                    style="font-size:11px;">
+                                    Mark all read
+                                </button>
+                            </c:if>
+                        </li>
 
+                        <div id="notiList">
+                            <!-- UNREAD NOTIFICATIONS -->
+                            <c:if test="${not empty unreadNotifications}">
+                                <c:forEach var="noti" items="${unreadNotifications}">
+                                    <li class="border-bottom list-unstyled bg-light">
                                         <c:choose>
-                                            <c:when test="${not empty sessionScope.currentUser.profileImg}">
-                                                <img src="${pageContext.request.contextPath}/uploads/profiles/${sessionScope.currentUser.profileImg}"
-                                                    alt="User Profile"
-                                                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #2563eb;" />
+                                            <c:when test="${noti.type eq 'FOLLOW'}">
+                                                <c:set var="targetLink" value="${pageContext.request.contextPath}/profile/${noti.referenceId}" />
                                             </c:when>
                                             <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/uploads/profiles/default.png"
-                                                    alt="Default Profile"
-                                                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #64748b;" />
+                                                <c:set var="targetLink" value="${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}" />
                                             </c:otherwise>
                                         </c:choose>
 
-                                        <span
-                                            class="ms-1 text-dark small fw-bold">${sessionScope.currentUser.name}</span>
-                                    </a>
-
-                                    <!-- 💡 ဤနေရာတွင် dropdown-menu-end အစား dropdown-menu-start သို့ပြောင်းလဲပြီး style positioning ကို ညှိလိုက်ပါသည် -->
-                                    <div class="dropdown-menu dropdown-menu-start shadow border-0 custom-grid-menu mt-2"
-                                        style="left: auto !important; right: 0 !important; transform: translateX(10px);">
-                                        <div class="grid-menu-container">
-
-                                            <!-- ဘယ်ဘက်ခြမ်း Column (Profile & Socials) -->
-                                            <div class="grid-column-side grid-column-divider">
-                                                <h6 class="dropdown-header px-2 fw-bold text-primary mb-1"></h6>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
-                                                    <i class="bi bi-person-circle text-primary"></i> My Profile
-                                                </a>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/follow/followers-view">
-                                                    <i class="bi bi-people-fill text-info"></i> My Followers
-                                                </a>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/follow/following-view">
-                                                    <i class="bi bi-person-heart text-danger"></i> Following Users
-                                                </a>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/category/followed-list">
-                                                    <i class="bi bi-grid-fill text-warning"></i> Followed Categories
-                                                </a>
-                                                <div class="mt-auto pt-2 border-top border-light">
-                                                    <a class="dropdown-item text-danger fw-bold"
-                                                        href="${pageContext.request.contextPath}/logout">
-                                                        <i class="bi bi-box-arrow-right text-danger"></i> Log out
-                                                    </a>
-                                                </div>
+                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                                            href="javascript:void(0);"
+                                            onclick="readNotification(${noti.id}, '${targetLink}')">
+                                            <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                                                <i class="bi bi-bell-fill text-primary"></i>
+                                                ${noti.title}
                                             </div>
-
-                                            <!-- ညာဘက်ခြမ်း Column (Collections & Hubs) -->
-                                            <div class="grid-column-side">
-                                                <h6 class="dropdown-header px-2 fw-bold text-success mb-1"></h6>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/profile/bookmarks">
-                                                    <i class="bi bi-bookmark-heart-fill text-warning"></i> Bookmarks
-                                                </a>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/collection/manage">
-                                                    <i class="bi bi-folder-fill text-success"></i> My Collection
-                                                </a>
-                                                <a class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/profile-cheatsheets">
-                                                    <i class="bi bi-file-earmark-spreadsheet-fill text-primary"></i> My
-                                                    Cheatsheets
-                                                </a>
+                                            <div class="text-secondary" style="font-size:12px;line-height:1.4;">
+                                                ${noti.message}
                                             </div>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
 
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- EMPTY STATE PROMPT -->
+                            <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
+                                <li class="text-center py-4 text-muted small list-unstyled">
+                                    <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+                                    No notifications
+                                </li>
+                            </c:if>
 
+                            <!-- HISTORICAL NOTIFICATIONS -->
+                            <c:if test="${not empty readNotificationsHistory}">
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-header fw-bold text-secondary">Notification History</li>
+                                <c:forEach var="history" items="${readNotificationsHistory}">
+                                    <li class="border-bottom list-unstyled">
+                                        <c:choose>
+                                            <c:when test="${history.type eq 'FOLLOW'}">
+                                                <c:set var="historyLink" value="${pageContext.request.contextPath}/profile/${history.referenceId}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="historyLink" value="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}" />
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted" href="${historyLink}">
+                                            <div class="small d-flex align-items-center gap-2">
+                                                <i class="bi bi-check-circle text-success"></i>
+                                                ${history.title}
+                                            </div>
+                                            <div style="font-size:12px;">${history.message}</div>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                        </div>
+                    </ul>
+                </div>
+
+                <!-- 📝 CREATE CHEATSHEET LINK -->
+                <a href="${pageContext.request.contextPath}/cheatsheet/create"
+                    class="text-decoration-none text-secondary fw-semibold">
+                    Create Cheatsheet
+                </a>
+
+                <!-- 👤 PROFILE HOVER DROPDOWN HUB -->
+                <div class="dropdown d-inline-block profile-hover-dropdown">
+                    <a href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}"
+                        class="text-decoration-none text-secondary fw-semibold dropdown-toggle d-flex align-items-center gap-2"
+                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.currentUser.profileImg}">
+                                <img src="${pageContext.request.contextPath}/uploads/profiles/${sessionScope.currentUser.profileImg}"
+                                    alt="User Profile"
+                                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #2563eb;" />
                             </c:when>
                             <c:otherwise>
-                                <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2"
-                                    data-bs-toggle="modal" data-bs-target="#loginModal">
-                                    Login
-                                </button>
-                                <button type="button" class="btn btn-primary btn-sm fw-bold px-3 rounded-2"
-                                    data-bs-toggle="modal" data-bs-target="#registerModal">
-                                    Register
-                                </button>
+                                <img src="${pageContext.request.contextPath}/uploads/profiles/default.png"
+                                    alt="Default Profile"
+                                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #64748b;" />
                             </c:otherwise>
                         </c:choose>
-                    </nav>
-                </header>
+
+                        <span class="ms-1 text-dark small fw-bold">${sessionScope.currentUser.name}</span>
+                    </a>
+
+                    <!-- 2-COLUMN PREMIUM GRID DROPDOWN MENU -->
+                    <div class="dropdown-menu dropdown-menu-start shadow border-0 custom-grid-menu mt-2">
+                        <div class="grid-menu-container">
+
+                            <!-- ဘယ်ဘက်ခြမ်း Column (Profile & Socials) -->
+                            <div class="grid-column-side grid-column-divider">
+                                <h6 class="dropdown-header px-2 fw-bold text-primary mb-1">Account & Socials</h6>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/profile/${sessionScope.currentUser.id}">
+                                    <i class="bi bi-person-circle text-primary"></i> My Profile
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/follow/followers-view">
+                                    <i class="bi bi-people-fill text-info"></i> My Followers
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/follow/following-view">
+                                    <i class="bi bi-person-heart text-danger"></i> Following Users
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/category/followed-list">
+                                    <i class="bi bi-grid-fill text-warning"></i> Followed Categories
+                                </a>
+                                <div class="mt-auto pt-2 border-top border-light">
+                                    <a class="dropdown-item text-danger fw-bold" href="${pageContext.request.contextPath}/logout">
+                                        <i class="bi bi-box-arrow-right text-danger"></i> Log out
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- ညာဘက်ခြမ်း Column (Collections & Hubs) -->
+                            <div class="grid-column-side">
+                                <h6 class="dropdown-header px-2 fw-bold text-success mb-1">Collections</h6>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/profile/bookmarks">
+                                    <i class="bi bi-bookmark-heart-fill text-warning"></i> Bookmarks
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/collection/manage">
+                                    <i class="bi bi-folder-fill text-success"></i> My Collection
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/profile-cheatsheets">
+                                    <i class="bi bi-file-earmark-spreadsheet-fill text-primary"></i> My Cheatsheets
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </c:when>
+            <c:otherwise>
+                <!-- LOGIN / REGISTER BUTTON STATES FOR VISITORS -->
+                <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-2"
+                    data-bs-toggle="modal" data-bs-target="#loginModal">
+                    Login
+                </button>
+                <button type="button" class="btn btn-primary btn-sm fw-bold px-3 rounded-2"
+                    data-bs-toggle="modal" data-bs-target="#registerModal">
+                    Register
+                </button>
+            </c:otherwise>
+        </c:choose>
+    </nav>
+</header>
 
                 <style>
                     .dropdown-toggle.no-caret::after {
