@@ -393,18 +393,17 @@ input[type="color"]{
                 tags, color, cover photo and sections.
             </p>
         </div>
-
-        <a href="${pageContext.request.contextPath}/"
+  <a href="javascript:history.back()"
            style="
                 background:white;
-                color:#059669;
+                color:#0284c7;
                 text-decoration:none;
                 padding:12px 20px;
                 border-radius:14px;
                 font-weight:800;
                 box-shadow:0 6px 18px rgba(0,0,0,.15);
                 transition:.2s;">
-             Back
+            ← Back
         </a>
 
     </div>
@@ -479,9 +478,17 @@ input[type="color"]{
 
                 <div class="form-group">
                     <label>Description</label>
+                    
+                    
                     <textarea name="description"
-           
-                    placeholder="Write cheatsheet description"></textarea>
+          placeholder="Write cheatsheet description"
+          required></textarea>
+                    
+                    
+                    
+                    
+                    
+                    
                 </div>
 
                 <div class="row">
@@ -570,7 +577,10 @@ input[type="color"]{
                        
                                   <input type="text"
                                        name="sectionTitles"
-                                       placeholder="Section Title">
+                                       placeholder="Section Title"required>
+                                       
+                              
+                                       
            
                               </div>
                         </div>
@@ -582,17 +592,17 @@ input[type="color"]{
                                     <input type="text"
                                        name="rowTitles_0"
                                        class="row-title-input"
-                                       placeholder="Row Title">
+                                       placeholder="Row Title"required>
 
                                 <input type="text"
                                        name="cellKeys_0"
                                        class="cell-key-input"
-                                       placeholder="Syntax / Code">
+                                       placeholder="Syntax / Code"required>
 
                                 <input type="text"
                                        name="cellValues_0"
                                        class="cell-value-input"
-                                       placeholder="Output / Rule">
+                                       placeholder="Output / Rule"required>
 
                                 <button type="button"
                                   
@@ -612,11 +622,11 @@ input[type="color"]{
                                 <input type="text"
                                        name="noteTitles_0"
       
-                                       placeholder="Note Title">
+                                       placeholder="Note Title"required>
 
                                 <textarea name="noteContents_0"
                                  
-                                          placeholder="Add helpful note statement..."></textarea>
+                                          placeholder="Add helpful note statement..."required></textarea>
 
                                 <button type="button"
                                         class="btn remove-btn small-remove"
@@ -896,7 +906,7 @@ function addSection(){
                 '<div class="form-group" style="flex:1;">' +
                     '<label>Section Header Name</label>' +
        
-                    '<input type="text" name="sectionTitles" placeholder="Section Title">' +
+                    '<input type="text" name="sectionTitles" placeholder="Section Title"required>' +
                 '</div>' +
 
                 '<button type="button" class="btn remove-btn small-remove" onclick="removeItem(this)">- Section</button>' +
@@ -905,9 +915,9 @@ function addSection(){
             '<div class="rows-container">' +
                
                 '<div class="builder-row">' +
-                    '<input type="text" name="rowTitles_' + sectionIndex + '" class="row-title-input" placeholder="Row Title">' +
-                    '<input type="text" name="cellKeys_' + sectionIndex + '" class="cell-key-input" placeholder="Syntax / Code">' +
-                    '<input type="text" name="cellValues_' + sectionIndex + '" class="cell-value-input" placeholder="Output / Rule">' +
+                    '<input type="text" name="rowTitles_' + sectionIndex + '" class="row-title-input" placeholder="Row Title"required>' +
+                    '<input type="text" name="cellKeys_' + sectionIndex + '" class="cell-key-input" placeholder="Syntax / Code"required>' +
+                    '<input type="text" name="cellValues_' + sectionIndex + '" class="cell-value-input" placeholder="Output / Rule"required>' +
         
                     '<button type="button" class="btn remove-btn small-remove" onclick="removeItem(this)">-</button>' +
                 '</div>' +
@@ -916,8 +926,8 @@ function addSection(){
             '<div class="notes-container">' +
                 '<div class="note-row">' +
                     
-                    '<input type="text" name="noteTitles_' + sectionIndex + '" placeholder="Note Title">' +
-                    '<textarea name="noteContents_' + sectionIndex + '" placeholder="Add helpful note statement..."></textarea>' +
+                    '<input type="text" name="noteTitles_' + sectionIndex + '" placeholder="Note Title"required>' +
+                    '<textarea name="noteContents_' + sectionIndex + '" placeholder="Add helpful note statement..."required></textarea>' +
                     '<button type="button" class="btn remove-btn small-remove" onclick="removeItem(this)">-</button>' +
                 '</div>' +
             '</div>' +
@@ -940,9 +950,9 @@ function addRow(button){
     const rowsContainer = sectionBox.querySelector(".rows-container");
     const html =
         '<div class="builder-row">' +
-            '<input type="text" name="rowTitles_' + index + '" class="row-title-input" placeholder="Row Title">' +
-            '<input type="text" name="cellKeys_' + index + '" class="cell-key-input" placeholder="Syntax / Code">' +
-            '<input type="text" name="cellValues_' + index + '" class="cell-value-input" placeholder="Output / Rule">' +
+            '<input type="text" name="rowTitles_' + index + '" class="row-title-input" placeholder="Row Title"required>' +
+            '<input type="text" name="cellKeys_' + index + '" class="cell-key-input" placeholder="Syntax / Code"required>' +
+            '<input type="text" name="cellValues_' + index + '" class="cell-value-input" placeholder="Output / Rule"required>' +
             '<button type="button" class="btn remove-btn small-remove" onclick="removeItem(this)">-</button>' +
      
         '</div>';
@@ -958,8 +968,8 @@ function addNote(button){
 
     const html =
         '<div class="note-row">' +
-            '<input type="text" name="noteTitles_' + index + '" placeholder="Note Title">' +
-            '<textarea name="noteContents_' + index + '" placeholder="Add helpful note statement..."></textarea>' +
+            '<input type="text" name="noteTitles_' + index + '" placeholder="Note Title"required>' +
+            '<textarea name="noteContents_' + index + '" placeholder="Add helpful note statement..."required></textarea>' +
             '<button type="button" class="btn remove-btn small-remove" onclick="removeItem(this)">-</button>' +
         '</div>';
     notesContainer.insertAdjacentHTML("beforeend", html);

@@ -304,10 +304,47 @@ input[type="color"]{
 
 <div class="container">
 
-    <div class="header">
+   <!--  <div class="header">
         <h1>Edit Cheatsheet</h1>
         <p>Modify your existing cheatsheet structure, layout details and configuration trees.</p>
+    </div> -->
+    
+    
+    <div class="header">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:20px;">
+
+        <div>
+            <h1>Edit Cheatsheet</h1>
+
+            <p>
+                Modify your existing cheatsheet structure,
+                layout details and configuration trees.
+            </p>
+        </div>
+
+        <a href="javascript:history.back()"
+           style="
+                background:white;
+                color:#0284c7;
+                text-decoration:none;
+                padding:12px 20px;
+                border-radius:14px;
+                font-weight:800;
+                box-shadow:0 6px 18px rgba(0,0,0,.15);
+                transition:.2s;">
+            ← Back
+        </a>
+
     </div>
+
+</div>
+    
+    
 
     <form action="${pageContext.request.contextPath}/profile-cheatsheets/update"
           method="post"

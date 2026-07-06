@@ -290,6 +290,38 @@
                 <body>
 
                     <jsp:include page="header.jsp" />
+                    
+                    
+                    
+                    
+                <div class="header">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:20px;">
+
+      
+
+        <a href="javascript:history.back()"
+           style="
+                background:white;
+                color:#0284c7;
+                text-decoration:none;
+                padding:12px 20px;
+                border-radius:14px;
+                font-weight:800;
+                box-shadow:0 6px 18px rgba(0,0,0,.15);
+                transition:.2s;">
+            ← Back
+        </a>
+
+    </div>
+
+</div>
+                    
+                    
 
                     <div class="container py-4">
 
