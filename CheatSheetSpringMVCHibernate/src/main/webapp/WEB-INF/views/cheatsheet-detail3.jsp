@@ -21,19 +21,31 @@
                     }
 
                     .breadcrumb a {
-                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        color: $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                         text-decoration: none;
                         font-weight: 600;
                     }
 
                     .title span {
-                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        color: $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                     }
 
                     .card-title-bar {
                         cursor: pointer;
 
-                        border-top: 5px solid ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        border-top: 5px solid $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                         color: #0f172a;
                     }
 
