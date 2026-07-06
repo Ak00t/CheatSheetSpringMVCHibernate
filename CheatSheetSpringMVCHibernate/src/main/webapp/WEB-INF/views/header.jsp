@@ -146,54 +146,76 @@
                                             </c:if>
                                         </li>
 
-                                        <div id="notiList">
-                                            <c:if test="${not empty unreadNotifications}">
-                                                <c:forEach var="noti" items="${unreadNotifications}">
-                                                    <li class="border-bottom list-unstyled bg-light">
-                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
-                                                            href="javascript:void(0);"
-                                                            onclick="readNotification(${noti.id}, '${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}')">
-                                                            <div
-                                                                class="fw-bold text-dark small d-flex align-items-center gap-2">
-                                                                <i class="bi bi-bell-fill text-primary"></i>
-                                                                ${noti.title}
-                                                            </div>
-                                                            <div class="text-secondary"
-                                                                style="font-size:12px;line-height:1.4;">
-                                                                ${noti.message}
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                </c:forEach>
-                                            </c:if>
+<div id="notiList">
+    <!-- ================= UNREAD NOTIFICATIONS ================= -->
+    <c:if test="${not empty unreadNotifications}">
+        <c:forEach var="noti" items="${unreadNotifications}">
+            <li class="border-bottom list-unstyled bg-light">
+                <!-- 1. Determine target link destination based on type matching -->
+                <c:choose>
+                    <c:when test="${noti.type eq 'FOLLOW'}">
+                        <c:set var="targetLink" value="${pageContext.request.contextPath}/profile/${noti.referenceId}" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="targetLink" value="${pageContext.request.contextPath}/cheatsheet/${noti.referenceId}" />
+                    </c:otherwise>
+                </c:choose>
 
-                                            <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
-                                                <li class="text-center py-4 text-muted small list-unstyled">
-                                                    <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
-                                                    No notifications
-                                                </li>
-                                            </c:if>
+                <!-- 2. Pass dynamic destination directly into JS onclick trigger handler -->
+                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1"
+                    href="javascript:void(0);"
+                    onclick="readNotification(${noti.id}, '${targetLink}')">
+                    <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                        <i class="bi bi-bell-fill text-primary"></i>
+                        ${noti.title}
+                    </div>
+                    <div class="text-secondary" style="font-size:12px;line-height:1.4;">
+                        ${noti.message}
+                    </div>
+                </a>
+            </li>
+        </c:forEach>
+    </c:if>
 
-                                            <c:if test="${not empty readNotificationsHistory}">
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-                                                <li class="dropdown-header fw-bold text-secondary">Notification History
-                                                </li>
-                                                <c:forEach var="history" items="${readNotificationsHistory}">
-                                                    <li class="border-bottom list-unstyled">
-                                                        <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
-                                                            href="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}">
-                                                            <div class="small d-flex align-items-center gap-2">
-                                                                <i class="bi bi-check-circle text-success"></i>
-                                                                ${history.title}
-                                                            </div>
-                                                            <div style="font-size:12px;">${history.message}</div>
-                                                        </a>
-                                                    </li>
-                                                </c:forEach>
-                                            </c:if>
-                                        </div>
+    <!-- ================= EMPTY STATE PROMPT ================= -->
+    <c:if test="${empty unreadNotifications && empty readNotificationsHistory}">
+        <li class="text-center py-4 text-muted small list-unstyled">
+            <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+            No notifications
+        </li>
+    </c:if>
+
+    <!-- ================= HISTORICAL NOTIFICATIONS ================= -->
+    <c:if test="${not empty readNotificationsHistory}">
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-header fw-bold text-secondary">Notification History</li>
+        
+        <c:forEach var="history" items="${readNotificationsHistory}">
+            <li class="border-bottom list-unstyled">
+                <!-- 3. Handle same type validation checks for historical links -->
+                <c:choose>
+                    <c:when test="${history.type eq 'FOLLOW'}">
+                        <c:set var="historyLink" value="${pageContext.request.contextPath}/profile/${history.referenceId}" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="historyLink" value="${pageContext.request.contextPath}/cheatsheet/${history.referenceId}" />
+                    </c:otherwise>
+                </c:choose>
+
+                <a class="dropdown-item p-3 text-wrap d-flex flex-column gap-1 text-muted"
+                    href="${historyLink}">
+                    <div class="small d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle text-success"></i>
+                        ${history.title}
+                    </div>
+                    <div style="font-size:12px;">${history.message}</div>
+                </a>
+            </li>
+        </c:forEach>
+    </c:if>
+</div>
                                     </ul>
                                 </div>
 
@@ -326,8 +348,7 @@
                             <div class="modal-body p-4">
                                 <c:if test="${param.error == 'true'}">
                                     <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Invalid email or password.
-                                        Please try again.
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> User not found or account is unavailable
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                             aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>
                                     </div>
