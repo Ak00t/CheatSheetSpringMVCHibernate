@@ -30,21 +30,41 @@ public class UserRepositoryImpl implements UserRepository {
 					.getSingleResult();
 	}
 
+	/*
+	 * @Override public List<Object[]> findTopContributors(int limit) { return
+	 * sessionFactory .getCurrentSession() .createQuery("select u, count(c.id) " +
+	 * "from UserEntity u " + "join u.cheatsheets c " +
+	 * "where u.status = :userStatus " + "and c.publishStatus = :publishStatus " +
+	 * "and c.visibility = :visibility " + "and c.status = :contentStatus " +
+	 * "group by u.id " + "order by count(c.id) desc", Object[].class)
+	 * .setParameter("userStatus", UserStatus.ACTIVE) .setParameter("publishStatus",
+	 * PublishStatus.PUBLISHED) .setParameter("visibility",
+	 * CheatsheetVisibility.PUBLIC) .setParameter("contentStatus",
+	 * ContentStatus.ACTIVE) .setMaxResults(limit) .getResultList(); }
+	 */
+	
+	
 	@Override
 	public List<Object[]> findTopContributors(int limit) {
-		return sessionFactory
-				.getCurrentSession()
-					.createQuery("select u, count(c.id) " + "from UserEntity u " + "join u.cheatsheets c "
-							+ "where u.status = :userStatus " + "and c.publishStatus = :publishStatus "
-							+ "and c.visibility = :visibility " + "and c.status = :contentStatus " + "group by u.id "
-							+ "order by count(c.id) desc", Object[].class)
-					.setParameter("userStatus", UserStatus.ACTIVE)
-					.setParameter("publishStatus", PublishStatus.PUBLISHED)
-					.setParameter("visibility", CheatsheetVisibility.PUBLIC)
-					.setParameter("contentStatus", ContentStatus.ACTIVE)
-					.setMaxResults(limit)
-					.getResultList();
+	    return sessionFactory
+	            .getCurrentSession()
+	            .createQuery(
+	                    "select u, count(distinct c.id) " +
+	                    "from UserEntity u " +
+	                    "join u.cheatsheets c " +
+	                    "where u.status = :userStatus " +
+	                    "and c.publishStatus = :publishStatus " +
+	                    "and c.status != :deletedStatus " +
+	                    "group by u.id " +
+	                    "order by count(distinct c.id) desc",
+	                    Object[].class)
+	            .setParameter("userStatus", UserStatus.ACTIVE)
+	            .setParameter("publishStatus", PublishStatus.PUBLISHED)
+	            .setParameter("deletedStatus", ContentStatus.DELETED)
+	            .setMaxResults(limit)
+	            .getResultList();
 	}
+	
 
 	@Override
 	public UserEntity findById(Long id) {
