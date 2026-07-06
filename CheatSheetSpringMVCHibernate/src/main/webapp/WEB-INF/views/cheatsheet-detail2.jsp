@@ -368,20 +368,6 @@
                                     </button>
                                 </form>
 
-
-                                <!-- PDF Download Button -->
-                                <a href="${pageContext.request.contextPath}/cheatsheet/pdf/${cheatsheet.id}"
-                                   target="_blank"
-                                   class="btn action-pill-btn"
-                                   style="
-                                        background:${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
-                                        color:white;
-                                        border:none;
-                                        font-weight:600;">
-                                    <i class="bi bi-file-earmark-pdf-fill"></i>
-                                    <span>Download PDF</span>
-                                </a>
-
                             </div>
 
                             <!-- Right Side: Share & Report -->
