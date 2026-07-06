@@ -115,4 +115,14 @@ public class CommentRepositoyImpl implements CommentsRepository {
 
 	}
 
+	@Override
+	public Long getCheatsheetIdByCommentId(Long commentId) {
+
+		return getSession()
+				.createQuery("SELECT cs.id  FROM CheatsheetEntity cs JOIN cs.comments c WHERE c.id = :commentId",
+						Long.class)
+					.setParameter("commentId", commentId)
+					.uniqueResult();
+	}
+
 }

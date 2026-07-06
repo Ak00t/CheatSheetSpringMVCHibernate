@@ -189,10 +189,16 @@
                             <h3 class="info-card-title"><i class="fa-solid fa-filter me-2"></i>Report Parameters Selection</h3>
                             <div class="filter-panel mt-3">
                                 <form action="${pageContext.request.contextPath}/admin/reports/monthly" method="GET" class="row align-items-end g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold text-dark">Select Target Month</label>
-                                        <input type="month" name="targetMonth" class="form-control form-control-lg" value="${selectedMonth}" required>
-                                    </div>
+<div class="col-md-6">
+    <label class="form-label fw-semibold text-dark">Select Target Month</label>
+    <input type="month" 
+           name="targetMonth" 
+           class="form-control form-control-lg" 
+           value="${selectedMonth}" 
+           onclick="this.showPicker()"
+           onkeydown="return false" 
+           required>
+</div>
                                     <div class="col-md-6 d-flex gap-2">
                                         <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">
                                             <i class="fa-solid fa-magnifying-glass me-2"></i> Show Report
@@ -231,7 +237,6 @@
                                                     <th style="width: 15%;">Posted At</th>
                                                     <th style="width: 10%;">Likes</th>
                                                     <th style="width: 10%;">Rating</th>
-                                                    <th style="width: 10%;">Views</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -245,7 +250,6 @@
                                                         </td>
                                                         <td>${report.likes}</td>
                                                         <td><fmt:formatNumber value="${report.rating}" minFractionDigits="1" maxFractionDigits="1"/></td>
-                                                        <td>${report.view_count}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
