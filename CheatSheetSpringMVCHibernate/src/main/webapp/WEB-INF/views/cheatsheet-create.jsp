@@ -404,7 +404,7 @@ input[type="color"]{
                 font-weight:800;
                 box-shadow:0 6px 18px rgba(0,0,0,.15);
                 transition:.2s;">
-             Home
+             Back
         </a>
 
     </div>
