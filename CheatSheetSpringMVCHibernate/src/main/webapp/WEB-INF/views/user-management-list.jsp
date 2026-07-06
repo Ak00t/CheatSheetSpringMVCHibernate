@@ -30,7 +30,7 @@
         .role-content-pane { display: none; }
         .role-content-pane.active { display: block; }
         .account-list-container { display: flex; flex-direction: column; gap: 12px; }
-        .user-card-item { display: none; } /* Default hidden for pagination */
+        .user-card-item { display: none; }
         .user-card-item.search-disabled { display: none !important; }
         .account-horizontal-box { background-color: #ffffff; border: 1px solid var(--border-light); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-card); }
         .box-left-section { display: flex; align-items: center; gap: 24px; flex-grow: 1; min-width: 0; }
@@ -50,7 +50,6 @@
         .btn-ban { background-color: #fff7ed; color: #ea580c; }
         .btn-unban { background-color: #f0fdf4; color: #16a34a; }
         .current-user-badge { font-size: 12px; color: var(--brand-blue); background-color: var(--brand-blue-light); padding: 6px 12px; border-radius: 8px; border: 1px dashed var(--brand-blue); }
-        /* Pagination CSS */
         .pagination-container { display: flex; justify-content: center; gap: 8px; margin-top: 25px; padding-bottom: 20px; }
         .page-btn { padding: 6px 14px; border: 1px solid var(--border-light); border-radius: 8px; cursor: pointer; background: white; font-weight: 600; color: var(--text-gray); }
         .page-btn.active { background: var(--brand-blue); color: white; border-color: var(--brand-blue); }
@@ -58,10 +57,9 @@
 </head>
 <body>
     <div class="page-container">
-              <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
+        <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
             <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
             <nav style="display:flex; gap:25px;">
-         
                 <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
             </nav>
         </header>
@@ -111,7 +109,9 @@
                                             </div>
                                             <div class="account-actions">
                                                 <c:choose>
-                                                    <c:when test="${user.id eq sessionScope.loginUser.id}"><span class="current-user-badge">You</span></c:when>
+                                                    <c:when test="${user.id eq sessionScope.currentUser.id}">
+                                                        <span class="current-user-badge">You</span>
+                                                    </c:when>
                                                     <c:otherwise>
                                                         <c:choose>
                                                             <c:when test="${user.status ne 'BANNED'}">
@@ -155,11 +155,18 @@
                                             </div>
                                             <div class="account-actions">
                                                 <c:choose>
-                                                    <c:when test="${user.status ne 'BANNED'}">
-                                                        <form action="${pageContext.request.contextPath}/usermanagement/ban/${user.id}" method="POST" onsubmit="return confirm('Ban this user?');"><button type="submit" class="btn btn-action btn-ban"><i class="fa-solid fa-ban"></i> Ban</button></form>
+                                                    <c:when test="${user.id eq sessionScope.currentUser.id}">
+                                                        <span class="current-user-badge">You</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <form action="${pageContext.request.contextPath}/usermanagement/unban/${user.id}" method="POST"><button type="submit" class="btn btn-action btn-unban"><i class="fa-solid fa-check"></i> Unban</button></form>
+                                                        <c:choose>
+                                                            <c:when test="${user.status ne 'BANNED'}">
+                                                                <form action="${pageContext.request.contextPath}/usermanagement/ban/${user.id}" method="POST" onsubmit="return confirm('Ban this user?');"><button type="submit" class="btn btn-action btn-ban"><i class="fa-solid fa-ban"></i> Ban</button></form>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <form action="${pageContext.request.contextPath}/usermanagement/unban/${user.id}" method="POST"><button type="submit" class="btn btn-action btn-unban"><i class="fa-solid fa-check"></i> Unban</button></form>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </div>
@@ -169,7 +176,6 @@
                             </c:forEach>
                         </div>
                     </div>
-                    <!-- Pagination Container -->
                     <div id="paginationControls" class="pagination-container"></div>
                 </div>
             </div>
