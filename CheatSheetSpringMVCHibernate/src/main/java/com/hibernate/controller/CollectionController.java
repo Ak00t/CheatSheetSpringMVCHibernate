@@ -97,9 +97,7 @@ public class CollectionController {
                 return "error-page"; 
             }
         }
-
-       
-        List<CheatsheetEntity> sheetsInCollection = new ArrayList<>();
+List<CheatsheetEntity> sheetsInCollection = new ArrayList<>();
         
         if (collection.getItems() != null && !collection.getItems().isEmpty()) {
             for (com.hibernate.entity.CollectionItemEntity item : collection.getItems()) {
@@ -138,6 +136,28 @@ public class CollectionController {
 
         
         collectionService.deleteCollection(collectionId); 
+        
+        return "Success";
+    }
+    @PostMapping("/update-name")
+    @ResponseBody
+    public String updateCollectionName(@RequestParam Long collectionId, @RequestParam String name, HttpSession session) {
+        UserEntity currentUser = (UserEntity) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "Unauthorized";
+        }
+
+        CollectionEntity collection = collectionService.findById(collectionId);
+        if (collection == null) {
+            return "NotFound";
+        }
+
+        if (!collection.getUser().getId().equals(currentUser.getId())) {
+            return "Forbidden";
+        }
+
+        // 💡 အသစ်ပြင်ဆင်ထားသော Service ကို လှမ်းခေါ်လိုက်ပါပြီ
+        collectionService.updateCollectionName(collectionId, name);
         
         return "Success";
     }
