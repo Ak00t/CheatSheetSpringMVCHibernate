@@ -50,10 +50,36 @@ public class WebSecurityConfig {
 								.authenticated()
 								.requestMatchers("/admindashboard/**", "/admin/**")
 								.hasRole("ADMIN")
-								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
-										"/reset-password", "/cheatsheet/uploads/**", "/uploads/**", "/category/**",
-										"/resources/**", "/cheatsheet/*", "/profile/*")
+								
+								
+								.requestMatchers(
+								        "/",
+								        "/register",
+								        "/login",
+								        "/forgot-password",
+								        "/search/**",
+								        "/reset-password",
+
+								        // Upload Files
+								        "/cheatsheet/uploads/**",
+								        "/profile-cheatsheets/uploads/**",
+								        "/uploads/**",
+								        "/uploads/profiles/**",
+								        "/uploads/cheatsheets/**",
+								        "/admin/uploads/**",
+								        "/app_uploads/**",
+
+								        // Public Pages
+								        "/category/**",
+								        "/tag/**",
+								        "/resources/**",
+								        "/cheatsheet/**",
+								        "/profile/**"
+								)
 								.permitAll()
+								
+								
+								
 								.anyRequest()
 								.authenticated())
 
