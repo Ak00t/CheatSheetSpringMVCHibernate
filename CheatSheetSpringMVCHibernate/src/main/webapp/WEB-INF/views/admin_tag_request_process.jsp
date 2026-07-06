@@ -87,7 +87,7 @@
         </div>
     </div>
 </div>
-
+<jsp:include page="footer.jsp" />
 <!-- Custom Alert Modal -->
 <div id="customAlert" style="display:none; position:fixed; top:30px; right:30px; background:#ffffff; border-left: 6px solid #f59e0b; padding:25px; border-radius:12px; box-shadow: 0 20px 25px rgba(0,0,0,0.1); z-index:9999; max-width:450px; border: 1px solid #e5e7eb;">
     <div style="display:flex; align-items:flex-start;">
