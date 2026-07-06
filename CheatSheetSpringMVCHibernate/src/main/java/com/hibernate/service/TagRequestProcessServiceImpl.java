@@ -3,11 +3,13 @@ package com.hibernate.service;
 import com.hibernate.entity.*;
 import com.hibernate.entity.enums.TagRequestStatus;
 import com.hibernate.repository.TagRequestProcessRepository;
-import com.hibernate.service.TagRequestProcessService;
-import org.hibernate.SessionFactory; 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 @Service
@@ -28,37 +30,34 @@ public class TagRequestProcessServiceImpl implements TagRequestProcessService {
     @Override
     public void approveTagRequest(Long requestId) {
         TagRequestEntity request = repository.findById(requestId);
-        
         if (request != null) {
-            // 1. Create and populate new Tag
-            TagEntity newTag = new TagEntity();
-            newTag.setName(request.getName());
-            newTag.setCategory(request.getCategory());
-            
             String slug = request.getName().toLowerCase().replaceAll("\\s+", "-");
-            newTag.setSlug(slug);
             
-            repository.save(newTag);
+            // Database ထဲမှာ slug ရှိပြီးသားလား စစ်ဆေးခြင်း
+            final boolean[] isDuplicate = {false};
+            sessionFactory.getCurrentSession().doWork(connection -> {
+                String sql = "SELECT COUNT(*) FROM tags WHERE slug = ?";
+                try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                    pstmt.setString(1, slug);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        if (rs.next() && rs.getInt(1) > 0) isDuplicate[0] = true;
+                    }
+                }
+            });
 
-            // Force Hibernate to flush and populate the auto-generated identity ID into newTag
-            sessionFactory.getCurrentSession().flush(); 
-
-            // 2. Link Tag to User if requestedBy exists
-            if (request.getRequestedBy() != null) {
-                UserFollowedTagEntity followedTag = new UserFollowedTagEntity();
-                
-                // Explicitly set primitive ID fields due to insertable = false mapping on objects
-                followedTag.setUserId(request.getRequestedBy().getId());
-                followedTag.setTagId(newTag.getId()); 
-                
-                // Sync object associations to maintain persistence context state
-                followedTag.setUser(request.getRequestedBy());
-                followedTag.setTag(newTag);
-                
-                repository.save(followedTag);
+            // Duplicate ဖြစ်ရင် Controller က 409 အဖြစ်ဖမ်းနိုင်အောင် Exception ပစ်မယ်
+            if (isDuplicate[0]) {
+                throw new IllegalArgumentException("Duplicate"); 
             }
 
-            // 3. Update Request Status to APPROVED
+            // Tag အသစ်ဖန်တီးခြင်း
+            TagEntity newTag = new TagEntity();
+            newTag.setName(request.getName());
+            newTag.setSlug(slug);
+            newTag.setCategory(request.getCategory());
+            repository.save(newTag);
+            
+            // Request Status ကို APPROVED ပြောင်းခြင်း
             request.setStatus(TagRequestStatus.APPROVED);
             repository.update(request);
         }
@@ -68,6 +67,7 @@ public class TagRequestProcessServiceImpl implements TagRequestProcessService {
     public void rejectTagRequest(Long requestId) {
         TagRequestEntity request = repository.findById(requestId);
         if (request != null) {
+            // Request Status ကို REJECTED ပြောင်းခြင်း
             request.setStatus(TagRequestStatus.REJECTED);
             repository.update(request);
         }
@@ -75,6 +75,7 @@ public class TagRequestProcessServiceImpl implements TagRequestProcessService {
 
     @Override
     public long getPendingCount() {
+        // PENDING ဖြစ်နေတဲ့ အရေအတွက်ကို ပြန်ပေးခြင်း
         return repository.findByStatus(TagRequestStatus.PENDING).size();
     }
 }
