@@ -32,7 +32,7 @@ public class CollectionRepositoryImpl implements CollectionRepository {
         getCurrentSession().flush(); 
     }
 
-    // 💡 🛑 Pagination စနစ်အတွက် findByUserId ကို Offset Limit ခံပြီး ရှာမည့်ပုံစံ
+    
     @Override
     public List<CollectionEntity> findByUserId(Long userId, int offset, int limit) {
         String hql = "FROM CollectionEntity c WHERE c.user.id = :userId ORDER BY c.id DESC";
@@ -63,6 +63,16 @@ public class CollectionRepositoryImpl implements CollectionRepository {
         String hql = "UPDATE CollectionEntity c SET c.visibility = :visibility WHERE c.id = :id";
         Query<?> query = getCurrentSession().createQuery(hql);
         query.setParameter("visibility", visibility);
+        query.setParameter("id", collectionId);
+        query.executeUpdate();
+        
+        getCurrentSession().flush(); 
+    }
+    @Override
+    public void updateName(Long collectionId, String name) {
+        String hql = "UPDATE CollectionEntity c SET c.name = :name WHERE c.id = :id";
+        Query<?> query = getCurrentSession().createQuery(hql);
+        query.setParameter("name", name);
         query.setParameter("id", collectionId);
         query.executeUpdate();
         

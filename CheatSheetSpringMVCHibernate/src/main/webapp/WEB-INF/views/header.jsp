@@ -631,7 +631,7 @@
                                     data.forEach(item => {
                                         if (item.type === 'cheatsheet') { hasCheatsheets = true; cheatsheetHtml += `<a href="` + ctx + `/cheatsheet/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
                                         else if (item.type === 'category') { hasCategories = true; categoryHtml += `<a href="` + ctx + `/category/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
-                                        else if (item.type === 'user') { hasUsers = true; userHtml += `<a href="` + ctx + `/user/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
+                                        else if (item.type === 'user') { hasUsers = true; userHtml += `<a href="` + ctx + `/profile/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`; }
                                     });
 
                                     if (hasCheatsheets) html += cheatsheetHtml;

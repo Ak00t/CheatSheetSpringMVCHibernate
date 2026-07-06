@@ -14,4 +14,5 @@ public interface CollectionService {
     
     CollectionEntity findById(Long id);
     void deleteCollection(Long collectionId);
+    void updateCollectionName(Long collectionId, String name);
 }
