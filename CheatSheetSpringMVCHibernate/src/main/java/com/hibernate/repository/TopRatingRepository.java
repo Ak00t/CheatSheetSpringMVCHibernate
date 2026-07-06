@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TopRatingRepository {
     List<CheatsheetEntity> findTopRatedCheatsheets(LocalDateTime start, LocalDateTime end);
+    List<CheatsheetEntity> findAllCheatsheets(); // Add this line to support fetching all records
 }
