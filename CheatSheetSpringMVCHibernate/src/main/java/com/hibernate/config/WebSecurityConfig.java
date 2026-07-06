@@ -46,40 +46,23 @@ public class WebSecurityConfig {
 				.csrf()
 					.disable()
 					.authorizeHttpRequests(auth -> auth
-							.requestMatchers("/cheatsheet/create")
+							.requestMatchers("/cheatsheet/create", "/cheatsheet/like", "/cheatsheet/bookmark",
+									"/cheatsheet/rate")
 								.authenticated()
 								.requestMatchers("/admindashboard/**", "/admin/**")
 								.hasRole("ADMIN")
-								
-								
-								.requestMatchers(
-								        "/",
-								        "/register",
-								        "/login",
-								        "/forgot-password",
-								        "/search/**",
-								        "/reset-password",
 
-								        // Upload Files
-								        "/cheatsheet/uploads/**",
-								        "/profile-cheatsheets/uploads/**",
-								        "/uploads/**",
-								        "/uploads/profiles/**",
-								        "/uploads/cheatsheets/**",
-								        "/admin/uploads/**",
-								        "/app_uploads/**",
+								.requestMatchers("/", "/register", "/login", "/forgot-password", "/search/**",
+										"/reset-password",
 
-								        // Public Pages
-								        "/category/**",
-								        "/tag/**",
-								        "/resources/**",
-								        "/cheatsheet/**",
-								        "/profile/**"
-								)
+										// Upload Files
+										"/cheatsheet/uploads/**", "/profile-cheatsheets/uploads/**", "/uploads/**",
+										"/uploads/profiles/**", "/uploads/cheatsheets/**", "/admin/uploads/**",
+										"/app_uploads/**",
+
+										// Public Pages
+										"/category/**", "/tag/**", "/resources/**", "/cheatsheet/**", "/profile/**")
 								.permitAll()
-								
-								
-								
 								.anyRequest()
 								.authenticated())
 
@@ -87,8 +70,6 @@ public class WebSecurityConfig {
 					.exceptionHandling(exception -> exception
 							.accessDeniedPage("/403")
 								.authenticationEntryPoint((request, response, authException) -> {
-									// Automatically routes unauthenticated users home and tells your JS to pop open
-									// the modal with an error
 									response.sendRedirect(request.getContextPath() + "/?login=true&unauthorized=true");
 								}))
 

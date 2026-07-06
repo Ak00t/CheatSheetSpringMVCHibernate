@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import com.hibernate.entity.enums.TargetType;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,6 +52,7 @@ public class WarningEntity {
 	@JoinColumn(name = "created_by")
 	private UserEntity createdBy;
 
+	@CreationTimestamp
 	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
 }

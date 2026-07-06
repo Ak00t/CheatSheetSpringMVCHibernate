@@ -21,19 +21,31 @@
                     }
 
                     .breadcrumb a {
-                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        color: $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                         text-decoration: none;
                         font-weight: 600;
                     }
 
                     .title span {
-                        color: ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        color: $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                     }
 
                     .card-title-bar {
                         cursor: pointer;
 
-                        border-top: 5px solid ${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
+                        border-top: 5px solid $ {
+                            cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
+                        }
+
+                        ;
                         color: #0f172a;
                     }
 
@@ -231,36 +243,37 @@
                         color: #dc2626;
                         border-color: #fee2e2;
                     }
-                 .star-rating-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
 
-.star-rating-container {
-    display: inline-flex;
-    gap: 4px;
-    /* 💡 row-reverse ကို လုံးဝ (လုံးဝ) မသုံးရပါ - ပုံမှန်အဝိုင်းအတိုင်း ဘယ်မှညာ သွားပါမည် */
-}
+                    .star-rating-box {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
 
-.star-rating-container i {
-    font-size: 1.35rem;
-    color: #cbd5e1;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+                    .star-rating-container {
+                        display: inline-flex;
+                        gap: 4px;
+                        /* 💡 row-reverse ကို လုံးဝ (လုံးဝ) မသုံးရပါ - ပုံမှန်အဝိုင်းအတိုင်း ဘယ်မှညာ သွားပါမည် */
+                    }
 
-.star-rating-container i:hover,
-.star-rating-container i.hovered {
-    color: #fbbf24 !important;
-    transform: scale(1.25) translateY(-2px);
-    text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
-}
+                    .star-rating-container i {
+                        font-size: 1.35rem;
+                        color: #cbd5e1;
+                        cursor: pointer;
+                        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    }
 
-.active-star {
-    color: #f59e0b !important;
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
-}
+                    .star-rating-container i:hover,
+                    .star-rating-container i.hovered {
+                        color: #fbbf24 !important;
+                        transform: scale(1.25) translateY(-2px);
+                        text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+                    }
+
+                    .active-star {
+                        color: #f59e0b !important;
+                        text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+                    }
                 </style>
             </head>
 
@@ -367,24 +380,33 @@
                                 </div>
 
                                 <!-- 🔘 Instant Star Rating System (Submit ခလုတ်မလိုဘဲ တန်းပြောင်းလဲမည်) -->
-                               <!-- 🔘 Instant Star Rating System (Advanced Dynamic Icons) -->
-<div class="d-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border star-rating-box">
-    <span class="small fw-bold text-secondary font-monospace" id="avgRatingDisplay">${cheatsheet.ratingAvg}</span>
-    
-    <form id="instantRateForm" action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST" class="m-0 d-inline">
-        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-        <input type="hidden" name="score" id="selectedStarScore" value="" />
+                                <!-- 🔘 Instant Star Rating System (Advanced Dynamic Icons) -->
+                                <div
+                                    class="d-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border star-rating-box">
+                                    <span class="small fw-bold text-secondary font-monospace"
+                                        id="avgRatingDisplay">${cheatsheet.ratingAvg}</span>
 
-        <!-- 💡 ကြယ်များကို ၁ မှ ၅ သို့ ဘယ်မှညာ အစဉ်အတိုင်း စီစဉ်ထားပါသည် -->
-        <div class="star-rating-container" id="starContainer">
-            <i class="bi bi-star-fill" data-score="1" onclick="submitInstantRating(1)"></i>
-            <i class="bi bi-star-fill" data-score="2" onclick="submitInstantRating(2)"></i>
-            <i class="bi bi-star-fill" data-score="3" onclick="submitInstantRating(3)"></i>
-            <i class="bi bi-star-fill" data-score="4" onclick="submitInstantRating(4)"></i>
-            <i class="bi bi-star-fill" data-score="5" onclick="submitInstantRating(5)"></i>
-        </div>
-    </form>
-</div>
+                                    <form id="instantRateForm"
+                                        action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST"
+                                        class="m-0 d-inline">
+                                        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                                        <input type="hidden" name="score" id="selectedStarScore" value="" />
+
+                                        <!-- 💡 ကြယ်များကို ၁ မှ ၅ သို့ ဘယ်မှညာ အစဉ်အတိုင်း စီစဉ်ထားပါသည် -->
+                                        <div class="star-rating-container" id="starContainer">
+                                            <i class="bi bi-star-fill" data-score="1"
+                                                onclick="submitInstantRating(1)"></i>
+                                            <i class="bi bi-star-fill" data-score="2"
+                                                onclick="submitInstantRating(2)"></i>
+                                            <i class="bi bi-star-fill" data-score="3"
+                                                onclick="submitInstantRating(3)"></i>
+                                            <i class="bi bi-star-fill" data-score="4"
+                                                onclick="submitInstantRating(4)"></i>
+                                            <i class="bi bi-star-fill" data-score="5"
+                                                onclick="submitInstantRating(5)"></i>
+                                        </div>
+                                    </form>
+                                </div>
 
                                 <!-- Bookmark Button Element -->
                                 <form action="${pageContext.request.contextPath}/cheatsheet/bookmark" method="POST"
@@ -400,9 +422,7 @@
 
                                 <!-- PDF Download Button -->
                                 <a href="${pageContext.request.contextPath}/cheatsheet/pdf/${cheatsheet.id}"
-                                   target="_blank"
-                                   class="btn action-pill-btn"
-                                   style="
+                                    target="_blank" class="btn action-pill-btn" style="
                                         background:${cheatsheet.themeColor != null ? cheatsheet.themeColor : '#2563eb'};
                                         color:white;
                                         border:none;
@@ -413,27 +433,30 @@
 
                             </div>
 
-<div class="d-flex align-items-center gap-2 justify-content-end">
-    <button class="btn action-pill-btn bg-dark text-white border-dark"
-        data-bs-toggle="modal" data-bs-target="#shareLinkModal">
-        <i class="bi bi-share-fill"></i> Share Hub
-    </button>
-    
-    <c:if test="${not empty sessionScope.currentUser and cheatsheet.user.id.toString() != sessionScope.currentUser.id.toString()}">
-        <c:choose>
-            <c:when test="${isAlreadyReported}">
-                <button class="btn action-pill-btn" disabled style="opacity: 0.55; cursor: not-allowed; background: #fee2e2; color: #ef4444; border-color: #fca5a5;">
-                    <i class="bi bi-shield-fill-check"></i> Already Reported
-                </button>
-            </c:when>
-            <c:otherwise>
-                <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal" data-bs-target="#reportModal">
-                    <i class="bi bi-flag-fill"></i> Report
-                </button>
-            </c:otherwise>
-        </c:choose>
-    </c:if>
-</div>
+                            <div class="d-flex align-items-center gap-2 justify-content-end">
+                                <button class="btn action-pill-btn bg-dark text-white border-dark"
+                                    data-bs-toggle="modal" data-bs-target="#shareLinkModal">
+                                    <i class="bi bi-share-fill"></i> Share Hub
+                                </button>
+
+                                <c:if
+                                    test="${not empty sessionScope.currentUser and cheatsheet.user.id.toString() != sessionScope.currentUser.id.toString()}">
+                                    <c:choose>
+                                        <c:when test="${isAlreadyReported}">
+                                            <button class="btn action-pill-btn" disabled
+                                                style="opacity: 0.55; cursor: not-allowed; background: #fee2e2; color: #ef4444; border-color: #fca5a5;">
+                                                <i class="bi bi-shield-fill-check"></i> Already Reported
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal"
+                                                data-bs-target="#reportModal">
+                                                <i class="bi bi-flag-fill"></i> Report
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+                            </div>
                         </div>
                     </div>
 
@@ -513,20 +536,24 @@
                                                                     </form>
                                                                 </li>
                                                             </c:when>
-                                                            <c:when test="${cheatsheet.user.id == sessionScope.currentUser.id}">
-													            <li>
-													                <form method="post"
-													                    action="${pageContext.request.contextPath}/comment/delete"
-													                    onsubmit="return confirm('Delete this comment from your cheatsheet?')">
-													                    <input type="hidden" name="commentId" value="${comment.id}" />
-													                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-													                    <button type="submit"
-													                        class="dropdown-item d-flex align-items-center gap-2 text-danger py-2">
-													                        <i class="bi bi-trash3-fill"></i> Delete Comment
-													                    </button>
-													                </form>
-													            </li>
-													        </c:when>
+                                                            <c:when
+                                                                test="${cheatsheet.user.id == sessionScope.currentUser.id}">
+                                                                <li>
+                                                                    <form method="post"
+                                                                        action="${pageContext.request.contextPath}/comment/delete"
+                                                                        onsubmit="return confirm('Delete this comment from your cheatsheet?')">
+                                                                        <input type="hidden" name="commentId"
+                                                                            value="${comment.id}" />
+                                                                        <input type="hidden" name="cheatsheetId"
+                                                                            value="${cheatsheet.id}" />
+                                                                        <button type="submit"
+                                                                            class="dropdown-item d-flex align-items-center gap-2 text-danger py-2">
+                                                                            <i class="bi bi-trash3-fill"></i> Delete
+                                                                            Comment
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </c:when>
                                                             <c:otherwise>
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-2 text-warning py-2"
@@ -564,49 +591,61 @@
                                             <div class="text-secondary px-1 mb-2 fs-6" id="comment-text-${comment.id}">
                                                 <c:out value="${comment.content}" />
                                             </div>
-											
-											<div class="d-flex gap-2">
-											    <button type="button" class="btn btn-sm btn-link text-decoration-none text-muted p-0 fw-semibold small d-flex align-items-center gap-1" onclick="toggleReplyForm(${comment.id})">
-											        <i class="bi bi-reply-fill"></i> Reply
-											    </button>
-											</div>
-											
+
+                                            <div class="d-flex gap-2">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-link text-decoration-none text-muted p-0 fw-semibold small d-flex align-items-center gap-1"
+                                                    onclick="toggleReplyForm(${comment.id})">
+                                                    <i class="bi bi-reply-fill"></i> Reply
+                                                </button>
+                                            </div>
+
 
                                             <!-- Hidden dynamic inline edit element box container wrapper -->
                                             <div id="comment-edit-container-${comment.id}" class="d-none mt-2">
-                                                <form method="post" action="${pageContext.request.contextPath}/comment/edit">
+                                                <form method="post"
+                                                    action="${pageContext.request.contextPath}/comment/edit">
                                                     <input type="hidden" name="commentId" value="${comment.id}" />
                                                     <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
                                                     <div class="mb-2">
-                                                        <textarea class="form-control" name="content" rows="2" required><c:out value="${comment.content}" /></textarea>
+                                                        <textarea class="form-control" name="content" rows="2"
+                                                            required><c:out value="${comment.content}" /></textarea>
                                                     </div>
                                                     <div class="d-flex gap-2 justify-content-end">
-                                                        <button type="button" class="btn btn-light btn-sm fw-bold border" onclick="toggleEditForm(${comment.id})">Cancel</button>
-                                                        <button type="submit" class="btn btn-dark btn-sm fw-bold">Save Changes</button>
+                                                        <button type="button"
+                                                            class="btn btn-light btn-sm fw-bold border"
+                                                            onclick="toggleEditForm(${comment.id})">Cancel</button>
+                                                        <button type="submit" class="btn btn-dark btn-sm fw-bold">Save
+                                                            Changes</button>
                                                     </div>
                                                 </form>
                                             </div>
-											<div id="reply-form-${comment.id}" class="mt-3 p-3 bg-white border rounded-3" style="display:none;">
-											    <form method="post" action="${pageContext.request.contextPath}/comment/post">
-											        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-											        <input type="hidden" name="parentCommentId" value="${comment.id}" />
-											        <div class="mb-2">
-											            <textarea class="form-control" placeholder="Write a reply..." name="content" required></textarea>
-											        </div>
-											        <div class="d-flex gap-2 justify-content-end">
-											            <button type="button" class="btn btn-sm btn-light border" onclick="toggleReplyForm(${comment.id})">Cancel</button>
-											            <button type="submit" class="btn btn-sm btn-dark">Post Reply</button>
-											        </div>
-											    </form>
-											</div>
-											
-											<div class="mt-2">
-											    <c:forEach items="${comment.replies}" var="reply">
-											        <c:set var="node" value="${reply}" scope="request" />
-											        <jsp:include page="comment-node.jsp" />
-											    </c:forEach>
-											</div>
-											
+                                            <div id="reply-form-${comment.id}"
+                                                class="mt-3 p-3 bg-white border rounded-3" style="display:none;">
+                                                <form method="post"
+                                                    action="${pageContext.request.contextPath}/comment/post">
+                                                    <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+                                                    <input type="hidden" name="parentCommentId" value="${comment.id}" />
+                                                    <div class="mb-2">
+                                                        <textarea class="form-control" placeholder="Write a reply..."
+                                                            name="content" required></textarea>
+                                                    </div>
+                                                    <div class="d-flex gap-2 justify-content-end">
+                                                        <button type="button" class="btn btn-sm btn-light border"
+                                                            onclick="toggleReplyForm(${comment.id})">Cancel</button>
+                                                        <button type="submit" class="btn btn-sm btn-dark">Post
+                                                            Reply</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <c:forEach items="${comment.replies}" var="reply">
+                                                    <c:set var="node" value="${reply}" scope="request" />
+                                                    <jsp:include page="comment-node.jsp" />
+                                                </c:forEach>
+                                            </div>
+
                                         </div>
                                     </c:forEach>
                                 </c:otherwise>
@@ -618,39 +657,45 @@
                 <!-- Comment Dynamic Report Modal -->
                 <div class="modal fade" id="commentReportModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <form action="${pageContext.request.contextPath}/comment/report" method="POST" class="modal-content">
+                        <form action="${pageContext.request.contextPath}/comment/report" method="POST"
+                            class="modal-content">
                             <input type="hidden" name="commentId" id="reportCommentIdTarget" value="" />
                             <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
                             <div class="modal-header">
-                                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Report Comment</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h5 class="modal-title fw-bold text-danger"><i
+                                        class="bi bi-exclamation-triangle-fill me-2"></i>Report Comment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p class="small text-muted">Please declare your assessment matrix parameters context category:</p>
+                                <p class="small text-muted">Please declare your assessment matrix parameters context
+                                    category:</p>
                                 <select name="reason" class="form-select mb-3" required>
                                     <option value="SPAM">Spam Content Matrix</option>
                                     <option value="ABUSE">Harassment or Abuse</option>
                                     <option value="INAPPROPRIATE">Inappropriate Tone/Language</option>
                                     <option value="COPYRIGHT">Copyright Violation</option>
                                 </select>
-                                <textarea name="description" class="form-control" placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
+                                <textarea name="description" class="form-control"
+                                    placeholder="Optional meta descriptions context payload..." rows="3"></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-light fw-bold border" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-light fw-bold border"
+                                    data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-danger fw-bold">Submit Assessment Report</button>
                             </div>
                         </form>
                     </div>
-					
-					
 
-					
-					<div class="mt-2">
-					    <c:forEach items="${comment.replies}" var="reply">
-					        <c:set var="node" value="${reply}" scope="request" />
-					        <jsp:include page="comment-node.jsp" />
-					    </c:forEach>
-					</div>
+
+
+
+                    <div class="mt-2">
+                        <c:forEach items="${comment.replies}" var="reply">
+                            <c:set var="node" value="${reply}" scope="request" />
+                            <jsp:include page="comment-node.jsp" />
+                        </c:forEach>
+                    </div>
                 </div>
 
                 <!-- Share Modal Hub -->
@@ -764,24 +809,24 @@
                 </div>
 
                 <script>
-                   
-					
-					function toggleReplyForm(id) {
-					    let el = document.getElementById('reply-form-' + id);
-					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
-					}
 
-					function toggleNestedReplies(id) {
-					    let el = document.getElementById('nested-' + id);
-					    if(el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
-					}
-					
+
+                    function toggleReplyForm(id) {
+                        let el = document.getElementById('reply-form-' + id);
+                        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+                    }
+
+                    function toggleNestedReplies(id) {
+                        let el = document.getElementById('nested-' + id);
+                        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+                    }
+
                     // Toggle visibility of inline edit forms for comments
                     function toggleEditForm(commentId) {
                         const txtArea = document.getElementById("comment-text-" + commentId);
                         const editContainer = document.getElementById("comment-edit-container-" + commentId);
-                        if(txtArea && editContainer) {
-                            if(editContainer.classList.contains('d-none')) {
+                        if (txtArea && editContainer) {
+                            if (editContainer.classList.contains('d-none')) {
                                 editContainer.classList.remove('d-none');
                                 txtArea.classList.add('d-none');
                             } else {
@@ -790,7 +835,7 @@
                             }
                         }
                     }
-                    
+
                     function submitInstantRating(scoreValue) {
                         document.getElementById("selectedStarScore").value = scoreValue;
                         document.getElementById("instantRateForm").submit(); // Form ကို တိုက်ရိုက် Submit လှမ်းလုပ်မည်
@@ -799,7 +844,7 @@
                     // Handle dynamic injection target parameter metrics payload for reporting comments
                     function triggerReportAction(commentId) {
                         const targetInput = document.getElementById("reportCommentIdTarget");
-                        if(targetInput) {
+                        if (targetInput) {
                             targetInput.value = commentId;
                             const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
                             rModal.show();
@@ -860,7 +905,7 @@
 
                     function saveToMyProfileLogs() {
                         const cheatsheetId = '${cheatsheet.id}';
-                        
+
                         // URL-encoded string အစား FormData ကို သုံးပါ
                         let formData = new FormData();
                         formData.append("cheatsheetId", cheatsheetId);
@@ -872,42 +917,39 @@
                             body: formData,
                             credentials: 'include' // 🔑 Browser Session Cookie ပါသွားစေရန် သေချာပေါက် ထည့်ရမည်
                         })
-                        .then(res => res.text())
-                        .then(data => {
-                            // .trim() သုံးပြီး Space အပိုတွေကြောင့် စာသားမကိုက်ညီမှုကို ကာကွယ်ပါ
-                            if (data.trim() === "Share Successfully") {
-                                alert("Successfully shared to your profile history!");
-                                const modalEl = document.getElementById('shareLinkModal');
-                                const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                if (modalInstance) modalInstance.hide();
-                            } else {
-                                alert(data); // "User not logged in" ဆိုပြီး Backend က ပို့တဲ့ စာသားအတိုင်း ပြပေးမည်
-                            }
-                        })
-                        .catch(err => {
-                            console.error("Database sync failed:", err);
-                            alert("Something went wrong!");
-                        });
+                            .then(res => res.text())
+                            .then(data => {
+
+                                if (data === "Logged Successfully") {
+                                    alert("Successfully shared to your profile history!");
+                                    const modalEl = document.getElementById('shareLinkModal');
+                                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                    if (modalInstance) modalInstance.hide();
+                                } else {
+                                    alert("Please login first!");
+                                }
+                            })            const cleanData = data.trim().replace(/^"|"$/g, '');
+                            .catch (err => console.error("Database sync failed:", err));
                     }
-                 // 💡 URL Parameters များကို ဖတ်ပြီး အခြေအနေအလိုက် Alert Box ပြပေးမည့်စနစ်
+                    // 💡 URL Parameters များကို ဖတ်ပြီး အခြေအနေအလိုက် Alert Box ပြပေးမည့်စနစ်
                     window.addEventListener('DOMContentLoaded', () => {
                         const urlParams = new URLSearchParams(window.location.search);
-                        
+
                         // ၁။ Report အောင်မြင်စွာ တင်ပြီးမြောက်သွားချိန်
                         if (urlParams.get('status') === 'reported') {
                             alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
                             // URL ထဲက Parameter ကို သန့်စင်ပေးခြင်း (နောက်တစ်ခါ Refresh နှိပ်ရင် Alert ထပ်မကျစေရန်)
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
-                        
+
                         // ၂။ Controller ကနေ တားဆီးလိုက်တဲ့ ကိုယ့်ဟာကိုယ် Report ထုမှုအခြေအနေ
                         if (urlParams.get('error') === 'self_report') {
                             alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
                     });
-                 
-                 // 💡 Star Rating ခေတ်မီလှပစေမည့် Dynamic JavaScript Engine
+
+                    // 💡 Star Rating ခေတ်မီလှပစေမည့် Dynamic JavaScript Engine
                     document.addEventListener('DOMContentLoaded', () => {
                         // #starContainer အောက်က ကြယ် ၅ လုံးလုံးကို အစဉ်လိုက် ဆွဲယူခြင်း
                         const stars = document.querySelectorAll('#starContainer i');
@@ -918,9 +960,9 @@
 
                         // ၂။ Mouse တင်လိုက်သည့်အခါ ဘယ်ဘက်အစကနေ အစဉ်လိုက် လင်းစေမည့် Logic
                         stars.forEach(star => {
-                            star.addEventListener('mouseenter', function() {
+                            star.addEventListener('mouseenter', function () {
                                 const currentScore = parseInt(this.getAttribute('data-score'));
-                                
+
                                 // Hover လုပ်ထားသော ကြယ်အပါအဝင် ၎င်း၏ ရှေ့က ကြယ်များကိုသာ လင်းစေပြီး နောက်ကကောင်များကို မှိတ်ခြင်း
                                 stars.forEach(s => {
                                     const sScore = parseInt(s.getAttribute('data-score'));
@@ -961,15 +1003,15 @@
                         highlightStars(scoreValue, 'active-star');
                         document.getElementById("instantRateForm").submit();
                     }
-                 // URL Parameters Detection Block
+                    // URL Parameters Detection Block
                     window.addEventListener('DOMContentLoaded', () => {
                         const urlParams = new URLSearchParams(window.location.search);
-                        
+
                         if (urlParams.get('status') === 'reported') {
                             alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
-                        
+
                         if (urlParams.get('error') === 'self_report') {
                             alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
                             window.history.replaceState({}, document.title, window.location.pathname);

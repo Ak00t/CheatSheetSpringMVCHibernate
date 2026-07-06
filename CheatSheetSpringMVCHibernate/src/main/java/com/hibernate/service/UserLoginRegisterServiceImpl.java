@@ -35,9 +35,11 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 		UserEntity user = userRepo.findByEmail(email);
-		if (user == null || "BANNED".equals(user.getStatus().name())) {
-	        throw new UsernameNotFoundException("User not found or account is unavailable: " + email);
-	    }
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found" + email);
+		} else if ("BANNED".equals(user.getStatus().name())) {
+
+		}
 		return User
 				.builder()
 					.username(user.getEmail())

@@ -33,6 +33,20 @@ public class AdminReportRepositoryImpl implements AdminReportRepository {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<ReportEntity> findAllReportHistory() {
+        return getCurrentSession()
+                .createQuery(
+                        "FROM ReportEntity r "
+                                + "LEFT JOIN FETCH r.reporterUser "
+                                + "LEFT JOIN FETCH r.reviewedBy "
+                                + "WHERE r.status <> :status "
+                                + "ORDER BY r.reviewedAt DESC, r.id DESC")
+                .setParameter("status", ReviewStatus.PENDING)
+                .list();
+    }
+
+    @Override
     public ReportEntity findById(Long id) {
         return getCurrentSession().get(ReportEntity.class, id);
     }

@@ -325,7 +325,7 @@
                                 categoryHtml += `<a href="` + ctx + `/category/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
                             } else if (item.type === 'user') {
                                 hasUsers = true;
-                                userHtml += `<a href="` + ctx + `/user/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
+                                userHtml += `<a href="` + ctx + `/profile/` + item.id + `" class="dropdown-item py-2 text-truncate rounded px-3">` + item.name + `</a>`;
                             }
                         });
 

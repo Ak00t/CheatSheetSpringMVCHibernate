@@ -28,10 +28,16 @@ public class AdminReportController {
 	public String showReportsPage(Model model, HttpSession session) {
 		UserEntity loggedInAdmin = (UserEntity) session.getAttribute("currentUser");
 		if (loggedInAdmin == null) {
-			return "redirect:/login";
+			return "redirect:/?login=true";
 		}
 
-		model.addAttribute("pendingReportsList", adminReportService.getPendingReports());
+		var pendingReportsList = adminReportService.getPendingReports();
+		var reportHistoryList = adminReportService.getReportHistory();
+
+		model.addAttribute("pendingReportsList", pendingReportsList);
+		model.addAttribute("reportHistoryList", reportHistoryList);
+		model.addAttribute("pendingTargetPreviews", adminReportService.getTargetPreviews(pendingReportsList));
+		model.addAttribute("historyTargetPreviews", adminReportService.getTargetPreviews(reportHistoryList));
 		return "adminreport";
 	}
 
