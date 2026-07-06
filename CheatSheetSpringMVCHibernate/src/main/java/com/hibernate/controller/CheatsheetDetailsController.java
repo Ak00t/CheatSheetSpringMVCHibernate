@@ -50,6 +50,12 @@ public class CheatsheetDetailsController {
 		model.addAttribute("isBookmarked", userId != null && bookmarkService.isBookmarked(userId, id));
 		model.addAttribute("isLiked", userId != null && likeService.isLiked(userId, id));
 		model.addAttribute("likeCount", likeService.countLikes(id));
+		
+		boolean isAlreadyReported = false;
+	    if (userId != null) {
+	        isAlreadyReported = reportService.isContentReportedByUser(userId, id);
+	    }
+	    model.addAttribute("isAlreadyReported", isAlreadyReported);
 		return "cheatsheet-detail";
 	}
 
@@ -125,10 +131,11 @@ public class CheatsheetDetailsController {
 	    if (user != null) {
 	        try {
 	            reportService.saveReport(user.getId(), targetId, reason, description);
-	            // 💡 အောင်မြင်ရင် URL parameter အနေနဲ့ status=reported ကို ပါးလိုက်မယ်
 	            return "redirect:/cheatsheet/" + targetId + "?status=reported";
+	        } catch (IllegalStateException e) {
+	            // 💡 ထုပြီးသား content ဖြစ်ပါက အမှန်ကန်ဆုံး parameter သို့ လမ်းညွှန်ခြင်း
+	            return "redirect:/cheatsheet/" + targetId + "?error=already_reported";
 	        } catch (RuntimeException e) {
-	            // ကိုယ့်ဟာကိုယ် တိုင်ကြားတဲ့အခါ Service က ပစ်လိုက်တဲ့ Error ကို ဖမ်းပြီး ပြန်ခြင်း
 	            return "redirect:/cheatsheet/" + targetId + "?error=self_report";
 	        }
 	    }

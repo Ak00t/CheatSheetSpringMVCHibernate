@@ -33,6 +33,9 @@ public class ReportServiceImpl implements ReportService {
         if (cheatsheet.getUser() != null && cheatsheet.getUser().getId().longValue() == userId.longValue()) {
             throw new RuntimeException("You cannot report your own cheat sheet!");
         }
+        if (isContentReportedByUser(userId, targetId)) {
+            throw new IllegalStateException("ALREADY_REPORTED");
+        }
 
         // ၃။ တိုင်ကြားသူ User ကို ဆွဲထုတ်ခြင်း
         UserEntity user = sessionFactory.getCurrentSession().get(UserEntity.class, userId);
@@ -53,5 +56,21 @@ public class ReportServiceImpl implements ReportService {
         int currentCount = cheatsheet.getReportCount() != null ? cheatsheet.getReportCount() : 0;
         cheatsheet.setReportCount(currentCount + 1);
         sessionFactory.getCurrentSession().update(cheatsheet);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isContentReportedByUser(Long userId, Long targetId) {
+        String hql = "SELECT COUNT(r.id) FROM ReportEntity r " +
+                     "WHERE r.reporterUser.id = :userId " +
+                     "AND r.targetId = :targetId " +
+                     "AND r.targetType = com.hibernate.entity.enums.TargetType.CHEATSHEET";
+                     
+        Long count = sessionFactory.getCurrentSession()
+                .createQuery(hql, Long.class)
+                .setParameter("userId", userId)
+                .setParameter("targetId", targetId)
+                .uniqueResult();
+                
+        return count != null && count > 0;
     }
 }

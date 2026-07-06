@@ -413,20 +413,27 @@
 
                             </div>
 
-          <div class="d-flex align-items-center gap-2 justify-content-end">
+<div class="d-flex align-items-center gap-2 justify-content-end">
     <button class="btn action-pill-btn bg-dark text-white border-dark"
         data-bs-toggle="modal" data-bs-target="#shareLinkModal">
         <i class="bi bi-share-fill"></i> Share Hub
     </button>
     
     <c:if test="${not empty sessionScope.currentUser and cheatsheet.user.id.toString() != sessionScope.currentUser.id.toString()}">
-        <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal"
-            data-bs-target="#reportModal">
-            <i class="bi bi-flag-fill"></i> Report
-        </button>
+        <c:choose>
+            <c:when test="${isAlreadyReported}">
+                <button class="btn action-pill-btn" disabled style="opacity: 0.55; cursor: not-allowed; background: #fee2e2; color: #ef4444; border-color: #fca5a5;">
+                    <i class="bi bi-shield-fill-check"></i> Already Reported
+                </button>
+            </c:when>
+            <c:otherwise>
+                <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal" data-bs-target="#reportModal">
+                    <i class="bi bi-flag-fill"></i> Report
+                </button>
+            </c:otherwise>
+        </c:choose>
     </c:if>
 </div>
-
                         </div>
                     </div>
 
@@ -954,7 +961,26 @@
                         highlightStars(scoreValue, 'active-star');
                         document.getElementById("instantRateForm").submit();
                     }
-                 
+                 // URL Parameters Detection Block
+                    window.addEventListener('DOMContentLoaded', () => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        
+                        if (urlParams.get('status') === 'reported') {
+                            alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                        
+                        if (urlParams.get('error') === 'self_report') {
+                            alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+
+                        // 💡 🔑 ၂ ကြိမ်မြောက် အတင်းလာထုသူများအား Alert Box ဖြင့် ဖြတ်တားခြင်း
+                        if (urlParams.get('error') === 'already_reported') {
+                            alert("⚠️ Notice!\nYou have already submitted a report for this cheat sheet.");
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                    });
                 </script>
             </body>
 

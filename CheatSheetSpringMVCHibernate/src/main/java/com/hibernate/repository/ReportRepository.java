@@ -4,4 +4,5 @@ import com.hibernate.entity.ReportEntity;
 
 public interface ReportRepository {
     void save(ReportEntity report);
+    
 }

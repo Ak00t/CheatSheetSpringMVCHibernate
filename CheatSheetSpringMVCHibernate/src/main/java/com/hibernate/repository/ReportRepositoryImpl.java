@@ -38,4 +38,5 @@ public class ReportRepositoryImpl implements ReportRepository {
         session.save(report);
         session.flush(); 
     }
+    
 }
