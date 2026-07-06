@@ -147,6 +147,32 @@
             text-transform: uppercase; margin-bottom: 14px; align-self: flex-start; letter-spacing: 0.5px;
         }
         .badge-share { background: rgba(34, 197, 94, 0.1) !important; color: #16a34a !important; }
+        
+        
+        
+        /* Delete Button Styling for Slider Items */
+.delete-log-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+.delete-log-btn:hover {
+    background: #ef4444;
+    color: #ffffff;
+    transform: scale(1.1);
+}
     </style>
 </head>
 <body>
@@ -216,25 +242,35 @@
                         <button type="button" class="slider-arrow arrow-left" onclick="moveSlider('shareSlider', -1)"><i class="bi bi-chevron-left"></i></button>
                         
                         <div class="horizontal-slider" id="shareSlider">
-                            <c:choose>
-                                <c:when test="${not empty sharedLogs}">
-                                    <c:forEach items="${sharedLogs}" var="log">
-                                        <a href="${pageContext.request.contextPath}/cheatsheet/${log.cheatsheet.id}" class="slider-item-card">
-                                            <div class="item-badge badge-share"><i class="bi bi-share-fill me-1"></i> Via ${log.platform}</div>
-                                            <h6 class="fw-bold text-truncate mb-1" style="color: #0f172a; font-weight: 800;">${log.cheatsheet.title}</h6>
-                                            <p class="text-muted small text-wrap mb-3" style="font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">${log.cheatsheet.description}</p>
-                                            <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-2 mt-auto" style="font-size: 11px; font-weight: 600;">
-                                                <span>👤 ${log.cheatsheet.user.name}</span>
-                                                <span>🗓 ${log.createdAt.toString().split('T')[0]}</span>
-                                            </div>
-                                        </a>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="text-muted small py-4 ps-2 w-100 text-center bg-light rounded-4 border border-dashed"><i class="bi bi-share me-1"></i> No shared logs recorded for this account.</div>
-                                </c:otherwise>
-                            </c:choose>
+    <c:choose>
+        <c:when test="${not empty sharedLogs}">
+            <c:forEach items="${sharedLogs}" var="log">
+                <div class="position-relative" id="log-card-${log.id}">
+                    
+                    <c:if test="${isOwner}">
+                        <button type="button" class="delete-log-btn" title="Delete from Profile" 
+                                onclick="event.stopPropagation(); event.preventDefault(); deleteShareLog(${log.id});">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </c:if>
+
+                    <a href="${pageContext.request.contextPath}/cheatsheet/${log.cheatsheet.id}" class="slider-item-card">
+                        <div class="item-badge badge-share"><i class="bi bi-share-fill me-1"></i> Via ${log.platform}</div>
+                        <h6 class="fw-bold text-truncate mb-1" style="color: #0f172a; font-weight: 800; max-width: 80%;">${log.cheatsheet.title}</h6>
+                        <p class="text-muted small text-wrap mb-3" style="font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">${log.cheatsheet.description}</p>
+                        <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-2 mt-auto" style="font-size: 11px; font-weight: 600;">
+                            <span>👤 ${log.cheatsheet.user.name}</span>
+                            <span>🗓 ${log.createdAt.toString().split('T')[0]}</span>
                         </div>
+                    </a>
+                </div>
+            </c:forEach>
+        </c:when>
+        <c:otherwise>
+            <div class="text-muted small py-4 ps-2 w-100 text-center bg-light rounded-4 border border-dashed"><i class="bi bi-share me-1"></i> No shared logs recorded for this account.</div>
+        </c:otherwise>
+    </c:choose>
+</div>
                         
                         <button type="button" class="slider-arrow arrow-right" onclick="moveSlider('shareSlider', 1)"><i class="bi bi-chevron-right"></i></button>
                     </div>
@@ -285,6 +321,73 @@ function moveSlider(sliderId, direction) {
         const scrollAmount = 290; // ကတ်အကျယ် (270px) + Gap (20px) တွက်ချက်မှုစနစ်
         slider.scrollLeft += (direction * scrollAmount);
     }
+}
+function deleteShareLog(logId) {
+    if (!confirm("Are you sure you want to remove this shared history?")) return;
+
+    let headers = {};
+    const csrfTokenEl = document.querySelector("meta[name='_csrf']");
+    const csrfHeaderEl = document.querySelector("meta[name='_csrf_header']");
+    
+    if (csrfTokenEl && csrfHeaderEl) {
+        const csrfToken = csrfTokenEl.getAttribute("content");
+        const csrfHeader = csrfHeaderEl.getAttribute("content");
+        if (csrfToken && csrfHeader) {
+            headers[csrfHeader] = csrfToken;
+        }
+    }
+
+    let formData = new FormData();
+    formData.append("logId", logId);
+
+    fetch('${pageContext.request.contextPath}/profile/share-log/delete', {
+        method: 'POST',
+        headers: headers,
+        body: formData,
+        credentials: 'include'
+    })
+    .then(res => res.text())
+    .then(data => {
+        // 💡 စာသား အကြီးအသေး မရွေး လိုက်ဖက်အောင် အစ်ကို့စတိုင်အတိုင်း ပြောင်းလဲစစ်ဆေးခြင်း
+        if (data.toLowerCase().includes("success")) {
+            
+            const cardElement = document.getElementById("log-card-" + logId);
+            if (cardElement) {
+                
+                // ၁။ ချောမွေ့စွာ ပျောက်ကွယ်သွားမည့် Animation စတင်ခြင်း
+                cardElement.style.transition = "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                cardElement.style.opacity = "0";
+                cardElement.style.transform = "scale(0.7) translateY(20px)"; // အောက်ကို အိကျသွားမည့်ပုံစံ
+                
+                // ၂။ Slider flow မပျက်စေရန် Layout element များကိုပါ တပြိုင်နက် ကျုံ့ပစ်ခြင်း
+                cardElement.style.width = "0px";
+                cardElement.style.marginRight = "-20px";
+                cardElement.style.overflow = "hidden";
+
+                // ၃။ Animation Frame ပြီးဆုံးချိန်တွင် DOM ပေါ်မှ လုံးဝ ဖယ်ထုတ်ခြင်း
+                setTimeout(() => {
+                    cardElement.remove();
+                    
+                    // ၄။ Card တစ်ခုမှ မကျန်တော့လျှင် Empty state စာသား တန်းပြောင်းပေးခြင်း
+                    const remainingCards = document.querySelectorAll("#shareSlider .position-relative");
+                    if (remainingCards.length === 0) {
+                        const sliderEl = document.getElementById("shareSlider");
+                        if (sliderEl) {
+                            sliderEl.innerHTML = '<div class="text-muted small py-4 ps-2 w-100 text-center bg-light rounded-4 border border-dashed"><i class="bi bi-share me-1"></i> No shared logs recorded for this account.</div>';
+                        }
+                    }
+                }, 400);
+            }
+            
+        } else {
+           
+            alert("Failed to delete: " + data); 
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Network error occurred.");
+    });
 }
 </script>
 </body>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.UserEntity;
@@ -63,18 +64,20 @@ public class CheatsheetDetailsController {
 
 	@PostMapping("/cheatsheet/share-log")
 	@ResponseBody
-	public String logCheatsheetShare(@RequestParam Long cheatsheetId, @RequestParam String platform,
-			HttpSession session) {
-		UserEntity user = (UserEntity) session.getAttribute("currentUser");
-		if (user != null) {
-			shareService.saveShareLog(user.getId(), cheatsheetId, platform);
-			return "Logged Successfully";
-		}
-		return "User not logged in";
+	public String logCheatsheetShare(
+	        @RequestParam("cheatsheetId") Long cheatsheetId, 
+	        @RequestParam("platform") String platform,
+	        @SessionAttribute(value = "currentUser", required = false) UserEntity user) { 
+	    
+	    if (user != null) {
+	        shareService.saveShareLog(user.getId(), cheatsheetId, platform);
+	        return "Share Successfully";
+	    }
+	    
+	    return "User not logged in";
 	}
 
-	// 💡 Manage Button နှင့် Header က လှမ်းလာမယ့် စုစုပေါင်း Bookmark ပြသပေးမည့်
-	// API
+	
 	@GetMapping("/profile/bookmarks")
 	public String viewUserBookmarks(Model model, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("currentUser");
@@ -116,14 +119,38 @@ public class CheatsheetDetailsController {
 
 	@PostMapping("/report/submit")
 	public String submitReport(@RequestParam Long targetId, @RequestParam String reason,
-			@RequestParam(required = false) String description, HttpSession session) {
-		UserEntity user = (UserEntity) session.getAttribute("currentUser");
-		if (user != null) {
-			reportService.saveReport(user.getId(), targetId, reason, description);
-		}
-		return "redirect:/cheatsheet/" + targetId;
+	        @RequestParam(required = false) String description, HttpSession session) {
+	    
+	    UserEntity user = (UserEntity) session.getAttribute("currentUser");
+	    if (user != null) {
+	        try {
+	            reportService.saveReport(user.getId(), targetId, reason, description);
+	            // 💡 အောင်မြင်ရင် URL parameter အနေနဲ့ status=reported ကို ပါးလိုက်မယ်
+	            return "redirect:/cheatsheet/" + targetId + "?status=reported";
+	        } catch (RuntimeException e) {
+	            // ကိုယ့်ဟာကိုယ် တိုင်ကြားတဲ့အခါ Service က ပစ်လိုက်တဲ့ Error ကို ဖမ်းပြီး ပြန်ခြင်း
+	            return "redirect:/cheatsheet/" + targetId + "?error=self_report";
+	        }
+	    }
+	    return "redirect:/cheatsheet/" + targetId;
 	}
-	// 💡 CheatsheetDetailsController.java ၏ အတွင်းထဲတွင် ဤ API လိုင်းသစ်အား
-	// ဖြည့်စွက်ပါ
+	@PostMapping("/profile/share-log/delete")
+	@ResponseBody
+	public String deleteShareLog(
+	        @RequestParam("logId") Long logId,
+	        @SessionAttribute(value = "currentUser", required = false) UserEntity currentUser) {
+	    
+	    if (currentUser == null) {
+	        return "Please login first!";
+	    }
+	    
+	    boolean isDeleted = shareService.deleteLogIfOwner(logId, currentUser.getId());
+	    
+	    if (isDeleted) {
+	        return "SUCCESS"; 
+	    } else {
+	        return "Unauthorized or log not found.";
+	    }
+	}
 
 }

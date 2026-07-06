@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor; // 👈 Lombok Import
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor // 👈 🛑 `@RequiredArgsConstructor` ကို ဖြည့်စွက်လိုက်ပါပြီ
+@RequiredArgsConstructor 
 public class ShareRepositoryImpl implements ShareRepository {
 
-    // 💡 🛑 @Autowired ကို ဖြုတ်ပြီး private final SessionFactory ဟု ပြောင်းလဲခြင်း
+    
     private final SessionFactory sessionFactory;
 
     private Session getCurrentSession() {
@@ -31,5 +31,15 @@ public class ShareRepositoryImpl implements ShareRepository {
                 .createQuery(hql, ShareEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
+    }
+    @Override
+    public ShareEntity findById(Long id) {
+        return getCurrentSession().get(ShareEntity.class, id);
+    }
+
+    @Override
+    public void delete(ShareEntity share) {
+        getCurrentSession().delete(share);
+        getCurrentSession().flush(); 
     }
 }

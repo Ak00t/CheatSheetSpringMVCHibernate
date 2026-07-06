@@ -21,33 +21,37 @@ public class ReportServiceImpl implements ReportService {
     private final SessionFactory sessionFactory;
 
     @Override
+    @Transactional
     public void saveReport(Long userId, Long targetId, String reason, String description) {
-        
+        // ၁။ Target ရှာဖွေခြင်း
         CheatsheetEntity cheatsheet = sessionFactory.getCurrentSession().get(CheatsheetEntity.class, targetId);
         if (cheatsheet == null) {
             throw new RuntimeException("Target Cheatsheet not found!");
         }
 
-        
-        ReportEntity report = new ReportEntity();
+        // ၂။ ကိုယ့်ဘာသာ Report တင်ခြင်းကို Service Layer မှာ စိတ်ချရဆုံး primitive value ချင်း ယှဉ်စစ်ခြင်း
+        if (cheatsheet.getUser() != null && cheatsheet.getUser().getId().longValue() == userId.longValue()) {
+            throw new RuntimeException("You cannot report your own cheat sheet!");
+        }
+
+        // ၃။ တိုင်ကြားသူ User ကို ဆွဲထုတ်ခြင်း
         UserEntity user = sessionFactory.getCurrentSession().get(UserEntity.class, userId);
         
+        ReportEntity report = new ReportEntity();
         report.setReporterUser(user);
         report.setTargetId(targetId);
-        report.setTargetType(TargetType.CHEATSHEET);
+        report.setTargetType(TargetType.CHEATSHEET); // 🔑 🛑 ဒီလိုင်းလေး မဖြစ်မနေ ပါရပါမယ် (Repository Check ကို ဖြတ်ကျော်နိုင်ရန်)
         report.setReason(ReportReason.valueOf(reason));
         report.setDescription(description);
         report.setStatus(ReviewStatus.PENDING);
         report.setCreatedAt(LocalDateTime.now());
         
-        
+        // ၄။ Repository သို့ ပို့၍ သိမ်းဆည်းခြင်း
         reportRepository.save(report);
 
-       
-        int currentReportCount = cheatsheet.getReportCount() != null ? cheatsheet.getReportCount() : 0;
-        cheatsheet.setReportCount(currentReportCount + 1);
-        
-       
+        // ၅။ Counter Update လုပ်ခြင်း (Null Safe ဖြစ်အောင် စစ်ဆေးပါသည်)
+        int currentCount = cheatsheet.getReportCount() != null ? cheatsheet.getReportCount() : 0;
+        cheatsheet.setReportCount(currentCount + 1);
         sessionFactory.getCurrentSession().update(cheatsheet);
     }
 }

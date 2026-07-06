@@ -14,10 +14,10 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor // 👈 🛑 ဒီမှာ တပ်လိုက်ပါပြီဗျာ
+@RequiredArgsConstructor
 public class ShareServiceImpl implements ShareService {
 
-    // 💡 🛑 အရေးကြီးဆုံးအချက်: @Autowired ဖြုတ်ပြီး 'private final' လို့ မဖြစ်မနေ ပြောင်းပေးရပါမယ်ဗျာ
+    
     private final ShareRepository shareRepository;
 
     @Override
@@ -61,5 +61,19 @@ public class ShareServiceImpl implements ShareService {
             }
         }
         return shares;
+    }
+    @Override
+    @Transactional
+    public boolean deleteLogIfOwner(Long logId, Long userId) {
+        ShareEntity shareLog = shareRepository.findById(logId);
+        
+        if (shareLog != null && shareLog.getUser() != null) {
+            
+            if (shareLog.getUser().getId().longValue() == userId.longValue()) {
+                shareRepository.delete(shareLog);
+                return true;
+            }
+        }
+        return false;
     }
 }

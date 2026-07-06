@@ -231,6 +231,36 @@
                         color: #dc2626;
                         border-color: #fee2e2;
                     }
+                 .star-rating-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.star-rating-container {
+    display: inline-flex;
+    gap: 4px;
+    /* 💡 row-reverse ကို လုံးဝ (လုံးဝ) မသုံးရပါ - ပုံမှန်အဝိုင်းအတိုင်း ဘယ်မှညာ သွားပါမည် */
+}
+
+.star-rating-container i {
+    font-size: 1.35rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.star-rating-container i:hover,
+.star-rating-container i.hovered {
+    color: #fbbf24 !important;
+    transform: scale(1.25) translateY(-2px);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+}
+
+.active-star {
+    color: #f59e0b !important;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
                 </style>
             </head>
 
@@ -337,25 +367,24 @@
                                 </div>
 
                                 <!-- 🔘 Instant Star Rating System (Submit ခလုတ်မလိုဘဲ တန်းပြောင်းလဲမည်) -->
-                                <div class="d-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border">
-                                    <span
-                                        class="small fw-bold text-secondary font-monospace">${cheatsheet.ratingAvg}</span>
-                                    <form id="instantRateForm"
-                                        action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST"
-                                        class="m-0 d-inline">
-                                        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
-                                        <input type="hidden" name="score" id="selectedStarScore" value="" />
+                               <!-- 🔘 Instant Star Rating System (Advanced Dynamic Icons) -->
+<div class="d-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border star-rating-box">
+    <span class="small fw-bold text-secondary font-monospace" id="avgRatingDisplay">${cheatsheet.ratingAvg}</span>
+    
+    <form id="instantRateForm" action="${pageContext.request.contextPath}/cheatsheet/rate" method="POST" class="m-0 d-inline">
+        <input type="hidden" name="cheatsheetId" value="${cheatsheet.id}" />
+        <input type="hidden" name="score" id="selectedStarScore" value="" />
 
-                                        <div class="star-rating-container">
-                                            <!-- ၅ လုံးမှ ၁ လုံးသို့ ပြောင်းပြန်စီထားခြင်း (flex-direction: row-reverse ကြောင့်) -->
-                                            <i class="bi bi-star-fill" onclick="submitInstantRating(5)"></i>
-                                            <i class="bi bi-star-fill" onclick="submitInstantRating(4)"></i>
-                                            <i class="bi bi-star-fill" onclick="submitInstantRating(3)"></i>
-                                            <i class="bi bi-star-fill" onclick="submitInstantRating(2)"></i>
-                                            <i class="bi bi-star-fill" onclick="submitInstantRating(1)"></i>
-                                        </div>
-                                    </form>
-                                </div>
+        <!-- 💡 ကြယ်များကို ၁ မှ ၅ သို့ ဘယ်မှညာ အစဉ်အတိုင်း စီစဉ်ထားပါသည် -->
+        <div class="star-rating-container" id="starContainer">
+            <i class="bi bi-star-fill" data-score="1" onclick="submitInstantRating(1)"></i>
+            <i class="bi bi-star-fill" data-score="2" onclick="submitInstantRating(2)"></i>
+            <i class="bi bi-star-fill" data-score="3" onclick="submitInstantRating(3)"></i>
+            <i class="bi bi-star-fill" data-score="4" onclick="submitInstantRating(4)"></i>
+            <i class="bi bi-star-fill" data-score="5" onclick="submitInstantRating(5)"></i>
+        </div>
+    </form>
+</div>
 
                                 <!-- Bookmark Button Element -->
                                 <form action="${pageContext.request.contextPath}/cheatsheet/bookmark" method="POST"
@@ -384,17 +413,19 @@
 
                             </div>
 
-                            <!-- Right Side: Share & Report -->
-                            <div class="d-flex align-items-center gap-2 justify-content-end">
-                                <button class="btn action-pill-btn bg-dark text-white border-dark"
-                                    data-bs-toggle="modal" data-bs-target="#shareLinkModal">
-                                    <i class="bi bi-share-fill"></i> Share Hub
-                                </button>
-                                <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal"
-                                    data-bs-target="#reportModal">
-                                    <i class="bi bi-flag-fill"></i> Report
-                                </button>
-                            </div>
+          <div class="d-flex align-items-center gap-2 justify-content-end">
+    <button class="btn action-pill-btn bg-dark text-white border-dark"
+        data-bs-toggle="modal" data-bs-target="#shareLinkModal">
+        <i class="bi bi-share-fill"></i> Share Hub
+    </button>
+    
+    <c:if test="${not empty sessionScope.currentUser and cheatsheet.user.id.toString() != sessionScope.currentUser.id.toString()}">
+        <button class="btn action-pill-btn btn-report-pill" data-bs-toggle="modal"
+            data-bs-target="#reportModal">
+            <i class="bi bi-flag-fill"></i> Report
+        </button>
+    </c:if>
+</div>
 
                         </div>
                     </div>
@@ -822,24 +853,108 @@
 
                     function saveToMyProfileLogs() {
                         const cheatsheetId = '${cheatsheet.id}';
+                        
+                        // URL-encoded string အစား FormData ကို သုံးပါ
+                        let formData = new FormData();
+                        formData.append("cheatsheetId", cheatsheetId);
+                        formData.append("platform", "PROFILE");
+
                         fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'cheatsheetId=' + cheatsheetId + '&platform=PROFILE'
+                            // ⚠️ Content-Type Header ကို လက်ရှိမှာ ဖြုတ်ထားရပါမယ် (FormData က အလိုအလျောက် ချိန်ပေးပါလိမ့်မယ်)
+                            body: formData,
+                            credentials: 'include' // 🔑 Browser Session Cookie ပါသွားစေရန် သေချာပေါက် ထည့်ရမည်
                         })
-                            .then(res => res.text())
-                            .then(data => {
-                                if (data === "Logged Successfully") {
-                                    alert("Successfully shared to your profile history!");
-                                    const modalEl = document.getElementById('shareLinkModal');
-                                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                    if (modalInstance) modalInstance.hide();
-                                } else {
-                                    alert("Please login first!");
-                                }
-                            })
-                            .catch(err => console.error("Database sync failed:", err));
+                        .then(res => res.text())
+                        .then(data => {
+                            // .trim() သုံးပြီး Space အပိုတွေကြောင့် စာသားမကိုက်ညီမှုကို ကာကွယ်ပါ
+                            if (data.trim() === "Share Successfully") {
+                                alert("Successfully shared to your profile history!");
+                                const modalEl = document.getElementById('shareLinkModal');
+                                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                if (modalInstance) modalInstance.hide();
+                            } else {
+                                alert(data); // "User not logged in" ဆိုပြီး Backend က ပို့တဲ့ စာသားအတိုင်း ပြပေးမည်
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Database sync failed:", err);
+                            alert("Something went wrong!");
+                        });
                     }
+                 // 💡 URL Parameters များကို ဖတ်ပြီး အခြေအနေအလိုက် Alert Box ပြပေးမည့်စနစ်
+                    window.addEventListener('DOMContentLoaded', () => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        
+                        // ၁။ Report အောင်မြင်စွာ တင်ပြီးမြောက်သွားချိန်
+                        if (urlParams.get('status') === 'reported') {
+                            alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
+                            // URL ထဲက Parameter ကို သန့်စင်ပေးခြင်း (နောက်တစ်ခါ Refresh နှိပ်ရင် Alert ထပ်မကျစေရန်)
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                        
+                        // ၂။ Controller ကနေ တားဆီးလိုက်တဲ့ ကိုယ့်ဟာကိုယ် Report ထုမှုအခြေအနေ
+                        if (urlParams.get('error') === 'self_report') {
+                            alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                    });
+                 
+                 // 💡 Star Rating ခေတ်မီလှပစေမည့် Dynamic JavaScript Engine
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // #starContainer အောက်က ကြယ် ၅ လုံးလုံးကို အစဉ်လိုက် ဆွဲယူခြင်း
+                        const stars = document.querySelectorAll('#starContainer i');
+                        const currentAvg = Math.floor(parseFloat('${cheatsheet.ratingAvg}') || 0);
+
+                        // ၁။ စာမျက်နှာ စပွင့်ချိန်တွင် ရှိပြီးသား အမှတ်အတိုင်း ဘယ်ဘက်အစကနေ မီးလင်းပေးထားခြင်း
+                        highlightStars(currentAvg, 'active-star');
+
+                        // ၂။ Mouse တင်လိုက်သည့်အခါ ဘယ်ဘက်အစကနေ အစဉ်လိုက် လင်းစေမည့် Logic
+                        stars.forEach(star => {
+                            star.addEventListener('mouseenter', function() {
+                                const currentScore = parseInt(this.getAttribute('data-score'));
+                                
+                                // Hover လုပ်ထားသော ကြယ်အပါအဝင် ၎င်း၏ ရှေ့က ကြယ်များကိုသာ လင်းစေပြီး နောက်ကကောင်များကို မှိတ်ခြင်း
+                                stars.forEach(s => {
+                                    const sScore = parseInt(s.getAttribute('data-score'));
+                                    if (sScore <= currentScore) {
+                                        s.classList.add('hovered');
+                                    } else {
+                                        s.classList.remove('hovered');
+                                    }
+                                });
+                            });
+                        });
+
+                        // ၃။ Mouse အပြင်ထွက်သွားလျှင် Hover အရောင်များကို ဖျက်ပြီး မူလအမှတ်အတိုင်း ပြန်ပြောင်းခြင်း
+                        const container = document.getElementById('starContainer');
+                        if (container) {
+                            container.addEventListener('mouseleave', () => {
+                                stars.forEach(s => s.classList.remove('hovered'));
+                            });
+                        }
+                    });
+
+                    // ဘယ်ဘက်အစကနေ သတ်မှတ်အမှတ်အထိ class တပ်ပေးမည့် အထောက်အကူပြု function
+                    function highlightStars(score, className) {
+                        const stars = document.querySelectorAll('#starContainer i');
+                        stars.forEach(s => {
+                            const sScore = parseInt(s.getAttribute('data-score'));
+                            if (sScore <= score) {
+                                s.classList.add(className);
+                            } else {
+                                s.classList.remove(className);
+                            }
+                        });
+                    }
+
+                    function submitInstantRating(scoreValue) {
+                        document.getElementById("selectedStarScore").value = scoreValue;
+                        // Form မတက်ခင် UI တွင် ချက်ချင်း အမှတ်ပြောင်းသွားစေရန် ဘယ်ကနေစပြီး အရောင်လင်းပေးခြင်း
+                        highlightStars(scoreValue, 'active-star');
+                        document.getElementById("instantRateForm").submit();
+                    }
+                 
                 </script>
             </body>
 
