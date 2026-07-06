@@ -372,13 +372,23 @@ body {
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body p-4">
-                                <c:if test="${param.error == 'true'}">
-                                    <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> User not found or account is unavailable
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close" style="padding: 0.8rem 1rem; font-size: 10px;"></button>
-                                    </div>
-                                </c:if>
+    <c:if test="${param.error == 'true'}">
+    <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+        
+        <c:choose>
+            <%-- Use bracket notation ['class'] to avoid the syntax parsing exception --%>
+<c:when test="${fn:containsIgnoreCase(SPRING_SECURITY_LAST_EXCEPTION.message, 'banned')}">
+                This account has been banned.
+            </c:when>
+            <c:otherwise>
+                User not found.
+            </c:otherwise>
+        </c:choose>
+        
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</c:if>
 
                                 <form action="${pageContext.request.contextPath}/login" method="POST">
                                     <div class="mb-3">

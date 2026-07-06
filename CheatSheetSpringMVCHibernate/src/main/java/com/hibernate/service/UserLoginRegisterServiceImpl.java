@@ -38,7 +38,8 @@ public class UserLoginRegisterServiceImpl implements UserLoginRegisterService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found" + email);
 		} else if ("BANNED".equals(user.getStatus().name())) {
-
+			throw new org.springframework.security.authentication.DisabledException(
+					"Your account has been banned. Please contact administration.");
 		}
 		return User
 				.builder()
