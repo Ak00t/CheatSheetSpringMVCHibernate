@@ -88,12 +88,6 @@
 				<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="af9af20e-37d0-48da-92d8-00418a0d1201" mode="Opaque" x="470" y="5" width="85" height="25" forecolor="#FFFFFF" backcolor="#2B2B2B" bold="true" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Views ]]></text>
-			<box>
-				<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-			</box>
-		</element>
 		<element kind="textField" uuid="edb18c5c-15c8-4bd7-9d73-e199449cef38" x="380" y="-25" width="110" height="17" bold="true" hTextAlign="Right">
 			<expression><![CDATA[$F{month}]]></expression>
 		</element>
@@ -135,12 +129,6 @@
 			</element>
 			<element kind="textField" uuid="4db6058d-b67c-4af8-9dc9-59cea9f98a1e" x="400" y="0" width="70" height="25" hTextAlign="Center" vTextAlign="Middle">
 				<expression><![CDATA[$F{rating} + " "]]></expression>
-				<box>
-					<pen lineWidth="0.5" lineColor="#E0E0E0"/>
-				</box>
-			</element>
-			<element kind="textField" uuid="513879e1-08c3-4974-be35-5dd3b7a6bb54" x="470" y="0" width="85" height="25" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{view_count} + " "]]></expression>
 				<box>
 					<pen lineWidth="0.5" lineColor="#E0E0E0"/>
 				</box>

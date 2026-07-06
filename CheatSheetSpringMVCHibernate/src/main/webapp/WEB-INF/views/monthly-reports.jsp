@@ -237,7 +237,6 @@
                                                     <th style="width: 15%;">Posted At</th>
                                                     <th style="width: 10%;">Likes</th>
                                                     <th style="width: 10%;">Rating</th>
-                                                    <th style="width: 10%;">Views</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -251,7 +250,6 @@
                                                         </td>
                                                         <td>${report.likes}</td>
                                                         <td><fmt:formatNumber value="${report.rating}" minFractionDigits="1" maxFractionDigits="1"/></td>
-                                                        <td>${report.view_count}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
