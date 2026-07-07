@@ -146,16 +146,32 @@
             padding: 40px 20px;
             text-align: center;
         }
+        .admin-sticky-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1060; /* အခြား element များ၏ အပေါ်၌ အမြဲလွှမ်းမိုးထားရန် */
+}
+
+/* 🌟 Header ကြောင့် အောက်ခြေ Content များ အပေါ်သို့ အတင်းတိုးမဝင်စေရန် Spacer */
+body {
+    padding-top: 80px !important; /* Header ၏ အမြင့်အလိုက် Content များကို အောက်သို့ တန်းစီတွန်းချပေးခြင်း */
+}
     </style>
 </head>
 <body>
 <div class="page-container">
-    <header style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05);">
-        <h2 style="color:#2563eb; margin: 0;">CheatSheet Hub</h2>
-        <nav style="display:flex; align-items:center; gap:25px;">
-            <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
-        </nav>
-    </header>
+        <header class="admin-sticky-header" style="background:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 20px rgba(0,0,0,.05); box-sizing: border-box;">
+    <h2 style="color:#2563eb; margin: 0; flex-shrink: 0;">
+        <a href="${pageContext.request.contextPath}/" class="text-decoration-none" style="color: #2563eb;">
+            CheatSheet Hub
+        </a>
+    </h2>
+    <nav style="display:flex; align-items:center; gap:25px; flex-shrink: 0; white-space: nowrap;">
+        <a href="${pageContext.request.contextPath}/admin/profile" style="text-decoration:none; color:#334155; font-weight: 600;">Profile</a>
+    </nav>
+</header>
 
     <div class="page-wrapper">
         <jsp:include page="sidebar.jsp" />
@@ -563,6 +579,6 @@
     </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ --></body>
 </html>
