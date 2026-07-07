@@ -200,80 +200,40 @@
                         }
                     }
 
-                    /* 🌟 Instant Star Rating UI Styling */
-                    .star-rating-container {
-                        display: inline-flex;
-                        flex-direction: row-reverse;
-                        /* Hover Effect မှန်ကန်စေရန် */
-                        gap: 4px;
-                    }
+                  /* 🌟 Glowing Star Rating Container Control */
+.star-rating-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
 
-                    .star-rating-container i {
-                        font-size: 1.25rem;
-                        color: #cbd5e1;
-                        cursor: pointer;
-                        transition: color 0.15s ease, transform 0.1s ease;
-                    }
+.star-rating-container {
+    display: inline-flex !important;
+    /* 💡 row-reverse ကို လုံးဝ (လုံးဝ) မသုံးတော့ပါ - ဒါမှ ဘယ်ဘက် (နံပါတ် ၁) ကနေ စတင်ပြီး လင်းမှာပါ */
+    flex-direction: row !important; 
+    gap: 4px;
+}
 
-                    .star-rating-container i:hover,
-                    .star-rating-container i:hover~i {
-                        color: #f59e0b;
-                        /* ရွှေ့လိုက်ရင် ရွှေရောင်ပြောင်းမည် */
-                        transform: scale(1.15);
-                    }
+.star-rating-container i {
+    font-size: 1.35rem;
+    color: #cbd5e1; /* မီးမှိတ်ထားစဉ် အရောင်ပြာဖျော့ */
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-                    .active-star {
-                        color: #f59e0b !important;
-                    }
+/* 💡 Mouse တင်လိုက်တဲ့ ကြယ်အပါအဝင် သူ့ရှေ့က ကြယ်အားလုံးကို ဘယ်မှညာ အစဉ်လိုက် Glowing ဖြစ်စေခြင်း */
+.star-rating-container i:hover,
+.star-rating-container i.hovered {
+    color: #fbbf24 !important; /* Premium ရွှေဝါရောင် */
+    transform: scale(1.25) translateY(-2px);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
 
-                    .active-bookmark {
-                        background: #fef9c3;
-                        color: #d97706;
-                        border-color: #fef08a;
-                    }
-
-                    .btn-report-pill {
-                        color: #94a3b8;
-                        background: transparent;
-                        border: 1px solid transparent;
-                    }
-
-                    .btn-report-pill:hover {
-                        background: #fff5f5;
-                        color: #dc2626;
-                        border-color: #fee2e2;
-                    }
-
-                    .star-rating-box {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 6px;
-                    }
-
-                    .star-rating-container {
-                        display: inline-flex;
-                        gap: 4px;
-                        /* 💡 row-reverse ကို လုံးဝ (လုံးဝ) မသုံးရပါ - ပုံမှန်အဝိုင်းအတိုင်း ဘယ်မှညာ သွားပါမည် */
-                    }
-
-                    .star-rating-container i {
-                        font-size: 1.35rem;
-                        color: #cbd5e1;
-                        cursor: pointer;
-                        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                    }
-
-                    .star-rating-container i:hover,
-                    .star-rating-container i.hovered {
-                        color: #fbbf24 !important;
-                        transform: scale(1.25) translateY(-2px);
-                        text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
-                    }
-
-                    .active-star {
-                        color: #f59e0b !important;
-                        text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
-                    }
+/* Database ကနေ တက်လာတဲ့ မူလအမှတ်အတိုင်း လင်းနေမည့် အရောင် */
+.active-star {
+    color: #f59e0b !important;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
                 </style>
             </head>
 
@@ -808,222 +768,189 @@
                     </div>
                 </div>
 
-                <script>
+<script>
+    // ၁။ Reply Form နှင့် Edit Form များ အဖွင့်အပိတ် ပြုလုပ်မည့်စနစ်
+    function toggleReplyForm(id) {
+        let el = document.getElementById('reply-form-' + id);
+        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    }
 
+    function toggleNestedReplies(id) {
+        let el = document.getElementById('nested-' + id);
+        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    }
+    
+    function toggleEditForm(commentId) {
+        const txtArea = document.getElementById("comment-text-" + commentId);
+        const editContainer = document.getElementById("comment-edit-container-" + commentId);
+        if (txtArea && editContainer) {
+            if (editContainer.classList.contains('d-none')) {
+                editContainer.classList.remove('d-none');
+                txtArea.classList.add('d-none');
+            } else {
+                editContainer.classList.add('d-none');
+                txtArea.classList.remove('d-none');
+            }
+        }
+    }
 
-                    function toggleReplyForm(id) {
-                        let el = document.getElementById('reply-form-' + id);
-                        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    // ၂။ Comment တိုင်ကြားချက် Modal ဖွင့်ခြင်းစနစ်
+    function triggerReportAction(commentId) {
+        const targetInput = document.getElementById("reportCommentIdTarget");
+        if (targetInput) {
+            targetInput.value = commentId;
+            const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
+            rModal.show();
+        }
+    }
+
+    // ၃။ Comment ဘာသာပြန်စနစ်
+    const commentCache = {};
+    function translateComment(commentId, targetLang) {
+        let targetSpan = document.getElementById("comment-text-" + commentId);
+        if (!targetSpan) return;
+
+        if (!commentCache[commentId]) {
+            commentCache[commentId] = targetSpan.innerText;
+        }
+
+        let originalText = commentCache[commentId];
+        targetSpan.innerText = "Translating text payload...";
+
+        let endpoint = '${pageContext.request.contextPath}/comment/translate?commentId=' + commentId + '&lang=' + targetLang;
+
+        fetch(endpoint)
+            .then(res => { if (!res.ok) throw new Error(); return res.text(); })
+            .then(txt => {
+                targetSpan.innerText = txt;
+                document.getElementById('translateOpt-' + commentId)?.classList.add('d-none');
+                document.getElementById('originalOpt-' + commentId)?.classList.remove('d-none');
+            })
+            .catch(() => {
+                targetSpan.innerText = originalText;
+                alert("Could not fetch translation matrix body.");
+            });
+    }
+
+    function restoreOriginalComment(commentId) {
+        let targetSpan = document.getElementById("comment-text-" + commentId);
+        let originalText = commentCache[commentId];
+        if (targetSpan && originalText) {
+            targetSpan.innerText = originalText;
+            document.getElementById('originalOpt-' + commentId)?.classList.add('d-none');
+            document.getElementById('translateOpt-' + commentId)?.classList.remove('d-none');
+        }
+    }
+
+    // ၄။ Social Share Engine
+    function shareToSocialWeb(platformName, webPrefixUrl) {
+        const sheetUrl = document.getElementById("sheetLinkInput").value;
+        window.open(webPrefixUrl + encodeURIComponent(sheetUrl), '_blank', 'width=600,height=400');
+    }
+
+    function copySheetDirectLink() {
+        let inputEl = document.getElementById("sheetLinkInput");
+        inputEl.select();
+        navigator.clipboard.writeText(inputEl.value);
+        alert("Cheat Sheet link copied!");
+    }
+
+    // ၅။ 🌟 Profile Share History သိမ်းဆည်းခြင်း (Syntax Error ရှင်းလင်းပြီး)
+    function saveToMyProfileLogs() {
+        const cheatsheetId = '${cheatsheet.id}';
+        let formData = new FormData();
+        formData.append("cheatsheetId", cheatsheetId);
+        formData.append("platform", "PROFILE");
+
+        fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        })
+        .then(res => res.text())
+        .then(data => {
+            const cleanData = data.trim().replace(/^"|"$/g, '');
+            if (cleanData === "Logged Successfully" || cleanData === "Share Successfully") {
+                alert("Successfully shared to your profile history!");
+                const modalEl = document.getElementById('shareLinkModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+            } else {
+                alert(cleanData);
+            }
+        })
+        .catch(err => {
+            console.error("Database sync failed:", err);
+            alert("Something went wrong!");
+        });
+    }
+
+    // ၆။ 🌟 Star Rating & URL Parameter စောင့်ကြည့်စနစ် (ပေါင်းစပ်သန့်စင်ပြီး)
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- (A) URL Parameters Alerts ---
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.get('status') === 'reported') {
+            alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        if (urlParams.get('error') === 'self_report') {
+            alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        if (urlParams.get('error') === 'already_reported') {
+            alert("⚠️ Notice!\nYou have already submitted a report for this cheat sheet.");
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // --- (B) Star Rating Engine ---
+        const stars = document.querySelectorAll('#starContainer i');
+        const currentAvg = Math.floor(parseFloat('${cheatsheet.ratingAvg}') || 0);
+
+        // မူလအမှတ်အတိုင်း မီးစလင်းပေးခြင်း
+        highlightStars(currentAvg, 'active-star');
+
+        // Mouse Hover စနစ် ထိန်းချုပ်မှု
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', function() {
+                const currentScore = parseInt(this.getAttribute('data-score'));
+                stars.forEach(s => {
+                    const sScore = parseInt(s.getAttribute('data-score'));
+                    if (sScore <= currentScore) {
+                        s.classList.add('hovered');
+                    } else {
+                        s.classList.remove('hovered');
                     }
+                });
+            });
+        });
 
-                    function toggleNestedReplies(id) {
-                        let el = document.getElementById('nested-' + id);
-                        if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
-                    }
+        const container = document.getElementById('starContainer');
+        if (container) {
+            container.addEventListener('mouseleave', () => {
+                stars.forEach(s => s.classList.remove('hovered'));
+            });
+        }
+    });
 
-                    // Toggle visibility of inline edit forms for comments
-                    function toggleEditForm(commentId) {
-                        const txtArea = document.getElementById("comment-text-" + commentId);
-                        const editContainer = document.getElementById("comment-edit-container-" + commentId);
-                        if (txtArea && editContainer) {
-                            if (editContainer.classList.contains('d-none')) {
-                                editContainer.classList.remove('d-none');
-                                txtArea.classList.add('d-none');
-                            } else {
-                                editContainer.classList.add('d-none');
-                                txtArea.classList.remove('d-none');
-                            }
-                        }
-                    }
+    // ၇။ Star Rating အထောက်အကူပြု Function များ
+    function highlightStars(score, className) {
+        const stars = document.querySelectorAll('#starContainer i');
+        stars.forEach(s => {
+            const sScore = parseInt(s.getAttribute('data-score'));
+            if (sScore <= score) {
+                s.classList.add(className);
+            } else {
+                s.classList.remove(className);
+            }
+        });
+    }
 
-                    function submitInstantRating(scoreValue) {
-                        document.getElementById("selectedStarScore").value = scoreValue;
-                        document.getElementById("instantRateForm").submit(); // Form ကို တိုက်ရိုက် Submit လှမ်းလုပ်မည်
-                    }
-
-                    // Handle dynamic injection target parameter metrics payload for reporting comments
-                    function triggerReportAction(commentId) {
-                        const targetInput = document.getElementById("reportCommentIdTarget");
-                        if (targetInput) {
-                            targetInput.value = commentId;
-                            const rModal = new bootstrap.Modal(document.getElementById('commentReportModal'));
-                            rModal.show();
-                        }
-                    }
-
-                    // Global memory cache to store text snapshots
-                    const commentCache = {};
-
-                    function translateComment(commentId, targetLang) {
-                        let targetSpan = document.getElementById("comment-text-" + commentId);
-                        if (!targetSpan) return;
-
-                        if (!commentCache[commentId]) {
-                            commentCache[commentId] = targetSpan.innerText;
-                        }
-
-                        let originalText = commentCache[commentId];
-                        targetSpan.innerText = "Translating text payload...";
-
-                        let endpoint = '${pageContext.request.contextPath}/comment/translate?commentId=' + commentId + '&lang=' + targetLang;
-
-                        fetch(endpoint)
-                            .then(res => { if (!res.ok) throw new Error(); return res.text(); })
-                            .then(txt => {
-                                targetSpan.innerText = txt;
-                                document.getElementById('translateOpt-' + commentId)?.classList.add('d-none');
-                                document.getElementById('originalOpt-' + commentId)?.classList.remove('d-none');
-                            })
-                            .catch(() => {
-                                targetSpan.innerText = originalText;
-                                alert("Could not fetch translation matrix body.");
-                            });
-                    }
-
-                    function restoreOriginalComment(commentId) {
-                        let targetSpan = document.getElementById("comment-text-" + commentId);
-                        let originalText = commentCache[commentId];
-
-                        if (targetSpan && originalText) {
-                            targetSpan.innerText = originalText;
-                            document.getElementById('originalOpt-' + commentId)?.classList.add('d-none');
-                            document.getElementById('translateOpt-' + commentId)?.classList.remove('d-none');
-                        }
-                    }
-
-                    function shareToSocialWeb(platformName, webPrefixUrl) {
-                        const sheetUrl = document.getElementById("sheetLinkInput").value;
-                        window.open(webPrefixUrl + encodeURIComponent(sheetUrl), '_blank', 'width=600,height=400');
-                    }
-
-                    function copySheetDirectLink() {
-                        let inputEl = document.getElementById("sheetLinkInput");
-                        inputEl.select();
-                        navigator.clipboard.writeText(inputEl.value);
-                        alert("Cheat Sheet link copied!");
-                    }
-
-                    function saveToMyProfileLogs() {
-                        const cheatsheetId = '${cheatsheet.id}';
-
-                        // URL-encoded string အစား FormData ကို သုံးပါ
-                        let formData = new FormData();
-                        formData.append("cheatsheetId", cheatsheetId);
-                        formData.append("platform", "PROFILE");
-
-                        fetch('${pageContext.request.contextPath}/cheatsheet/share-log', {
-                            method: 'POST',
-                            // ⚠️ Content-Type Header ကို လက်ရှိမှာ ဖြုတ်ထားရပါမယ် (FormData က အလိုအလျောက် ချိန်ပေးပါလိမ့်မယ်)
-                            body: formData,
-                            credentials: 'include' // 🔑 Browser Session Cookie ပါသွားစေရန် သေချာပေါက် ထည့်ရမည်
-                        })
-                            .then(res => res.text())
-                            .then(data => {
-
-                                if (data === "Logged Successfully") {
-                                    alert("Successfully shared to your profile history!");
-                                    const modalEl = document.getElementById('shareLinkModal');
-                                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                    if (modalInstance) modalInstance.hide();
-                                } else {
-                                    alert("Please login first!");
-                                }
-                            })            const cleanData = data.trim().replace(/^"|"$/g, '');
-                            .catch (err => console.error("Database sync failed:", err));
-                    }
-                    // 💡 URL Parameters များကို ဖတ်ပြီး အခြေအနေအလိုက် Alert Box ပြပေးမည့်စနစ်
-                    window.addEventListener('DOMContentLoaded', () => {
-                        const urlParams = new URLSearchParams(window.location.search);
-
-                        // ၁။ Report အောင်မြင်စွာ တင်ပြီးမြောက်သွားချိန်
-                        if (urlParams.get('status') === 'reported') {
-                            alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
-                            // URL ထဲက Parameter ကို သန့်စင်ပေးခြင်း (နောက်တစ်ခါ Refresh နှိပ်ရင် Alert ထပ်မကျစေရန်)
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-
-                        // ၂။ Controller ကနေ တားဆီးလိုက်တဲ့ ကိုယ့်ဟာကိုယ် Report ထုမှုအခြေအနေ
-                        if (urlParams.get('error') === 'self_report') {
-                            alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-                    });
-
-                    // 💡 Star Rating ခေတ်မီလှပစေမည့် Dynamic JavaScript Engine
-                    document.addEventListener('DOMContentLoaded', () => {
-                        // #starContainer အောက်က ကြယ် ၅ လုံးလုံးကို အစဉ်လိုက် ဆွဲယူခြင်း
-                        const stars = document.querySelectorAll('#starContainer i');
-                        const currentAvg = Math.floor(parseFloat('${cheatsheet.ratingAvg}') || 0);
-
-                        // ၁။ စာမျက်နှာ စပွင့်ချိန်တွင် ရှိပြီးသား အမှတ်အတိုင်း ဘယ်ဘက်အစကနေ မီးလင်းပေးထားခြင်း
-                        highlightStars(currentAvg, 'active-star');
-
-                        // ၂။ Mouse တင်လိုက်သည့်အခါ ဘယ်ဘက်အစကနေ အစဉ်လိုက် လင်းစေမည့် Logic
-                        stars.forEach(star => {
-                            star.addEventListener('mouseenter', function () {
-                                const currentScore = parseInt(this.getAttribute('data-score'));
-
-                                // Hover လုပ်ထားသော ကြယ်အပါအဝင် ၎င်း၏ ရှေ့က ကြယ်များကိုသာ လင်းစေပြီး နောက်ကကောင်များကို မှိတ်ခြင်း
-                                stars.forEach(s => {
-                                    const sScore = parseInt(s.getAttribute('data-score'));
-                                    if (sScore <= currentScore) {
-                                        s.classList.add('hovered');
-                                    } else {
-                                        s.classList.remove('hovered');
-                                    }
-                                });
-                            });
-                        });
-
-                        // ၃။ Mouse အပြင်ထွက်သွားလျှင် Hover အရောင်များကို ဖျက်ပြီး မူလအမှတ်အတိုင်း ပြန်ပြောင်းခြင်း
-                        const container = document.getElementById('starContainer');
-                        if (container) {
-                            container.addEventListener('mouseleave', () => {
-                                stars.forEach(s => s.classList.remove('hovered'));
-                            });
-                        }
-                    });
-
-                    // ဘယ်ဘက်အစကနေ သတ်မှတ်အမှတ်အထိ class တပ်ပေးမည့် အထောက်အကူပြု function
-                    function highlightStars(score, className) {
-                        const stars = document.querySelectorAll('#starContainer i');
-                        stars.forEach(s => {
-                            const sScore = parseInt(s.getAttribute('data-score'));
-                            if (sScore <= score) {
-                                s.classList.add(className);
-                            } else {
-                                s.classList.remove(className);
-                            }
-                        });
-                    }
-
-                    function submitInstantRating(scoreValue) {
-                        document.getElementById("selectedStarScore").value = scoreValue;
-                        // Form မတက်ခင် UI တွင် ချက်ချင်း အမှတ်ပြောင်းသွားစေရန် ဘယ်ကနေစပြီး အရောင်လင်းပေးခြင်း
-                        highlightStars(scoreValue, 'active-star');
-                        document.getElementById("instantRateForm").submit();
-                    }
-                    // URL Parameters Detection Block
-                    window.addEventListener('DOMContentLoaded', () => {
-                        const urlParams = new URLSearchParams(window.location.search);
-
-                        if (urlParams.get('status') === 'reported') {
-                            alert("🚨 Report Submitted Successfully!\nOur team will review this content shortly.");
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-
-                        if (urlParams.get('error') === 'self_report') {
-                            alert("❌ Action Denied!\nYou cannot report your own cheat sheet.");
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-
-                        // 💡 🔑 ၂ ကြိမ်မြောက် အတင်းလာထုသူများအား Alert Box ဖြင့် ဖြတ်တားခြင်း
-                        if (urlParams.get('error') === 'already_reported') {
-                            alert("⚠️ Notice!\nYou have already submitted a report for this cheat sheet.");
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-                    });
-                </script>
-            </body>
+    function submitInstantRating(scoreValue) {
+        document.getElementById("selectedStarScore").value = scoreValue;
+        highlightStars(scoreValue, 'active-star');
+        document.getElementById("instantRateForm").submit();
+    }
+</script>            </body>
 
             </html>
