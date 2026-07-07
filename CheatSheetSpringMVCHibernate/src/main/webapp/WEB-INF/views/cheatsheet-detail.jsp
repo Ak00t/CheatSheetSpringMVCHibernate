@@ -21,7 +21,7 @@
                     }
 
                     .breadcrumb a {
-                        color: $ {
+                        color: ${
                             cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
                         }
 
@@ -31,7 +31,7 @@
                     }
 
                     .title span {
-                        color: $ {
+                        color: ${
                             cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
                         }
 
@@ -41,7 +41,7 @@
                     .card-title-bar {
                         cursor: pointer;
 
-                        border-top: 5px solid $ {
+                        border-top: 5px solid ${
                             cheatsheet.themeColor !=null ? cheatsheet.themeColor: '#2563eb'
                         }
 

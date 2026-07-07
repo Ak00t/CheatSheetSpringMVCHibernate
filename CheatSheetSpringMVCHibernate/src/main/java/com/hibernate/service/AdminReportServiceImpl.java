@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hibernate.dto.AdminReportTargetPreviewDTO;
+
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.CommentEntity;
 import com.hibernate.entity.ReportEntity;
+import com.hibernate.DTO.AdminReportTargetPreviewDTO;
 import com.hibernate.entity.BanEntity;
 import com.hibernate.entity.UserEntity;
 import com.hibernate.entity.WarningEntity;

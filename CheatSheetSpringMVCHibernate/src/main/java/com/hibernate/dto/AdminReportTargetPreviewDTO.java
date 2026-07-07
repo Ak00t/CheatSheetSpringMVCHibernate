@@ -1,4 +1,4 @@
-package com.hibernate.dto;
+package com.hibernate.DTO;
 
 import com.hibernate.entity.CheatsheetEntity;
 import com.hibernate.entity.CommentEntity;
